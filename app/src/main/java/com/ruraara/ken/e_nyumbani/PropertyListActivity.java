@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.ruraara.ken.e_nyumbani.dummy.DummyProperty;
+import com.ruraara.ken.e_nyumbani.dummy.Property;
 import com.ruraara.ken.e_nyumbani.dummy.Property;
 import com.ruraara.ken.e_nyumbani.dummy.Property;
 import com.squareup.picasso.Picasso;
@@ -74,7 +74,7 @@ public class PropertyListActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.property_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        //setupRecyclerView((RecyclerView) recyclerView);
 
         if (findViewById(R.id.property_detail_container) != null) {
             // The detail container view will be present only in the
@@ -84,41 +84,44 @@ public class PropertyListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        //getListings();
+        getListings();
     }
 
-    /*private void getListings(){
+    private void getListings() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get("http://10.0.3.2:8000/api/listings", new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
                 // called before request is started
-                Log.d(TAG,"Started request");
+                Log.d(TAG, "Started request");
             }
 
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
-                Log.d(TAG,"Status: "+statusCode);
+                Log.d(TAG, "Status: " + statusCode);
                 String resp = new String(response);
-                Log.d(TAG,"S: "+resp);
+                Log.d(TAG, "S: " + resp);
 
-                Log.e(TAG,String.valueOf(Property.ITEMS.size()));
+                Log.e(TAG, String.valueOf(Property.ITEMS.size()));
 
-                if(Property.ITEMS.size() > 0){
+                if (Property.ITEMS.size() > 0) {
                     Property.ITEMS.clear();
                 }
 
                 try {
                     JSONArray jsonArray = new JSONArray(resp);
-                    for(int i = 0;i<jsonArray.length();i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         int id = jsonObject.getInt("id");
                         String title = jsonObject.getString("title");
+                        String address = jsonObject.getString("address");
+                        String agent = jsonObject.getString("agent");
+                        String price = jsonObject.getString("price");
                         String image = jsonObject.getString("image");
-                        Property.addPropertyItem(Property.createPropertyItem(id,title,image));
+                        Property.addPropertyItem(Property.createPropertyItem(String.valueOf(id), title, address, agent, price, image));
 
                     }
                 } catch (JSONException e) {
@@ -136,27 +139,27 @@ public class PropertyListActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(TAG,"failed "+statusCode);
+                Log.d(TAG, "failed " + statusCode);
             }
 
             @Override
             public void onRetry(int retryNo) {
                 // called when request is retried
-                Log.d(TAG,"retryNO: "+retryNo);
+                Log.d(TAG, "retryNO: " + retryNo);
             }
         });
-    }*/
+    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyProperty.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Property.ITEMS));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyProperty.DummyItem> mValues;
+        private final List<Property.PropertyItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyProperty.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<Property.PropertyItem> items) {
             mValues = items;
         }
 
@@ -174,11 +177,11 @@ public class PropertyListActivity extends AppCompatActivity {
             holder.mAddressView.setText(mValues.get(position).address);
             holder.mAgentView.setText(mValues.get(position).agent);
             holder.mPriceView.setText(mValues.get(position).price);
-            holder.mImageView.setImageResource(mValues.get(position).image);
+            //holder.mImageView.setImageResource(mValues.get(position).image);
 
-            /*Picasso.with(PropertyListActivity.this)
+            Picasso.with(PropertyListActivity.this)
                     .load("http://10.0.3.2:8000/images/properties/agent_properties_120x120/"+mValues.get(position).image)
-                    .into(holder.mImageView);*/
+                    .into(holder.mImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -214,7 +217,7 @@ public class PropertyListActivity extends AppCompatActivity {
             public final TextView mAgentView;
             public final TextView mPriceView;
             public final ImageView mImageView;
-            public DummyProperty.DummyItem mItem;
+            public Property.PropertyItem mItem;
 
             public ViewHolder(View view) {
                 super(view);
