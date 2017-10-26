@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.ruraara.ken.e_nyumbani.dummy.DummyProperty;
 import com.ruraara.ken.e_nyumbani.dummy.Property;
 import com.ruraara.ken.e_nyumbani.dummy.Property;
 import com.squareup.picasso.Picasso;
@@ -83,10 +84,10 @@ public class PropertyListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        getListings();
+        //getListings();
     }
-    
-    private void getListings(){
+
+    /*private void getListings(){
         AsyncHttpClient client = new AsyncHttpClient();
         client.get("http://10.0.3.2:8000/api/listings", new AsyncHttpResponseHandler() {
 
@@ -123,7 +124,7 @@ public class PropertyListActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                
+
                 //Do the working from here
 
                 setupRecyclerView((RecyclerView) recyclerView);
@@ -144,18 +145,18 @@ public class PropertyListActivity extends AppCompatActivity {
                 Log.d(TAG,"retryNO: "+retryNo);
             }
         });
-    }
+    }*/
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Property.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyProperty.ITEMS));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Property.PropertyItem> mValues;
+        private final List<DummyProperty.DummyItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<Property.PropertyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<DummyProperty.DummyItem> items) {
             mValues = items;
         }
 
@@ -169,12 +170,15 @@ public class PropertyListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).title);
+            holder.mTitleView.setText(mValues.get(position).title);
+            holder.mAddressView.setText(mValues.get(position).address);
+            holder.mAgentView.setText(mValues.get(position).agent);
+            holder.mPriceView.setText(mValues.get(position).price);
+            holder.mImageView.setImageResource(mValues.get(position).image);
 
-            Picasso.with(PropertyListActivity.this)
+            /*Picasso.with(PropertyListActivity.this)
                     .load("http://10.0.3.2:8000/images/properties/agent_properties_120x120/"+mValues.get(position).image)
-                    .into(holder.mImageView);
+                    .into(holder.mImageView);*/
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -205,22 +209,26 @@ public class PropertyListActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
+            public final TextView mTitleView;
+            public final TextView mAddressView;
+            public final TextView mAgentView;
+            public final TextView mPriceView;
             public final ImageView mImageView;
-            public Property.PropertyItem mItem;
+            public DummyProperty.DummyItem mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mImageView = (ImageView) view.findViewById(R.id.imageView);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mTitleView = view.findViewById(R.id.title);
+                mAddressView = view.findViewById(R.id.address);
+                mAgentView = view.findViewById(R.id.agent);
+                mPriceView = view.findViewById(R.id.price);
+                mImageView = view.findViewById(R.id.imageView);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mTitleView.getText() + "'";
             }
         }
     }
