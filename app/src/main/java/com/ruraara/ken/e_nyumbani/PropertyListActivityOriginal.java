@@ -2,36 +2,21 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.ruraara.ken.e_nyumbani.dummy.Property;
-import com.ruraara.ken.e_nyumbani.dummy.Property;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.ruraara.ken.e_nyumbani.dummy.DummyContent;
 
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * An activity representing a list of Properties. This activity
@@ -41,17 +26,13 @@ import cz.msebera.android.httpclient.Header;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class PropertyListActivity extends AppCompatActivity {
-
-    String TAG = PropertyListActivity.class.getSimpleName();
+public class PropertyListActivityOriginal extends AppCompatActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
-
-    View recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +52,7 @@ public class PropertyListActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.property_list);
+        View recyclerView = findViewById(R.id.property_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
@@ -82,80 +63,18 @@ public class PropertyListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
-        getListings();
-    }
-    
-    private void getListings(){
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://10.0.3.2:8000/api/listings", new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                // called before request is started
-                Log.d(TAG,"Started request");
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                // called when response HTTP status is "200 OK"
-                Log.d(TAG,"Status: "+statusCode);
-                String resp = new String(response);
-                Log.d(TAG,"S: "+resp);
-
-                Log.e(TAG,String.valueOf(Property.ITEMS.size()));
-
-                if(Property.ITEMS.size() > 0){
-                    Property.ITEMS.clear();
-                }
-
-                try {
-                    JSONArray jsonArray = new JSONArray(resp);
-                    for(int i = 0;i<jsonArray.length();i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        int id = jsonObject.getInt("id");
-                        String title = jsonObject.getString("title");
-                        String image = jsonObject.getString("image");
-                        Property.addPropertyItem(Property.createPropertyItem(id,title,image));
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                
-                //Do the working from here
-
-                setupRecyclerView((RecyclerView) recyclerView);
-
-                //End work from here
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(TAG,"failed "+statusCode);
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-                Log.d(TAG,"retryNO: "+retryNo);
-            }
-        });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Property.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Property.PropertyItem> mValues;
+        private final List<DummyContent.DummyItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<Property.PropertyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
             mValues = items;
         }
 
@@ -170,11 +89,7 @@ public class PropertyListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).title);
-
-            Picasso.with(PropertyListActivity.this)
-                    .load("http://10.0.3.2:8000/images/properties/agent_properties_120x120/"+mValues.get(position).image)
-                    .into(holder.mImageView);
+            holder.mContentView.setText(mValues.get(position).content);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,14 +122,12 @@ public class PropertyListActivity extends AppCompatActivity {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
-            public final ImageView mImageView;
-            public Property.PropertyItem mItem;
+            public DummyContent.DummyItem mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id);
-                mImageView = (ImageView) view.findViewById(R.id.imageView);
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
 
