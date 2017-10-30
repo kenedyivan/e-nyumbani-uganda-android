@@ -3,6 +3,8 @@ package com.ruraara.ken.e_nyumbani;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +15,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ruraara.ken.e_nyumbani.dummy.DummyContent;
+
+import static com.loopj.android.http.AsyncHttpClient.log;
+
 public class DrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FeaturedPropertyFragment.OnListFragmentInteractionListener,
+        ForRentPropertyFragment.OnListFragmentInteractionListener,
+        ForSalePropertyFragment.OnListFragmentInteractionListener {
+
+    NavigationView navigationView;
+    int position;
+    String TAG = DrawerActivity.class.getSimpleName();
+    Fragment fragment = null;
+    Class fragmentClass = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +53,28 @@ public class DrawerActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //Sets navigation drawer first item to checked
+        navigationView.getMenu().getItem(0).setChecked(true);
+        if(navigationView.getMenu().findItem(R.id.nav_camera).isChecked()){
+            position = 0;
+        }
+
+        if(position == 0){
+            fragmentClass = FeaturedPropertyFragment.class;
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+        }
 
 
     }
@@ -82,11 +117,15 @@ public class DrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        /*Fragment fragment = null;
+        Class fragmentClass = null;*/
 
+        if (id == R.id.nav_camera) {
+            fragmentClass = FeaturedPropertyFragment.class;
+        } else if (id == R.id.nav_gallery) {
+            fragmentClass = ForRentPropertyFragment.class;
         } else if (id == R.id.nav_slideshow) {
+            fragmentClass = ForSalePropertyFragment.class;
 
         } else if (id == R.id.nav_manage) {
 
@@ -96,8 +135,24 @@ public class DrawerActivity extends AppCompatActivity
 
         }
 
+        try {
+            assert fragmentClass != null;
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }
