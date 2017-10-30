@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">E-Nyumbani</string>
     <string name="title_property_detail">Property Detail</string>
+
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
