@@ -9,11 +9,11 @@
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Rent" />
+            android:title="For rent" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Sale" />
+            android:title="For sale" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
