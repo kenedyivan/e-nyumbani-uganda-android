@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ruraara.ken.e_nyumbani.DrawerActivity"
-    tools:showIn="@layout/app_bar_drawer"
-    android:id="@+id/f_content">
-
+    tools:context="com.ruraara.ken.e_nyumbani.PropertyForRentActivity">
 
 </android.support.constraint.ConstraintLayout>
