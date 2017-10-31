@@ -55,13 +55,12 @@ public class FeaturedPropertyRecyclerViewAdapter
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(mContext,"Clicked me",Toast.LENGTH_SHORT).show();
 
-                    /*Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetailActivity.class);
-                    intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, PropertyDetails.class);
+                    //intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, holder.mItem.id);
 
-                    context.startActivity(intent);*/
+                    context.startActivity(intent);
             }
         });
     }

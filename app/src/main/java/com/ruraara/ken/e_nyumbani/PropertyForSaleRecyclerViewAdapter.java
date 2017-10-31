@@ -55,9 +55,8 @@ public class PropertyForSaleRecyclerViewAdapter
             public void onClick(View v) {
 
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetailActivity.class);
-                    intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-
+                Intent intent = new Intent(context, PropertyDetails.class);
+                mContext.startActivity(intent);
                     context.startActivity(intent);
             }
         });

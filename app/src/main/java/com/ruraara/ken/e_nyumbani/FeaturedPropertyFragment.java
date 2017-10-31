@@ -77,9 +77,9 @@ public class FeaturedPropertyFragment extends Fragment {
 
         final ProgressDialog mProgressDialog;
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage("Signing........");
+        mProgressDialog.setMessage("Loading........");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCancelable(true);
 
 
 

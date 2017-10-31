@@ -48,18 +48,17 @@ public class PropertyForRentRecyclerViewAdapter
         //holder.mImageView.setImageResource(mValues.get(position).image);
 
         Picasso.with(mContext)
-                .load(AppData.getImagesPath()+mValues.get(position).image)
+                .load(AppData.getImagesPath() + mValues.get(position).image)
                 .into(holder.mImageView);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                    Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetailActivity.class);
-                    intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                Context context = v.getContext();
+                Intent intent = new Intent(context, PropertyDetails.class);
 
-                    context.startActivity(intent);
+                context.startActivity(intent);
             }
         });
     }

@@ -58,11 +58,11 @@ public class DrawerActivity extends AppCompatActivity
 
         //Sets navigation drawer first item to checked
         navigationView.getMenu().getItem(0).setChecked(true);
-        if(navigationView.getMenu().findItem(R.id.nav_camera).isChecked()){
+        if (navigationView.getMenu().findItem(R.id.nav_camera).isChecked()) {
             position = 0;
         }
 
-        if(position == 0){
+        if (position == 0) {
             fragmentClass = FeaturedPropertyFragment.class;
 
             try {
@@ -82,11 +82,31 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (position > 0) {
+
+            drawer.closeDrawer(GravityCompat.START);
+            fragmentClass = FeaturedPropertyFragment.class;
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            position = 0;
+            navigationView.getMenu().getItem(0).setChecked(true);
+
+        } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+
+
+
     }
 
     @Override
@@ -122,10 +142,13 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             fragmentClass = FeaturedPropertyFragment.class;
+            position = 0;
         } else if (id == R.id.nav_gallery) {
             fragmentClass = ForRentPropertyFragment.class;
+            position = 2;
         } else if (id == R.id.nav_slideshow) {
             fragmentClass = ForSalePropertyFragment.class;
+            position = 3;
 
         } else if (id == R.id.nav_manage) {
 
@@ -155,4 +178,5 @@ public class DrawerActivity extends AppCompatActivity
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
     }
+
 }

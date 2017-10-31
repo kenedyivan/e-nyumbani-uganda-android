@@ -14,15 +14,7 @@
         <activity
             android:name=".PropertyListActivity"
             android:label="@string/featured"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            android:theme="@style/AppTheme.NoActionBar">ter>
         </activity>
         <activity
             android:name=".PropertyDetailActivity"
@@ -33,46 +25,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ruraara.ken.e_nyumbani.PropertyListActivity" />
         </activity>
-        <activity android:name=".MainActivity">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreen">
 
-            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".DrawerActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PropertyForRentActivity" />
-        <activity android:name=".PropertyDetails">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".PropertyDetails"></activity>
     </application>
 
 </manifest>

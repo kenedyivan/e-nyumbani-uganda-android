@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,7 @@ import com.github.vivchar.viewpagerindicator.ViewPagerIndicator;
 
 import me.relex.circleindicator.CircleIndicator;
 
-public class PropertyDetails extends FragmentActivity {
+public class PropertyDetails extends AppCompatActivity {
 
     /**
      * The number of pages (wizard steps) to show in this demo.
@@ -41,9 +43,13 @@ public class PropertyDetails extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_details);
 
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getTitle());*/
+
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = findViewById(R.id.pager);
-        CircleIndicator indicator = findViewById(R.id.indicator);
+        mPager = (ViewPager) findViewById(R.id.pager);
+        CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         indicator.setViewPager(mPager);
