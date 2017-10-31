@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.dummy.Property;
@@ -54,11 +55,13 @@ public class FeaturedPropertyRecyclerViewAdapter
             @Override
             public void onClick(View v) {
 
-                    Context context = v.getContext();
+                Toast.makeText(mContext,"Clicked me",Toast.LENGTH_SHORT).show();
+
+                    /*Context context = v.getContext();
                     Intent intent = new Intent(context, PropertyDetailActivity.class);
                     intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, holder.mItem.id);
 
-                    context.startActivity(intent);
+                    context.startActivity(intent);*/
             }
         });
     }
