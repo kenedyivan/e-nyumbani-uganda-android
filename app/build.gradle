@@ -35,6 +35,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'com.github.vivchar:ViewPagerIndicator:v1.0.1'
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
     compile 'com.google.android.gms:play-services-plus:11.0.4'
     testCompile 'junit:junit:4.12'

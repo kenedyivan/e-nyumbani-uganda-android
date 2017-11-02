@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ruraara.ken.e_nyumbani.dummy.DummyContent;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
@@ -30,6 +31,7 @@ public class DrawerActivity extends AppCompatActivity
     String TAG = DrawerActivity.class.getSimpleName();
     Fragment fragment = null;
     Class fragmentClass = null;
+    MaterialSearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class DrawerActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -106,13 +110,14 @@ public class DrawerActivity extends AppCompatActivity
         }
 
 
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
         return true;
     }
 
