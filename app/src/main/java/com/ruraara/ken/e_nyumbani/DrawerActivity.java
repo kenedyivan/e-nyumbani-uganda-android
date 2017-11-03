@@ -34,13 +34,16 @@ public class DrawerActivity extends AppCompatActivity
     Fragment fragment = null;
     Class fragmentClass = null;
     MaterialSearchView searchView;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Featured");
         setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +90,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (position == 0) {
             fragmentClass = FeaturedPropertyFragment.class;
+            toolbar.setTitle("Featured");
 
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
@@ -109,6 +113,7 @@ public class DrawerActivity extends AppCompatActivity
 
             drawer.closeDrawer(GravityCompat.START);
             fragmentClass = FeaturedPropertyFragment.class;
+            toolbar.setTitle("Featured");
 
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
@@ -169,12 +174,15 @@ public class DrawerActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             fragmentClass = FeaturedPropertyFragment.class;
             position = 0;
+            toolbar.setTitle("Featured");
         } else if (id == R.id.nav_gallery) {
             fragmentClass = ForRentPropertyFragment.class;
             position = 2;
+            toolbar.setTitle("For rent");
         } else if (id == R.id.nav_slideshow) {
             fragmentClass = ForSalePropertyFragment.class;
             position = 3;
+            toolbar.setTitle("For sale");
 
         } else if (id == R.id.nav_manage) {
 

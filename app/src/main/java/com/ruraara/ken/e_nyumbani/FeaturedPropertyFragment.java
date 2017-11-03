@@ -114,12 +114,13 @@ public class FeaturedPropertyFragment extends Fragment {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         int id = jsonObject.getInt("id");
                         String title = jsonObject.getString("title");
+                        int rating = jsonObject.getInt("rating");
                         String address = jsonObject.getString("address");
                         String agent = jsonObject.getString("agent");
                         String price = jsonObject.getString("price");
                         String image = jsonObject.getString("image");
                         Property.addPropertyItem(Property.createPropertyItem(String.valueOf(id),
-                                title, address, agent, price, image));
+                                title, rating, address, agent, price, image));
 
                     }
                 } catch (JSONException e) {

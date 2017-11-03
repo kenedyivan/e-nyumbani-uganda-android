@@ -42,7 +42,8 @@
         </activity>
         <activity android:name=".PropertyForRentActivity" />
         <activity android:name=".PropertyDetails" />
-        <activity android:name=".SearchResults"></activity>
+        <activity android:name=".SearchResults"
+            android:label="Search results"></activity>
     </application>
 
 </manifest>

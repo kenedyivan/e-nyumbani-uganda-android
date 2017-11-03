@@ -145,8 +145,8 @@ public class PropertyListActivity extends AppCompatActivity implements Navigatio
                         String agent = jsonObject.getString("agent");
                         String price = jsonObject.getString("price");
                         String image = jsonObject.getString("image");
-                        Property.addPropertyItem(Property.createPropertyItem(String.valueOf(id),
-                                title, address, agent, price, image));
+                        /*Property.addPropertyItem(Property.createPropertyItem(String.valueOf(id),
+                                title, address, agent, price, image));*/
 
                     }
                 } catch (JSONException e) {

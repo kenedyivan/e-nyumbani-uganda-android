@@ -43,7 +43,7 @@ public class FeaturedPropertyRecyclerViewAdapter
     public void onBindViewHolder(final FeaturedPropertyRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
-        holder.mRatingBar.setRating(4);
+        holder.mRatingBar.setRating((float) mValues.get(position).rating);
         holder.mAddressView.setText(mValues.get(position).address);
         holder.mAgentView.setText(mValues.get(position).agent);
         holder.mPriceView.setText(mValues.get(position).price);
