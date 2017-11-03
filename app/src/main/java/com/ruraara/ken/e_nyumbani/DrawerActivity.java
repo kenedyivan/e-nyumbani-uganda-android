@@ -1,10 +1,12 @@
 package com.ruraara.ken.e_nyumbani;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -50,6 +52,23 @@ public class DrawerActivity extends AppCompatActivity
         });
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Intent intent = new Intent(DrawerActivity.this, SearchResults.class);
+                intent.putExtra(SearchResults.QUERY, query);
+                startActivity(intent);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                return false;
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -105,7 +124,9 @@ public class DrawerActivity extends AppCompatActivity
 
         } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (searchView.isSearchOpen()) {
+            searchView.closeSearch();
+        }else {
             super.onBackPressed();
         }
 

@@ -24,6 +24,10 @@ public class AppData {
         return HOST+"/api/listings/for-sale";
     }
 
+    public static String search(){
+        return HOST+"/api/listings/search";
+    }
+
     public static String getImagesPath(){
         return HOST+"/images/properties/agent_properties_120x120/";
     }

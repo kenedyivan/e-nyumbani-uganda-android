@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class FeaturedPropertyRecyclerViewAdapter
     public void onBindViewHolder(final FeaturedPropertyRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
+        holder.mRatingBar.setRating(4);
         holder.mAddressView.setText(mValues.get(position).address);
         holder.mAgentView.setText(mValues.get(position).agent);
         holder.mPriceView.setText(mValues.get(position).price);
@@ -77,12 +79,14 @@ public class FeaturedPropertyRecyclerViewAdapter
         public final TextView mAgentView;
         public final TextView mPriceView;
         public final ImageView mImageView;
+        public final RatingBar mRatingBar;
         public Property.PropertyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mTitleView = view.findViewById(R.id.title);
+            mRatingBar = view.findViewById(R.id.rating);
             mAddressView = view.findViewById(R.id.address);
             mAgentView = view.findViewById(R.id.agent);
             mPriceView = view.findViewById(R.id.price);
