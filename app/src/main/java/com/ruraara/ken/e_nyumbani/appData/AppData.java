@@ -8,27 +8,35 @@ public class AppData {
     public static final String HOST = "http://10.0.3.2:8000";
     //public static final String HOST = "http://192.168.43.28:5000";
 
-    public static String getHost(){
+    public static String getHost() {
         return HOST;
     }
 
-    public static String getFeatured(){
-        return HOST+"/api/listings";
+    public static String getFeatured() {
+        return HOST + "/api/listings";
     }
 
-    public static String getRent(){
-        return HOST+"/api/listings/for-rent";
+    public static String getRent() {
+        return HOST + "/api/listings/for-rent";
     }
 
-    public static String getSale(){
-        return HOST+"/api/listings/for-sale";
+    public static String getSale() {
+        return HOST + "/api/listings/for-sale";
     }
 
-    public static String search(){
-        return HOST+"/api/listings/search";
+    public static String search() {
+        return HOST + "/api/listings/search";
     }
 
-    public static String getImagesPath(){
-        return HOST+"/images/properties/agent_properties_120x120/";
+    public static String getProperty() {
+        return HOST + "/api/listings/property";
+    }
+
+    public static String getImagesPath() {
+        return HOST + "/images/properties/agent_properties_120x120/";
+    }
+
+    public static String getDetailsImagesPath() {
+        return HOST + "/images/properties/property_listing_364x244/";
     }
 }

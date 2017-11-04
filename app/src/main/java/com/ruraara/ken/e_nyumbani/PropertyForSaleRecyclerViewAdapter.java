@@ -54,10 +54,10 @@ public class PropertyForSaleRecyclerViewAdapter
             @Override
             public void onClick(View v) {
 
-                    Context context = v.getContext();
+                Context context = v.getContext();
                 Intent intent = new Intent(context, PropertyDetails.class);
-                mContext.startActivity(intent);
-                    context.startActivity(intent);
+                intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                context.startActivity(intent);
             }
         });
     }

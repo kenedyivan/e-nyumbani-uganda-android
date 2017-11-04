@@ -47,7 +47,13 @@
             </intent-filter>-->
         </activity>
         <activity android:name=".PropertyForRentActivity" />
-        <activity android:name=".PropertyDetails" />
+        <activity android:name=".PropertyDetails">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
         <activity
             android:name=".SearchResults"
             android:label="Search results"></activity>

@@ -4,10 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.ruraara.ken.e_nyumbani.appData.AppData;
+import com.squareup.picasso.Picasso;
 
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -15,14 +19,16 @@ public class ScreenSlidePageFragment extends Fragment {
     private String title;
     private int page;
     private int img = R.drawable.img2;
-    int r;
+    String r;
+    private static Context context;
 
     // newInstance constructor for creating fragment with arguments
-    public static ScreenSlidePageFragment newInstance(int page, int image) {
+    public static ScreenSlidePageFragment newInstance(Context c, int page, String image) {
         ScreenSlidePageFragment fragmentFirst = new ScreenSlidePageFragment();
+        context = c;
         Bundle args = new Bundle();
         args.putInt("someInt", page);
-        args.putInt("img", image);
+        args.putString("img", image);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -31,7 +37,7 @@ public class ScreenSlidePageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        r = getArguments().getInt("img", 0);
+        r = getArguments().getString("img");
     }
 
     @Override
@@ -44,7 +50,14 @@ public class ScreenSlidePageFragment extends Fragment {
         //int r = R.drawable.img2;
 
         ImageView img = view.findViewById(R.id.imageView3);
-        img.setImageResource(r);
+
+        Picasso.with(getActivity())
+                .load(AppData.getDetailsImagesPath()+r)
+                .fit()
+                .into(img);
+
+        Log.d("View pager Image", AppData.getDetailsImagesPath()+r);
+
         return view;
     }
 }
