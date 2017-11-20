@@ -9,6 +9,7 @@
     </style>
 
     <style name="SplashScreen" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:statusBarColor">@color/black_overlay</item>
+        <!--<item name="android:statusBarColor">@color/black_overlay</item>-->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 </resources>
