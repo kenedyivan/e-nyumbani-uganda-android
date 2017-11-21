@@ -86,12 +86,12 @@ public class PropertyDetail {
             for (int i = 0; i < reviewsJson.length(); i++) {
                 JSONObject jsonObject = reviewsJson.getJSONObject(i);
                 String id = jsonObject.getString("id");
-                String rating = jsonObject.getString("rating");
+                int rating = jsonObject.getInt("rating");
                 String review = jsonObject.getString("review");
                 String username = jsonObject.getString("username");
                 String profile_picture = jsonObject.getString("profile_picture");
 
-                reviews.add(new Review(id,rating,review,username,profile_picture));
+                reviews.add(new Review(id,(double)rating,review,username,profile_picture));
 
             }
 
@@ -132,12 +132,12 @@ public class PropertyDetail {
 
     public static class Review {
         public final String id;
-        public final String rating;
+        public final double rating;
         public final String review;
         public final String username;
         public final String profile_picture;
 
-        public Review(String id, String rating, String review, String username, String profile_picture) {
+        public Review(String id, double rating, String review, String username, String profile_picture) {
             this.id = id;
             this.rating = rating;
             this.review = review;

@@ -36,6 +36,10 @@ public class AppData {
         return HOST + "/images/properties/agent_properties_120x120/";
     }
 
+    public static String getAgentsImagesPath() {
+        return HOST + "/images/agents/profile_330x330/";
+    }
+
     public static String getDetailsImagesPath() {
         return HOST + "/images/properties/property_listing_364x244/";
     }

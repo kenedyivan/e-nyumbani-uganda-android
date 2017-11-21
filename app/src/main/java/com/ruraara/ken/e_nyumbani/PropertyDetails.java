@@ -337,17 +337,15 @@ public class PropertyDetails extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ReviewsRecyclerViewAdapter.ViewHolder holder, int position) {
 
-            Log.d("RRReview",mValues.toString());
-            /*holder.mItem = mValues.get(position);
-            holder.mTitleView.setText(mValues.get(position).title);
+            Log.e("RRReviews", mValues.toString());
+
+            holder.mItem = mValues.get(position);
+            holder.mName.setText(mValues.get(position).username);
             holder.mRatingBar.setRating((float) mValues.get(position).rating);
-            holder.mAddressView.setText(mValues.get(position).address);
-            holder.mAgentView.setText(mValues.get(position).agent);
-            holder.mPriceView.setText(mValues.get(position).price);
-            //holder.mImageView.setImageResource(mValues.get(position).image);
+            holder.mContent.setText(mValues.get(position).review);
 
             Picasso.with(mContext)
-                    .load(AppData.getImagesPath()+mValues.get(position).image)
+                    .load(AppData.getAgentsImagesPath()+mValues.get(position).profile_picture)
                     .into(holder.mImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -360,7 +358,7 @@ public class PropertyDetails extends AppCompatActivity {
                     intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
                     context.startActivity(intent);
                 }
-            });*/
+            });
         }
 
         @Override
@@ -370,10 +368,8 @@ public class PropertyDetails extends AppCompatActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final View mView;
-            final TextView mTitleView;
-            final TextView mAddressView;
-            final TextView mAgentView;
-            final TextView mPriceView;
+            final TextView mName;
+            final TextView mContent;
             final ImageView mImageView;
             final RatingBar mRatingBar;
             PropertyDetail.Review mItem;
@@ -381,17 +377,15 @@ public class PropertyDetails extends AppCompatActivity {
             ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mTitleView = view.findViewById(R.id.title);
-                mRatingBar = view.findViewById(R.id.rating);
-                mAddressView = view.findViewById(R.id.address);
-                mAgentView = view.findViewById(R.id.agent);
-                mPriceView = view.findViewById(R.id.price);
-                mImageView = view.findViewById(R.id.imageView);
+                mName = view.findViewById(R.id.name);
+                mRatingBar = view.findViewById(R.id.reviewRatingBar);
+                mContent = view.findViewById(R.id.content);
+                mImageView = view.findViewById(R.id.profile_image);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mTitleView.getText() + "'";
+                return super.toString() + " '" + mContent.getText() + "'";
             }
         }
     }

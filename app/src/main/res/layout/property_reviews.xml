@@ -42,7 +42,7 @@
                 android:textSize="16sp" />
 
             <RatingBar
-                android:id="@+id/ratingBar3"
+                android:id="@+id/reviewRatingBar"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
