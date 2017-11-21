@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -133,12 +134,12 @@ public class ForSalePropertyFragment extends Fragment {
                 if (view instanceof RecyclerView) {
                     Context context = view.getContext();
                     RecyclerView recyclerView = (RecyclerView) view;
-                    //if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    //} else {
-                    //  recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-                    //}
-                    //recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                            linearLayoutManager.getOrientation());
+                    recyclerView.addItemDecoration(mDividerItemDecoration);
+
                     recyclerView.setAdapter(new PropertyForSaleRecyclerViewAdapter(PropertyForSale.ITEMS, getActivity()));
                 }
 

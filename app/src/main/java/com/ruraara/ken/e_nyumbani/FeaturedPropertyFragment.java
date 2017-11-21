@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -82,7 +83,6 @@ public class FeaturedPropertyFragment extends Fragment {
         mProgressDialog.setCancelable(true);
 
 
-
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(AppData.getFeatured(), new AsyncHttpResponseHandler() {
 
@@ -133,13 +133,13 @@ public class FeaturedPropertyFragment extends Fragment {
                 if (view instanceof RecyclerView) {
                     Context context = view.getContext();
                     RecyclerView recyclerView = (RecyclerView) view;
-                    //if (mColumnCount <= 1) {
-                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    //} else {
-                      //  recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-                    //}
-                    //recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-                    recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(Property.ITEMS,getActivity()));
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                            linearLayoutManager.getOrientation());
+                    recyclerView.addItemDecoration(mDividerItemDecoration);
+
+                    recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(Property.ITEMS, getActivity()));
                 }
 
                 //setupRecyclerView((RecyclerView) recyclerView);
@@ -156,14 +156,14 @@ public class FeaturedPropertyFragment extends Fragment {
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.d(TAG, "failed " + statusCode);
-                Toast.makeText(getActivity(),"Network error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Network error", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRetry(int retryNo) {
                 // called when request is retried
                 Log.d(TAG, "retryNO: " + retryNo);
-                Toast.makeText(getActivity(),"Taking too long",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });
 
