@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:weightSum="1"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,14 +14,16 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="77dp"
+            android:layout_width="80dp"
+            android:layout_marginRight="16dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="5dp">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/img1" />
         </LinearLayout>
@@ -29,15 +31,16 @@
 
         <LinearLayout
             android:layout_width="157dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.51"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="0dp">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:textSize="16sp"/>
 
             <RatingBar
                 android:id="@+id/rating"
@@ -81,7 +84,7 @@
                 android:minHeight="40dip"
                 android:text="Agent"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:layout_centerVertical="true"
+                android:layout_below="@+id/price"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
