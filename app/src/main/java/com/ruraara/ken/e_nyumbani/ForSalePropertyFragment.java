@@ -104,8 +104,8 @@ public class ForSalePropertyFragment extends Fragment {
 
                 Log.e(TAG, String.valueOf(PropertyForSale.ITEMS.size()));
 
-                if (Property.ITEMS.size() > 0) {
-                    Property.ITEMS.clear();
+                if (PropertyForSale.ITEMS.size() > 0) {
+                    PropertyForSale.ITEMS.clear();
                 }
 
                 try {
@@ -114,12 +114,13 @@ public class ForSalePropertyFragment extends Fragment {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         int id = jsonObject.getInt("id");
                         String title = jsonObject.getString("title");
+                        int rating = jsonObject.getInt("rating");
                         String address = jsonObject.getString("address");
                         String agent = jsonObject.getString("agent");
                         String price = jsonObject.getString("price");
                         String image = jsonObject.getString("image");
                         PropertyForSale.addPropertyItem(PropertyForSale.createPropertyItem(String.valueOf(id),
-                                title, address, agent, price, image));
+                                title, rating, address, agent, price, image));
 
                     }
                 } catch (JSONException e) {
