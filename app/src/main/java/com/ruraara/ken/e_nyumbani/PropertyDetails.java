@@ -3,7 +3,9 @@ package com.ruraara.ken.e_nyumbani;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -77,6 +80,7 @@ public class PropertyDetails extends AppCompatActivity {
     private TextView mAddress;
     private ImageView mMainImage;
     public List<String> mOtherImages;
+    public RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,10 @@ public class PropertyDetails extends AppCompatActivity {
         mReviewsTitle = (TextView) findViewById(R.id.reviews_title);
         mAddress = (TextView) findViewById(R.id.address);
         mMainImage = (ImageView) findViewById(R.id.main_image);
+
+        recyclerView = (RecyclerView) findViewById(R.id.reviews_list);
+        recyclerView.setNestedScrollingEnabled(false);
+        assert recyclerView != null;
 
         /*ViewPagerIndicator viewPagerIndicator = findViewById(R.id.view_pager_indicator);
 
@@ -112,6 +120,11 @@ public class PropertyDetails extends AppCompatActivity {
 
             }
         });*/
+
+        //Create layout dynamically
+
+
+        //End of create layout dynamically
 
         final ProgressDialog mProgressDialog;
         mProgressDialog = new ProgressDialog(context);
@@ -169,13 +182,19 @@ public class PropertyDetails extends AppCompatActivity {
 
                     //More images
                     JSONArray otherImages = new JSONArray(jsonObject.getString("other_images"));
-                    //Log.d("Other Images", otherImages.toString());
+
+                    //Property reviews
+                    JSONArray reviews = new JSONArray(jsonObject.getString("reviews"));
+
+                    Log.d("Reviews", reviews.toString());
                     //End processign more images
 
 
                     propertyDetail = new PropertyDetail(String.valueOf(id),
                             jTitle, jDescrition, jRating, jNoReviews, jAddress,
-                            jType, jStatus, jAgent, jPrice, jImage, otherImages);
+                            jType, jStatus, jAgent, jPrice, jImage, otherImages,reviews);
+
+                    Log.e("Rev", propertyDetail.getReviews().toString());
 
 
                     //}
@@ -222,6 +241,9 @@ public class PropertyDetails extends AppCompatActivity {
                         .fit()
                         .into(mMainImage);
 
+                setupRecyclerView(recyclerView);
+
+
                 mProgressDialog.dismiss();
 
                 //End work from here
@@ -244,6 +266,10 @@ public class PropertyDetails extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews,PropertyDetails.this));
     }
 
     /**
@@ -287,6 +313,86 @@ public class PropertyDetails extends AppCompatActivity {
         @Override
         public int getCount() {
             return NUM_IMAGES;
+        }
+    }
+
+    class ReviewsRecyclerViewAdapter
+            extends RecyclerView.Adapter<ReviewsRecyclerViewAdapter.ViewHolder> {
+
+        private final List<PropertyDetail.Review> mValues;
+        private final Context mContext;
+
+        public ReviewsRecyclerViewAdapter(List<PropertyDetail.Review> reviews, Context c) {
+            mValues = reviews;
+            mContext = c;
+        }
+
+        @Override
+        public ReviewsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.property_reviews, parent, false);
+            return new ReviewsRecyclerViewAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ReviewsRecyclerViewAdapter.ViewHolder holder, int position) {
+
+            Log.d("RRReview",mValues.toString());
+            /*holder.mItem = mValues.get(position);
+            holder.mTitleView.setText(mValues.get(position).title);
+            holder.mRatingBar.setRating((float) mValues.get(position).rating);
+            holder.mAddressView.setText(mValues.get(position).address);
+            holder.mAgentView.setText(mValues.get(position).agent);
+            holder.mPriceView.setText(mValues.get(position).price);
+            //holder.mImageView.setImageResource(mValues.get(position).image);
+
+            Picasso.with(mContext)
+                    .load(AppData.getImagesPath()+mValues.get(position).image)
+                    .into(holder.mImageView);
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, PropertyDetails.class);
+                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                    context.startActivity(intent);
+                }
+            });*/
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final View mView;
+            final TextView mTitleView;
+            final TextView mAddressView;
+            final TextView mAgentView;
+            final TextView mPriceView;
+            final ImageView mImageView;
+            final RatingBar mRatingBar;
+            PropertyDetail.Review mItem;
+
+            ViewHolder(View view) {
+                super(view);
+                mView = view;
+                mTitleView = view.findViewById(R.id.title);
+                mRatingBar = view.findViewById(R.id.rating);
+                mAddressView = view.findViewById(R.id.address);
+                mAgentView = view.findViewById(R.id.agent);
+                mPriceView = view.findViewById(R.id.price);
+                mImageView = view.findViewById(R.id.imageView);
+            }
+
+            @Override
+            public String toString() {
+                return super.toString() + " '" + mTitleView.getText() + "'";
+            }
         }
     }
 }

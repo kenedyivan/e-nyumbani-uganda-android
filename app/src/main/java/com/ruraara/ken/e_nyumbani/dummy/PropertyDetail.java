@@ -26,18 +26,22 @@ public class PropertyDetail {
     public final String price;
     public final String image;
     public final JSONArray otherImagesJson;
+    public final JSONArray reviewsJson;
 
     public static List<String> otherImages = new ArrayList<>();
+    public static List<Review> reviews = new ArrayList<>();
 
     private int numberOfOtherImages;
+    private int numberOfReviews;
 
     public PropertyDetail(String id, String title, String descrition,
                           int rating, String noReviews,
                           String address,
                           String type, String status, String agent,
-                          String price, String image, JSONArray otherImagesJson) {
+                          String price, String image, JSONArray otherImagesJson, JSONArray reviewsJson) {
 
         clearOtherImages();
+        clearOtherReviews();
 
         this.id = id;
         this.title = title;
@@ -51,6 +55,7 @@ public class PropertyDetail {
         this.price = price;
         this.image = image;
         this.otherImagesJson = otherImagesJson;
+        this.reviewsJson = reviewsJson;
     }
 
 
@@ -73,6 +78,41 @@ public class PropertyDetail {
         return otherImages;
     }
 
+    //Returns property reviews
+    public List<Review> getReviews() {
+
+        try {
+
+            for (int i = 0; i < reviewsJson.length(); i++) {
+                JSONObject jsonObject = reviewsJson.getJSONObject(i);
+                String id = jsonObject.getString("id");
+                String rating = jsonObject.getString("rating");
+                String review = jsonObject.getString("review");
+                String username = jsonObject.getString("username");
+                String profile_picture = jsonObject.getString("profile_picture");
+
+                reviews.add(new Review(id,rating,review,username,profile_picture));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return reviews;
+    }
+
+    public void clearOtherReviews(){
+        if (reviews != null) {
+            reviews.clear();
+        }
+    }
+
+    public int getNoOfReviews(){
+        numberOfReviews = reviews.size();
+        return numberOfReviews;
+    }
+
     public void clearOtherImages() {
         if (otherImages != null) {
             otherImages.clear();
@@ -88,5 +128,26 @@ public class PropertyDetail {
     @Override
     public String toString() {
         return title;
+    }
+
+    public static class Review {
+        public final String id;
+        public final String rating;
+        public final String review;
+        public final String username;
+        public final String profile_picture;
+
+        public Review(String id, String rating, String review, String username, String profile_picture) {
+            this.id = id;
+            this.rating = rating;
+            this.review = review;
+            this.username = username;
+            this.profile_picture = profile_picture;
+        }
+
+        @Override
+        public String toString() {
+            return review;
+        }
     }
 }

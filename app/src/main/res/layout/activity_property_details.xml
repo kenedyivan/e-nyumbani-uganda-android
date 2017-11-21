@@ -257,77 +257,13 @@
                     android:text="Reviews(280)"
                     android:textSize="16sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="77dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/profile_image"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:src="@drawable/img1"
-                            app:civ_border_color="#cecece"
-                            app:civ_border_width="2dp" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="157dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.51"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Akena kenedy"
-                            android:textSize="16sp" />
-
-                        <RatingBar
-                            android:id="@+id/ratingBar3"
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="74dp"
-                        android:layout_height="match_parent"
-                        android:paddingTop="3dp">
-
-                        <TextView
-                            android:id="@+id/price"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="2 days ago" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/reviews_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy."
-                        android:textSize="12sp" />
-
-                </LinearLayout>
+                    app:layoutManager="LinearLayoutManager"
+                    tools:context="com.ruraara.ken.e_nyumbani.PropertyDetails"
+                    tools:listitem="@layout/property_reviews" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
