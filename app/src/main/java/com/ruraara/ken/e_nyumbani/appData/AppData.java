@@ -32,6 +32,10 @@ public class AppData {
         return HOST + "/api/listings/property";
     }
 
+    public static String uploadPhoto() {
+        return HOST + "/api/listings/property/upload-photo";
+    }
+
     public static String getImagesPath() {
         return HOST + "/images/properties/agent_properties_120x120/";
     }
