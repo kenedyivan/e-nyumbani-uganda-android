@@ -17,8 +17,14 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -42,23 +48,352 @@ import java.io.InputStreamReader;
 
 import cz.msebera.android.httpclient.Header;
 
-public class AddProperty extends AppCompatActivity implements View.OnClickListener {
+public class AddProperty extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
     private String TAG = AddProperty.class.getSimpleName();
-    private ImageView mImageView;
+    private ImageView mImageView1;
+    private ImageView mImageView2;
+    private ImageView mImageView3;
+    private ImageView mImageView4;
+    private ImageView mImageView5;
+    private ImageView mImageView6;
+    private ProgressBar mProgressBar1;
+    private ProgressBar mProgressBar2;
+    private ProgressBar mProgressBar3;
+    private ProgressBar mProgressBar4;
+    private ProgressBar mProgressBar5;
+    private ProgressBar mProgressBar6;
+    private ImageButton mImageButton1;
+    private ImageButton mImageButton2;
+    private ImageButton mImageButton3;
+    private ImageButton mImageButton4;
+    private ImageButton mImageButton5;
+    private ImageButton mImageButton6;
+    private ImageView mCheckMark1;
+    private ImageView mCheckMark2;
+    private ImageView mCheckMark3;
+    private ImageView mCheckMark4;
+    private ImageView mCheckMark5;
+    private ImageView mCheckMark6;
     private String imageName;
+    private int layout;
+
+    /*Other form fields*/
+    private EditText mTitle;
+    private EditText mDescription;
+    private EditText mPrice;
+    private EditText mAddress;
+    private EditText mDistrict;
+    private EditText mTown;
+    private EditText mRegion;
+    private Spinner mStatus;
+    private Spinner mCurrency;
+    private Spinner mType;
+    /*end of other form fields*/
+
+    private Button mAddProperty;
+
+    private long time;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_property);
 
-        mImageView = (ImageView) findViewById(R.id.image);
+        //Sets actionbar back arrow
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        time = System.currentTimeMillis(); //// TODO: 11/30/17 Make session time variable unchanging during various activity life cycles 
+
+        Log.d("Time: ", String.valueOf(time));
 
 
-        Button mButton = (Button) findViewById(R.id.pick);
-        mButton.setOnClickListener(this);
+        final String[] type = new String[1];
+        final String[] status = new String[1];
+        final String[] currency = new String[1];
+
+        mTitle = (EditText) findViewById(R.id.title);
+        mDescription = (EditText) findViewById(R.id.description);
+        mPrice = (EditText) findViewById(R.id.price);
+        mAddress = (EditText) findViewById(R.id.address);
+        mDistrict = (EditText) findViewById(R.id.district);
+        mTown = (EditText) findViewById(R.id.town);
+        mRegion = (EditText) findViewById(R.id.region);
+
+        mStatus = (Spinner) findViewById(R.id.status);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this,
+                R.array.property_status, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mStatus.setAdapter(statusAdapter);
+        mStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Status: ", String.valueOf(adapterView.getItemAtPosition(i)));
+                status[0] = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        mCurrency = (Spinner) findViewById(R.id.currency);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> currencyAapter = ArrayAdapter.createFromResource(this,
+                R.array.currency, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        currencyAapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mCurrency.setAdapter(currencyAapter);
+        mCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Currency: ", String.valueOf(adapterView.getItemAtPosition(i)));
+                currency[0] = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        mType = (Spinner) findViewById(R.id.type);
+        String[] types = {"Apartment", "Condor", "Bungalow", "Mansion"};
+        ArrayAdapter<String> typeSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, types);
+        typeSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+        mType.setAdapter(typeSpinner);
+
+        mType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Type: ", String.valueOf(adapterView.getItemAtPosition(i)));
+                type[0] = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        mAddProperty = (Button) findViewById(R.id.add_property);
+
+        mAddProperty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String title;
+                String description;
+                String price;
+                String address;
+                String district;
+                String town;
+                String region;
+                String sType;
+                String sStatus;
+                String sCurrency;
+
+
+                if (mTitle.getText().toString() != null && !mTitle.getText().toString().isEmpty()) {
+                    title = mTitle.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "Title empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mDescription.getText().toString() != null && !mDescription.getText().toString().isEmpty()) {
+                    description = mDescription.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "Description empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mPrice.getText().toString() != null && !mPrice.getText().toString().isEmpty()) {
+                    price = mPrice.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "Price empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mAddress.getText().toString() != null && !mAddress.getText().toString().isEmpty()) {
+                    address = mAddress.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "Address empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (mDistrict.getText().toString() != null && !mDistrict.getText().toString().isEmpty()) {
+                    district = mDistrict.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "District empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                if (mTown.getText().toString() != null && !mTown.getText().toString().isEmpty()) {
+                    town = mTown.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "Town is empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (mRegion.getText().toString() != null && !mRegion.getText().toString().isEmpty()) {
+                    region = mRegion.getText().toString();
+                } else {
+                    Toast.makeText(AddProperty.this, "Region is empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (type[0] != null && !type[0].isEmpty()) {
+                    sType = type[0];
+                } else {
+                    Toast.makeText(AddProperty.this, "Type not selected", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (status[0] != null && !status[0].isEmpty()) {
+                    sStatus = status[0];
+                } else {
+                    Toast.makeText(AddProperty.this, "Region is empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (currency[0] != null && !currency[0].isEmpty()) {
+                    sCurrency = currency[0];
+                } else {
+                    Toast.makeText(AddProperty.this, "Region is empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                Log.d("Title: ", title);
+                Log.d("Desc: ", description);
+                Log.d("price: ", price);
+                Log.d("add: ", address);
+                Log.d("dist: ", district);
+                Log.d("town: ", town);
+                Log.d("region: ", region);
+                Log.d("type: ", sType);
+                Log.d("status: ", sStatus);
+                Log.d("currency: ", sCurrency);
+
+                if (!title.isEmpty() && !description.isEmpty() && !price.isEmpty()
+                        && !address.isEmpty() && !district.isEmpty()
+                        && !town.isEmpty() && !region.isEmpty()
+                        && !sType.isEmpty() && !sStatus.isEmpty() && !sCurrency.isEmpty()) {
+
+                    uploadForm(title, description, price, address,
+                            district, town, region,
+                            sType, sStatus, sCurrency, time);
+
+                } else {
+                    Toast.makeText(AddProperty.this, "Cannot read fields", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+        mImageView1 = (ImageView) findViewById(R.id.image1);
+        mImageView2 = (ImageView) findViewById(R.id.image2);
+        mImageView3 = (ImageView) findViewById(R.id.image3);
+        mImageView4 = (ImageView) findViewById(R.id.image4);
+        mImageView5 = (ImageView) findViewById(R.id.image5);
+        mImageView6 = (ImageView) findViewById(R.id.image6);
+
+        mCheckMark1 = (ImageView) findViewById(R.id.checkmark1);
+        mCheckMark2 = (ImageView) findViewById(R.id.checkmark2);
+        mCheckMark3 = (ImageView) findViewById(R.id.checkmark3);
+        mCheckMark4 = (ImageView) findViewById(R.id.checkmark4);
+        mCheckMark5 = (ImageView) findViewById(R.id.checkmark5);
+        mCheckMark6 = (ImageView) findViewById(R.id.checkmark6);
+
+        mProgressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
+        mProgressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
+        mProgressBar3 = (ProgressBar) findViewById(R.id.progressBar3);
+        mProgressBar4 = (ProgressBar) findViewById(R.id.progressBar4);
+        mProgressBar5 = (ProgressBar) findViewById(R.id.progressBar5);
+        mProgressBar6 = (ProgressBar) findViewById(R.id.progressBar6);
+
+        mProgressBar1.setVisibility(View.GONE);
+        mProgressBar2.setVisibility(View.GONE);
+        mProgressBar3.setVisibility(View.GONE);
+        mProgressBar4.setVisibility(View.GONE);
+        mProgressBar5.setVisibility(View.GONE);
+        mProgressBar6.setVisibility(View.GONE);
+
+        mCheckMark1.setVisibility(View.GONE);
+        mCheckMark2.setVisibility(View.GONE);
+        mCheckMark3.setVisibility(View.GONE);
+        mCheckMark4.setVisibility(View.GONE);
+        mCheckMark5.setVisibility(View.GONE);
+        mCheckMark6.setVisibility(View.GONE);
+
+
+        mImageButton1 = (ImageButton) findViewById(R.id.pick1);
+        mImageButton2 = (ImageButton) findViewById(R.id.pick2);
+        mImageButton3 = (ImageButton) findViewById(R.id.pick3);
+        mImageButton4 = (ImageButton) findViewById(R.id.pick4);
+        mImageButton5 = (ImageButton) findViewById(R.id.pick5);
+        mImageButton6 = (ImageButton) findViewById(R.id.pick6);
+
+        mImageButton1.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                layout = 1;
+                performFileSearch();
+            }
+        });
+        mImageButton2.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                layout = 2;
+                performFileSearch();
+            }
+        });
+        mImageButton3.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                layout = 3;
+                performFileSearch();
+            }
+        });
+        mImageButton4.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                layout = 4;
+                performFileSearch();
+            }
+        });
+        mImageButton5.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                layout = 5;
+                performFileSearch();
+            }
+        });
+        mImageButton6.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View view) {
+                layout = 6;
+                performFileSearch();
+            }
+        });
 
     }
 
@@ -85,12 +420,6 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onClick(View view) {
-        performFileSearch();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onActivityResult(int requestCode, int resultCode,
@@ -105,6 +434,29 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.
             // Pull that URI using resultData.getData().
+
+            switch (layout) {
+                case 1:
+                    mImageButton1.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    mImageButton2.setVisibility(View.GONE);
+                    break;
+                case 3:
+                    mImageButton3.setVisibility(View.GONE);
+                    break;
+                case 4:
+                    mImageButton4.setVisibility(View.GONE);
+                    break;
+                case 5:
+                    mImageButton5.setVisibility(View.GONE);
+                    break;
+                case 6:
+                    mImageButton6.setVisibility(View.GONE);
+                    break;
+            }
+
+
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
@@ -117,9 +469,29 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
                     e.printStackTrace();
                 }
                 dumpImageMetaData(uri);
-                upload(uri);
+                upload(uri);    //// TODO: 11/30/17 Make image upload direct to cloudinary server from android client, if application server fails 
                 try {
-                    mImageView.setImageBitmap(getBitmapFromUri(uri));
+                    switch (layout) {
+                        case 1:
+                            mImageView1.setImageBitmap(getBitmapFromUri(uri));
+                            break;
+                        case 2:
+                            mImageView2.setImageBitmap(getBitmapFromUri(uri));
+                            break;
+                        case 3:
+                            mImageView3.setImageBitmap(getBitmapFromUri(uri));
+                            break;
+                        case 4:
+                            mImageView4.setImageBitmap(getBitmapFromUri(uri));
+                            break;
+                        case 5:
+                            mImageView5.setImageBitmap(getBitmapFromUri(uri));
+                            break;
+                        case 6:
+                            mImageView6.setImageBitmap(getBitmapFromUri(uri));
+                            break;
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -197,24 +569,39 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
         String str = getImageBase64(uri);
 
         RequestParams params = new RequestParams();
-        params.put("encoded_string",str);
-        params.put("image",imageName);
-
-        final ProgressDialog mProgressDialog;
-        mProgressDialog = new ProgressDialog(AddProperty.this);
-        mProgressDialog.setMessage("Loading........");
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(true);
+        params.put("encoded_string", str);
+        params.put("image", imageName);
+        params.put("session_time", time);
 
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout((50 * 1000));
+        client.setResponseTimeout((50 * 1000));
         client.post(AppData.uploadPhoto(), params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
                 // called before request is started
                 Log.d(TAG, "Started request");
-                //progressBar.setVisibility(View.VISIBLE);
-                mProgressDialog.show();
+                switch (layout) {
+                    case 1:
+                        mProgressBar1.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        mProgressBar2.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        mProgressBar3.setVisibility(View.VISIBLE);
+                        break;
+                    case 4:
+                        mProgressBar4.setVisibility(View.VISIBLE);
+                        break;
+                    case 5:
+                        mProgressBar5.setVisibility(View.VISIBLE);
+                        break;
+                    case 6:
+                        mProgressBar6.setVisibility(View.VISIBLE);
+                        break;
+                }
             }
 
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -225,7 +612,34 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
                 String resp = new String(response);
                 Log.d(TAG, "Response: " + resp);
 
-                mProgressDialog.dismiss();
+
+                switch (layout) {
+                    case 1:
+                        mProgressBar1.setVisibility(View.GONE);
+                        mCheckMark1.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        mProgressBar2.setVisibility(View.GONE);
+                        mCheckMark2.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        mProgressBar3.setVisibility(View.GONE);
+                        mCheckMark3.setVisibility(View.VISIBLE);
+                        break;
+                    case 4:
+                        mProgressBar4.setVisibility(View.GONE);
+                        mCheckMark4.setVisibility(View.VISIBLE);
+                        break;
+                    case 5:
+                        mProgressBar5.setVisibility(View.GONE);
+                        mCheckMark5.setVisibility(View.VISIBLE);
+                        break;
+                    case 6:
+                        mProgressBar6.setVisibility(View.GONE);
+                        mCheckMark6.setVisibility(View.VISIBLE);
+                        break;
+                }
+
 
                 //End work from here
 
@@ -260,7 +674,7 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
         myImg.compress(Bitmap.CompressFormat.PNG, 50, stream);
         byte[] byte_arr = stream.toByteArray();
         // Encode Image to String
-        return  android.util.Base64.encodeToString(byte_arr, 0);
+        return android.util.Base64.encodeToString(byte_arr, 0);
     }
 
     //Reducing Image Size of a selected Image
@@ -292,6 +706,98 @@ public class AddProperty extends AppCompatActivity implements View.OnClickListen
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
 
+    }
+
+    private void uploadForm(String title, String description, String price,
+                            String address, String district, String town,
+                            String region, String type, String status, String currency, long sessionTime) {
+
+        RequestParams params = new RequestParams();
+        params.put("title", title);
+        params.put("description", description);
+        params.put("price", price);
+        params.put("address", address);
+        params.put("district", district);
+        params.put("town", town);
+        params.put("region", region);
+        params.put("type", type);
+        params.put("status", status);
+        params.put("currency", currency);
+        params.put("session_time", sessionTime);
+
+        final ProgressDialog mProgressDialog;
+        mProgressDialog = new ProgressDialog(AddProperty.this);
+        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(AppData.createProperty(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+                //progressBar.setVisibility(View.VISIBLE);
+                mProgressDialog.show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Response: " + resp);
+
+                //Toast.makeText(AddProperty.this, "Added successfully", Toast.LENGTH_SHORT).show();
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+                    int status = jsonObject.getInt("status");
+                    int error = jsonObject.getInt("error");
+
+                    Log.d("State: ", String.valueOf(status));
+                    Log.d("error: ", String.valueOf(error));
+
+                    if (error == 0 && status == 1) {
+                        Toast.makeText(AddProperty.this, "Added successfully", Toast.LENGTH_LONG).show();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //// TODO: 11/30/17 Intent redirect to agents pending properties
+                    } else if (error == 1 && status == 0) {
+                        Toast.makeText(AddProperty.this, "Failed", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(AddProperty.this, "Unknown error", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mProgressDialog.dismiss();
+
+                //End work from here
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+                Toast.makeText(AddProperty.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Log.d(TAG, "retryNO: " + retryNo);
+                Toast.makeText(AddProperty.this, "Taking too long", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

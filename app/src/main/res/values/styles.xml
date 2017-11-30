@@ -29,4 +29,9 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="myButtonTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
+
 </resources>

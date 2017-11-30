@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">e-nyumbani</string>
     <string name="featured">Featured</string>
+    <string name="add_property">New property</string>
     <string name="title_property_detail">Property Detail</string>
 
     <string name="title_activity_splash_screen">SplashScreenActivity</string>

@@ -32,11 +32,11 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreen">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".DrawerActivity"
@@ -65,12 +65,9 @@
         <activity
             android:name=".SearchResults"
             android:label="Search results" />
-        <activity android:name=".AddProperty">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".AddProperty"
+            android:label="@string/add_property">
         </activity>
     </application>
 
