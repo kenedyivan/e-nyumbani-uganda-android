@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -100,9 +101,10 @@ public class SearchResults extends AppCompatActivity {
                         String address = jsonObject.getString("address");
                         String agent = jsonObject.getString("agent");
                         String price = jsonObject.getString("price");
+                        String currency = jsonObject.getString("currency");
                         String image = jsonObject.getString("image");
                         SearchProperty.addPropertyItem(SearchProperty.createPropertyItem(String.valueOf(id),
-                                title, address, agent, price, image));
+                                title, address, agent, price, currency, image));
 
                     }
                 } catch (JSONException e) {
@@ -171,7 +173,12 @@ public class SearchResults extends AppCompatActivity {
             holder.mAddressView.setText(mValues.get(position).address);
             holder.mAgentView.setText(mValues.get(position).agent);
             holder.mPriceView.setText(mValues.get(position).price);
-            //holder.mImageView.setImageResource(mValues.get(position).image);
+
+            double amount = Double.parseDouble(mValues.get(position).price);
+            //DecimalFormat formatter = new DecimalFormat("#,###.00");  //// TODO: 12/1/17 when counting dollars with cents
+            DecimalFormat formatter = new DecimalFormat("#,###");
+
+            holder.mPriceView.setText(mValues.get(position).currency.toUpperCase()+" "+formatter.format(amount));
 
             Picasso.with(context)
                     .load(AppData.getImagesPath() + mValues.get(position).image)

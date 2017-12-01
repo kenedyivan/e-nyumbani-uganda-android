@@ -49,8 +49,10 @@ public class Property {
 
     }
 
-    public static PropertyItem createPropertyItem(String id, String title, int rating, String address, String agent, String price, String image) {
-        return new PropertyItem(id, title, rating, address, agent, price, image);
+    public static PropertyItem createPropertyItem(String id, String title,
+                                                  int rating, String address, String agent,
+                                                  String price, String currency, String image) {
+        return new PropertyItem(id, title, rating, address, agent, price, currency, image);
     }
 
     /**
@@ -63,15 +65,17 @@ public class Property {
         public final String address;
         public final String agent;
         public final String price;
+        public final String currency;
         public final String image;
 
-        public PropertyItem(String id, String title, int rating, String address, String agent, String price, String image) {
+        public PropertyItem(String id, String title, int rating, String address, String agent, String price, String currency, String image) {
             this.id = id;
             this.title = title;
             this.rating = rating;
             this.address = address;
             this.agent = agent;
             this.price = price;
+            this.currency = currency;
             this.image = image;
         }
 

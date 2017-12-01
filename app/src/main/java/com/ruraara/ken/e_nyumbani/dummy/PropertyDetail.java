@@ -24,6 +24,7 @@ public class PropertyDetail {
     public final String status;
     public final String agent;
     public final String price;
+    public final String currency;
     public final String image;
     public final JSONArray otherImagesJson;
     public final JSONArray reviewsJson;
@@ -38,7 +39,8 @@ public class PropertyDetail {
                           int rating, String noReviews,
                           String address,
                           String type, String status, String agent,
-                          String price, String image, JSONArray otherImagesJson, JSONArray reviewsJson) {
+                          String price, String currency, String image,
+                          JSONArray otherImagesJson, JSONArray reviewsJson) {
 
         clearOtherImages();
         clearOtherReviews();
@@ -53,6 +55,7 @@ public class PropertyDetail {
         this.status = status;
         this.agent = agent;
         this.price = price;
+        this.currency = currency;
         this.image = image;
         this.otherImagesJson = otherImagesJson;
         this.reviewsJson = reviewsJson;

@@ -37,8 +37,9 @@ public class SearchProperty {
 
     }
 
-    public static SearchProperty.PropertyItem createPropertyItem(String id, String title, String address, String agent, String price, String image) {
-        return new SearchProperty.PropertyItem(id, title, address, agent, price, image);
+    public static SearchProperty.PropertyItem createPropertyItem(String id, String title, String address,
+                                                                 String agent, String price, String currency, String image) {
+        return new SearchProperty.PropertyItem(id, title, address, agent, price, currency, image);
     }
 
     /**
@@ -50,14 +51,16 @@ public class SearchProperty {
         public final String address;
         public final String agent;
         public final String price;
+        public final String currency;
         public final String image;
 
-        public PropertyItem(String id, String title, String address, String agent, String price, String image) {
+        public PropertyItem(String id, String title, String address, String agent, String price, String currency, String image) {
             this.id = id;
             this.title = title;
             this.address = address;
             this.agent = agent;
             this.price = price;
+            this.currency = currency;
             this.image = image;
         }
 

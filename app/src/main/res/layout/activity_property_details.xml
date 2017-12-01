@@ -228,6 +228,20 @@
                             android:padding="3dip"
                             android:text="New" />
                     </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:padding="3dip"
+                            android:text="Price" />
+
+                        <TextView
+                            android:id="@+id/price"
+                            android:gravity="left"
+                            android:padding="3dip" />
+                    </TableRow>
                 </TableLayout>
             </LinearLayout>
 

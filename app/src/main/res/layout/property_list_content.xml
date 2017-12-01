@@ -64,9 +64,9 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="100dp"
+            android:layout_width="125dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.37"
+            android:layout_weight="0.61"
             android:paddingTop="3dp">
 
             <TextView

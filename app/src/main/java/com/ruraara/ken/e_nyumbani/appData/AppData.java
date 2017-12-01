@@ -12,6 +12,18 @@ public class AppData {
         return HOST;
     }
 
+    public static String loginUser() {
+        return HOST + "/api/login";
+    }
+
+    public static String userProfile() {
+        return HOST + "/api/profile";
+    }
+
+    public static String userProfilePic() {
+        return HOST + "/images/agents/profile_330x330/";
+    }
+
     public static String getFeatured() {
         return HOST + "/api/listings";
     }

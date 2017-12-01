@@ -15,6 +15,7 @@ import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.dummy.Property;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -46,7 +47,12 @@ public class FeaturedPropertyRecyclerViewAdapter
         holder.mRatingBar.setRating((float) mValues.get(position).rating);
         holder.mAddressView.setText(mValues.get(position).address);
         holder.mAgentView.setText(mValues.get(position).agent);
-        holder.mPriceView.setText(mValues.get(position).price);
+
+        double amount = Double.parseDouble(mValues.get(position).price);
+        //DecimalFormat formatter = new DecimalFormat("#,###.00");  //// TODO: 12/1/17 when counting dollars with cents
+        DecimalFormat formatter = new DecimalFormat("#,###");
+
+        holder.mPriceView.setText(mValues.get(position).currency.toUpperCase()+" "+formatter.format(amount));
         //holder.mImageView.setImageResource(mValues.get(position).image);
 
         Picasso.with(mContext)

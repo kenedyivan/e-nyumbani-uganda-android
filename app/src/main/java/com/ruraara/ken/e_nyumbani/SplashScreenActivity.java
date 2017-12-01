@@ -1,10 +1,14 @@
 package com.ruraara.ken.e_nyumbani;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -20,6 +24,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.hide();
 
+        final SessionManager sessionManager = new SessionManager(SplashScreenActivity.this);
+
+        if (sessionManager.getUserID() != null) {
+            Log.d("ID: ", "User; " + sessionManager.getUserID());
+        } else {
+            Log.d("ID: ", "New user");
+        }
+
         new Handler().postDelayed(new Runnable() {
 
             /*
@@ -31,7 +43,15 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashScreenActivity.this, DrawerActivity.class);
+
+                Intent i;
+
+                if (sessionManager.isLoggedIn()) {
+                    i = new Intent(SplashScreenActivity.this, DrawerActivity.class);
+                } else {
+                    i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                }
+
                 startActivity(i);
 
                 // close this activity

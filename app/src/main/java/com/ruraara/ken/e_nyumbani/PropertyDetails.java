@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -76,6 +77,7 @@ public class PropertyDetails extends AppCompatActivity {
     private TextView mNoReviews;
     private TextView mType;
     private TextView mStatus;
+    private TextView mPrice;
     private TextView mReviewsTitle;
     private TextView mAddress;
     private ImageView mMainImage;
@@ -87,12 +89,17 @@ public class PropertyDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_details);
 
+        //Sets actionbar back arrow
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mTitle = (TextView) findViewById(R.id.title);
         mDescription = (TextView) findViewById(R.id.description);
         mPropertyRating = (RatingBar) findViewById(R.id.property_rating);
         mNoReviews = (TextView) findViewById(R.id.no_reviews);
         mType = (TextView) findViewById(R.id.type);
         mStatus = (TextView) findViewById(R.id.status);
+        mPrice = (TextView) findViewById(R.id.price);
         mReviewsTitle = (TextView) findViewById(R.id.reviews_title);
         mAddress = (TextView) findViewById(R.id.address);
         mMainImage = (ImageView) findViewById(R.id.main_image);
@@ -178,6 +185,7 @@ public class PropertyDetails extends AppCompatActivity {
                     String jStatus = jsonObject.getString("status");
                     String jAgent = jsonObject.getString("agent");
                     String jPrice = jsonObject.getString("price");
+                    String jCurrency = jsonObject.getString("currency");
                     String jImage = jsonObject.getString("main_image");
 
                     //More images
@@ -192,7 +200,7 @@ public class PropertyDetails extends AppCompatActivity {
 
                     propertyDetail = new PropertyDetail(String.valueOf(id),
                             jTitle, jDescrition, jRating, jNoReviews, jAddress,
-                            jType, jStatus, jAgent, jPrice, jImage, otherImages,reviews);
+                            jType, jStatus, jAgent, jPrice, jCurrency, jImage, otherImages,reviews);
 
                     Log.e("Rev", propertyDetail.getReviews().toString());
 
@@ -235,6 +243,12 @@ public class PropertyDetails extends AppCompatActivity {
                 mAddress.setText(propertyDetail.address);
                 mType.setText(propertyDetail.type);
                 mStatus.setText(propertyDetail.status);
+
+                double amount = Double.parseDouble(propertyDetail.price);
+                //DecimalFormat formatter = new DecimalFormat("#,###.00");  //// TODO: 12/1/17 when counting dollars with cents
+                DecimalFormat formatter = new DecimalFormat("#,###");
+
+                mPrice.setText(propertyDetail.currency.toUpperCase()+" "+formatter.format(amount));
 
                 Picasso.with(PropertyDetails.this)
                         .load(AppData.getImagesPath()+propertyDetail.image)

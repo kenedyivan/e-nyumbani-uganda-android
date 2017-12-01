@@ -1,7 +1,9 @@
 package com.ruraara.ken.e_nyumbani;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,9 +18,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.dummy.DummyContent;
+import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
@@ -36,6 +53,10 @@ public class DrawerActivity extends AppCompatActivity
     MaterialSearchView searchView;
     Toolbar toolbar;
 
+    TextView mName;
+    TextView mEmail;
+    ImageView mProfilePicture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +65,21 @@ public class DrawerActivity extends AppCompatActivity
         toolbar.setTitle("Featured");
         setSupportActionBar(toolbar);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+
+        mName = hView.findViewById(R.id.name);
+        mEmail = hView.findViewById(R.id.email);
+        mProfilePicture = hView.findViewById(R.id.profile_picture);
+        setDrawerProfile();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
                 Intent i = new Intent(DrawerActivity.this, AddProperty.class);
                 startActivity(i);
             }
@@ -213,6 +242,78 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
+    }
+
+    private void setDrawerProfile(){
+
+        SessionManager sessionManager = new SessionManager(DrawerActivity.this);
+        String userId = sessionManager.getUserID();
+        RequestParams params = new RequestParams();
+
+        params.put("id", userId);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(AppData.userProfile(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Response: " + resp);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+                    int success = jsonObject.getInt("success");
+                    int error = jsonObject.getInt("error");
+
+                    Log.d("Success: ", String.valueOf(success));
+                    Log.d("Error: ", String.valueOf(error));
+
+                    if (error == 0 && success == 1) {
+
+                        String lastname = jsonObject.getString("lastname");
+                        String firstname = jsonObject.getString("firstname");
+
+                        String lastCap = lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
+
+                        String firstCap = firstname.substring(0, 1).toUpperCase() + firstname.substring(1);
+
+                        mName.setText(lastCap+" "+firstCap);
+                        mEmail.setText(jsonObject.getString("email"));
+
+                        Picasso.with(DrawerActivity.this)
+                                .load(AppData.userProfilePic()+jsonObject.getString("profile_picture"))
+                                .resize(200, 200)
+                                .centerCrop()
+                                .into(mProfilePicture);
+                    }else {
+                        //Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
     }
 
 }
