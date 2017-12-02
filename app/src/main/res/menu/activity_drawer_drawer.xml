@@ -18,12 +18,22 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/group"
             android:title="Agents" />
+        <item
+            android:id="@+id/nav_my_properties"
+            android:icon="@drawable/house"
+            android:title="My properties" />
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings" />
     </group>
 
-    <item android:title="User">
+    <!--<item
+        android:id="@+id/user"
+        android:title="User">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_my_properties"
                 android:icon="@drawable/house"
                 android:title="My properties" />
             <item
@@ -31,6 +41,6 @@
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Settings" />
         </menu>
-    </item>
+    </item>-->
 
 </menu>

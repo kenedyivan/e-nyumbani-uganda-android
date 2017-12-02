@@ -12,31 +12,16 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PropertyListActivity"
-            android:label="@string/featured"
-            android:theme="@style/AppTheme.NoActionBar">
-            ter>
-        </activity>
-        <activity
-            android:name=".PropertyDetailActivity"
-            android:label="@string/title_property_detail"
-            android:parentActivityName=".PropertyListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ruraara.ken.e_nyumbani.PropertyListActivity" />
-        </activity>
-        <activity android:name=".MainActivity" />
-        <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreen">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,14 +32,11 @@
             android:name=".DrawerActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <!--
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            </intent-filter>-->
         </activity>
         <activity android:name=".PropertyForRentActivity" />
         <activity android:name=".PropertyDetails">
@@ -72,17 +54,21 @@
             android:label="Search results" />
         <activity
             android:name=".AddProperty"
-            android:label="@string/add_property"></activity>
+            android:label="@string/add_property" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Login">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
+        <activity android:name=".SuccessActivity"></activity>
     </application>
 
 </manifest>

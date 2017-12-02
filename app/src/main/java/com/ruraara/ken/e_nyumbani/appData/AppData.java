@@ -6,7 +6,7 @@ package com.ruraara.ken.e_nyumbani.appData;
 
 public class AppData {
     public static final String HOST = "http://10.0.3.2:8000";
-    // static final String HOST = "http://192.168.43.28:5000";
+    //static final String HOST = "http://192.168.43.28:5000";
 
     public static String getHost() {
         return HOST;
@@ -22,6 +22,10 @@ public class AppData {
 
     public static String userProfilePic() {
         return HOST + "/images/agents/profile_330x330/";
+    }
+
+    public static String getMyProperties(){
+        return HOST + "/api/agent";
     }
 
     public static String getFeatured() {

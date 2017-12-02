@@ -76,17 +76,6 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:text="10000"/>
-
-            <Button
-                android:id="@+id/agent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="40dip"
-                android:text="Agent"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:layout_below="@+id/price"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </LinearLayout>
 

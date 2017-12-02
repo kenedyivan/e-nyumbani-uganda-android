@@ -762,13 +762,20 @@ public class AddProperty extends AppCompatActivity {
 
                     if (error == 0 && status == 1) {
                         Toast.makeText(AddProperty.this, "Added successfully", Toast.LENGTH_LONG).show();
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+
                         //// TODO: 11/30/17 Intent redirect to agents pending properties
-                    } else if (error == 1 && status == 0) {
+                        Intent i = new Intent(AddProperty.this, DrawerActivity.class);
+                        i.putExtra("fragment", "myProperties");
+                        // Closing all the Activities
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        // Add new Flag to start new Activity
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        startActivity(i);
+
+                        finish();
+
+                    } else if (error == 1 && status == 0){
                         Toast.makeText(AddProperty.this, "Failed", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(AddProperty.this, "Unknown error", Toast.LENGTH_LONG).show();

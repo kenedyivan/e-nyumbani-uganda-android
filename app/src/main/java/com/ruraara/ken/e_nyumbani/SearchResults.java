@@ -190,8 +190,7 @@ public class SearchResults extends AppCompatActivity {
 
                     Context context = v.getContext();
                     Intent intent = new Intent(context, PropertyDetails.class);
-                    intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-
+                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
                     context.startActivity(intent);
                 }
             });
