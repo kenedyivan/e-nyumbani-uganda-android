@@ -181,7 +181,8 @@ public class SearchResults extends AppCompatActivity {
             holder.mPriceView.setText(mValues.get(position).currency.toUpperCase()+" "+formatter.format(amount));
 
             Picasso.with(context)
-                    .load(AppData.getImagesPath() + mValues.get(position).image)
+                    //.load(AppData.getImagesPath() + mValues.get(position).image)
+                    .load(mValues.get(position).image)
                     .into(holder.mImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {

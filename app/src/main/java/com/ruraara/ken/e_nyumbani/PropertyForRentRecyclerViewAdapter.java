@@ -55,7 +55,8 @@ public class PropertyForRentRecyclerViewAdapter
         holder.mPriceView.setText(mValues.get(position).currency.toUpperCase()+" "+formatter.format(amount));
 
         Picasso.with(mContext)
-                .load(AppData.getImagesPath() + mValues.get(position).image)
+                //.load(AppData.getImagesPath() + mValues.get(position).image)
+                .load(mValues.get(position).image)
                 .into(holder.mImageView);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

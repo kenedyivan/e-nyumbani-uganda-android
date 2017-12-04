@@ -52,7 +52,8 @@ public class ScreenSlidePageFragment extends Fragment {
         ImageView img = view.findViewById(R.id.imageView3);
 
         Picasso.with(getActivity())
-                .load(AppData.getDetailsImagesPath()+r)
+                //.load(AppData.getDetailsImagesPath()+r)
+                .load(r)
                 .fit()
                 .into(img);
 
