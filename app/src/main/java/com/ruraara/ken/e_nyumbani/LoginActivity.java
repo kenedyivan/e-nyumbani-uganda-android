@@ -34,6 +34,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -44,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -79,10 +88,73 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login_button);
+
+        loginButton.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
+
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                final String socialId = loginResult.getAccessToken().getUserId();
+
+                Log.d("FB-uid: ", loginResult.getAccessToken().getUserId());
+                Log.d("FB-token: ", loginResult.getAccessToken().getToken());
+
+                // App code
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                // Application code
+                                try {
+                                    String name = object.getString("name");
+                                    String gender = object.getString("gender");
+                                    String firstName = object.getString("first_name");
+                                    String lastName = object.getString("last_name");
+                                    Log.d("Name: ", name);
+                                    Log.d("Gender: ", gender);
+
+                                    AuthenticateSocialUser(firstName, lastName, socialId);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,first_name,last_name,email,link,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("FB: ", "fb canceled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                error.printStackTrace();
+            }
+        });
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -108,6 +180,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         mLoginFormView = findViewById(R.id.login_form);
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void populateAutoComplete() {
@@ -281,7 +359,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         final ProgressDialog mProgressDialog;
         mProgressDialog = new ProgressDialog(LoginActivity.this);
-        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setMessage("Logging in........");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
@@ -336,6 +414,100 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     } else if (error == 2 && success == 0) {
                         Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+                mProgressDialog.dismiss();
+                Toast.makeText(LoginActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Log.d(TAG, "retryNO: " + retryNo);
+                Toast.makeText(LoginActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    private void AuthenticateSocialUser(String firstName, String lastName, String socialId) {
+
+        RequestParams params = new RequestParams();
+        params.put("first_name", firstName);
+        params.put("last_name", lastName);
+        params.put("username", firstName);
+        params.put("social_id", socialId);
+
+        final ProgressDialog mProgressDialog;
+        mProgressDialog = new ProgressDialog(LoginActivity.this);
+        mProgressDialog.setMessage("Logging in........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(AppData.loginSocialUser(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+                mProgressDialog.show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Response: " + resp);
+
+                mProgressDialog.dismiss();
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+                    int success = jsonObject.getInt("success");
+                    int error = jsonObject.getInt("error");
+                    int id = jsonObject.getInt("id");
+                    String socialId = jsonObject.getString("s_id");
+
+                    Log.d("Success: ", String.valueOf(success));
+                    Log.d("Error: ", String.valueOf(error));
+
+                    if (error == 0 && success == 1 && id != 0) {
+
+                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
+
+                        SessionManager sessionManager = new SessionManager(LoginActivity.this);
+                        sessionManager.createLoginSession(String.valueOf(id), socialId);
+
+                        Intent i = new Intent(LoginActivity.this, DrawerActivity.class);
+                        // Closing all the Activities
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        // Add new Flag to start new Activity
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        startActivity(i);
+
+                        finish();
+
+                    } else if (error == 1 && success == 0) {
+                        Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
+
+                    } else if (error == 2 && success == 0) {
+                        Toast.makeText(LoginActivity.this, "Failed social login", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
                     }

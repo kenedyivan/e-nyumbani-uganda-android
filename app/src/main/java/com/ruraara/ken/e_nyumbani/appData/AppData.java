@@ -16,6 +16,10 @@ public class AppData {
         return HOST + "/api/login";
     }
 
+    public static String loginSocialUser() {
+        return HOST + "/api/login-social-user";
+    }
+
     public static String userProfile() {
         return HOST + "/api/profile";
     }

@@ -56,7 +56,7 @@
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
-                    <Button
+                    <!--<Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -64,9 +64,18 @@
                         android:text="SIGN IN WITH "
                         android:textStyle="bold"
                         android:id="@+id/fb_login"
-                        android:theme="@style/fbButtonTheme"/>
+                        android:theme="@style/fbButtonTheme"/>-->
 
-                    <Button
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/fb_login_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp" />
+
+
+                    <!--<Button
                         android:id="@+id/twitter_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -74,7 +83,7 @@
                         android:drawableRight="@drawable/ic_twitter"
                         android:text="SIGN IN WITH "
                         android:textStyle="bold"
-                        android:theme="@style/twButtonTheme"/>
+                        android:theme="@style/twButtonTheme"/>-->
                 </LinearLayout>
 
                 <LinearLayout

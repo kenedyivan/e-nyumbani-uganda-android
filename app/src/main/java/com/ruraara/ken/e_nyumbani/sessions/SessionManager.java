@@ -41,6 +41,9 @@ public class SessionManager {
     // User id (make variable public to access from outside)
     public static final String KEY_ID = "id";
 
+    // User social id (make variable public to access from outside)
+    public static final String KEY_SOCIAL_ID = "social_id";
+
     // Constructor
     public SessionManager(Context context) {
         this._context = context;
@@ -60,6 +63,25 @@ public class SessionManager {
 
         // Storing password in pref
         editor.putString(KEY_PASSWORD, password);
+
+        // Storing id in pref
+        editor.putString(KEY_ID, id);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public void createLoginSession(String id, String socialId) {
+        // Storing login value as TRUE
+        editor.putBoolean(IS_LOGIN, true);
+
+        //Removes email from field
+        editor.remove(KEY_EMAIL);
+
+        //Removes password from field
+        editor.remove(KEY_PASSWORD);
+
+        editor.putString(KEY_SOCIAL_ID,socialId);
 
         // Storing id in pref
         editor.putString(KEY_ID, id);
