@@ -74,7 +74,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="30dp"
                         android:layout_marginBottom="30dp"
-                        fb:login_text="facebook"
                         android:layout_weight="1"/>
 
 
