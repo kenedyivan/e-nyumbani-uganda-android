@@ -9,4 +9,5 @@
     <color name="tw_background">#00aeef</color>
     <color name="fb_background">#3B5998</color>
     <color name="background">#ffffff</color>
+    <color name="property_background">#ececec</color>
 </resources>

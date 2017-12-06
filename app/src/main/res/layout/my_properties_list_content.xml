@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="16dp"
     android:paddingBottom="16dp"
+    android:paddingTop="16dp"
     android:weightSum="1">
 
     <LinearLayout
@@ -15,8 +15,8 @@
 
         <LinearLayout
             android:layout_width="80dp"
-            android:layout_marginRight="16dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
             android:orientation="vertical"
             android:paddingTop="5dp">
 
@@ -24,8 +24,8 @@
                 android:id="@+id/imageView"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/img1" />
+                android:background="@color/property_background"
+                android:scaleType="fitXY" />
         </LinearLayout>
 
 
@@ -40,7 +40,7 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <RatingBar
                 android:id="@+id/rating"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="10000"/>
+                android:text="10000" />
         </RelativeLayout>
     </LinearLayout>
 

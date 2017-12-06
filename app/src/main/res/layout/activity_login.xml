@@ -1,16 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fb="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fb="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ruraara.ken.e_nyumbani.LoginActivity"
-    android:background="@color/background">
+    tools:context="com.ruraara.ken.e_nyumbani.LoginActivity">
 
     <!-- Login progress -->
 
@@ -37,9 +37,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="233dp"
@@ -72,20 +72,33 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginBottom="30dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
 
 
-                  <!--  <Button
-                        android:id="@+id/twitter_login"
+                    <!--  <Button
+                          android:id="@+id/twitter_login"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="1"
+                          android:drawableRight="@drawable/ic_twitter"
+                          android:text="SIGN IN WITH "
+                          android:textStyle="bold"
+                          android:theme="@style/twButtonTheme"/>-->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                        android:id="@+id/login_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableRight="@drawable/ic_twitter"
-                        android:text="SIGN IN WITH "
-                        android:textStyle="bold"
-                        android:theme="@style/twButtonTheme"/>-->
+                        android:layout_weight="1"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -114,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
                         android:inputType="textEmailAddress"
-                        android:maxLines="1"/>
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -131,7 +144,7 @@
                         android:imeActionLabel="@string/action_sign_in_short"
                         android:imeOptions="actionUnspecified"
                         android:inputType="textPassword"
-                        android:maxLines="1"/>
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -142,7 +155,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/action_sign_in_short"
                     android:textStyle="bold"
-                    android:theme="@style/loginButtonTheme"/>
+                    android:theme="@style/loginButtonTheme" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -153,12 +166,12 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
                         android:id="@+id/sign_up_pop_show"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:paddingBottom="10dp"
                         android:clickable="true"
+                        android:paddingBottom="10dp"
                         android:text="Sign up"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/colorAccent"
@@ -170,7 +183,7 @@
                         android:layout_gravity="center_horizontal"
                         android:text="Forgot password?"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/light_text"/>
+                        android:textColor="@color/light_text" />
 
                 </LinearLayout>
 
@@ -182,9 +195,9 @@
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
-            android:layout_gravity="center"/>
+            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>

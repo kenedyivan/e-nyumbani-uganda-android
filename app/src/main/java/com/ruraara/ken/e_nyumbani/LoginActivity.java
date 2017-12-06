@@ -47,6 +47,19 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +69,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import retrofit2.Call;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -88,6 +102,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    TwitterLoginButton twLoginButton;
+
     CallbackManager callbackManager;
 
     @Override
@@ -96,14 +112,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
+        TwitterConfig config = new TwitterConfig.Builder(this)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(new TwitterAuthConfig("iAry7ZbX3RJB6Yy6tJkac0Ny4", "75nlFj3jrJURHhuw8L9lGIxtOq5T6352w55yj4ERRMQIp13QBN"))
+                .debug(true)
+                .build();
+        Twitter.initialize(config);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login_button);
 
-        loginButton.setReadPermissions(Arrays.asList(
+        /*
+         *Facebook login
+         */
+        LoginButton fbLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
+        fbLoginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
-
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 final String socialId = loginResult.getAccessToken().getUserId();
@@ -153,6 +178,87 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 error.printStackTrace();
             }
         });
+        //End of facebook login
+
+        /*
+         *Twitter login
+         */
+        twLoginButton = (TwitterLoginButton) findViewById(R.id.login_button);
+        twLoginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                // Do something with result, which provides a TwitterSession for making API calls
+
+                final long userId = result.data.getUserId();
+                String username = result.data.getUserName();
+
+                Log.d("UserID: ", String.valueOf(userId));
+                Log.d("Username: ", username);
+
+                TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                TwitterAuthToken authToken = session.getAuthToken();
+                String token = authToken.token;
+                String secret = authToken.secret;
+
+
+                Call<User> userResult = TwitterCore.getInstance().getApiClient(session).getAccountService().verifyCredentials(true, false, false);
+                userResult.enqueue(new Callback<User>() {
+
+
+                    @Override
+                    public void success(Result<User> userResult) {
+
+                        User user = userResult.data;
+                        String twitterImage = user.profileImageUrl;
+
+                        try {
+                            Log.d("imageurl", user.profileImageUrl);
+                            Log.d("name", user.name);
+
+                            String str = user.name;
+                            String[] splited = str.split("\\s+");
+
+                            String firstName = splited[0];
+                            String lastName = splited[1];
+
+                            Log.d("first_name", splited[0]);
+                            Log.d("last_name", splited[1]);
+
+                            //Log.d("email",user.email);
+                            Log.d("des", user.description);
+                            Log.d("followers ", String.valueOf(user.followersCount));
+                            Log.d("createdAt", user.createdAt);
+
+                            AuthenticateSocialUser(firstName, lastName, String.valueOf(userId));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    @Override
+                    public void failure(TwitterException e) {
+
+                        e.printStackTrace();
+
+                    }
+
+                });
+
+
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                // Do something on failure
+                Log.d("Twiiter err: ", "twitter failed");
+                exception.printStackTrace();
+            }
+        });
+
+        //End of twitter login
 
 
         // Set up the login form.
@@ -185,7 +291,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Pass the activity result to the fb login
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        // Pass the activity result to the tw login button.
+        twLoginButton.onActivityResult(requestCode, resultCode, data);
     }
 
     private void populateAutoComplete() {
