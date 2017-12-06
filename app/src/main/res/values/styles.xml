@@ -51,8 +51,6 @@
     <style name="twButtonTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">#fff</item>
         <item name="colorButtonNormal">@color/tw_background</item>
-        <item name="android:minHeight">0dip</item>
-        <item name="android:minWidth">1dip</item>
     </style>
 
 </resources>
