@@ -20,6 +20,10 @@ public class AppData {
         return HOST + "/api/login-social-user";
     }
 
+    public static String registerUser() {
+        return HOST + "/api/register";
+    }
+
     public static String userProfile() {
         return HOST + "/api/profile";
     }
@@ -28,7 +32,7 @@ public class AppData {
         return HOST + "/images/agents/profile_330x330/";
     }
 
-    public static String getMyProperties(){
+    public static String getMyProperties() {
         return HOST + "/api/agent";
     }
 

@@ -6,13 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.dummy.MyProperty;
+import com.ruraara.ken.e_nyumbani.classes.MyProperty;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;

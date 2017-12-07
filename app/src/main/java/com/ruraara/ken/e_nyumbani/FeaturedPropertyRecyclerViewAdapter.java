@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.dummy.Property;
+import com.ruraara.ken.e_nyumbani.classes.Property;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;

@@ -30,14 +30,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="40dp"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="40dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -45,6 +43,21 @@
                         android:layout_width="233dp"
                         android:layout_height="71dp"
                         android:src="@drawable/logo_splash" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Continue with"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
 
@@ -106,7 +119,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -166,7 +180,7 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:id="@+id/sign_up_pop_show"
+                        android:id="@+id/sign_up"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -182,8 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Forgot password?"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/light_text" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
 

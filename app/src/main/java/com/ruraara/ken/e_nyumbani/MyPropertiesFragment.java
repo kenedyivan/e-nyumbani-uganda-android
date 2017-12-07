@@ -20,9 +20,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.dummy.MyProperty;
-import com.ruraara.ken.e_nyumbani.dummy.Property;
-import com.ruraara.ken.e_nyumbani.dummy.PropertyForRent;
+import com.ruraara.ken.e_nyumbani.classes.MyProperty;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 
 import org.json.JSONArray;

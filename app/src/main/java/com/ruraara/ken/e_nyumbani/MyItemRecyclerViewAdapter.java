@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.FeaturedPropertyFragment.OnListFragmentInteractionListener;
-import com.ruraara.ken.e_nyumbani.dummy.DummyContent.DummyItem;
+import com.ruraara.ken.e_nyumbani.classes.DummyContent.DummyItem;
 
 import java.util.List;
 

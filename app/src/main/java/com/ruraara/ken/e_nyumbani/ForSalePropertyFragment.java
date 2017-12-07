@@ -18,9 +18,8 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.dummy.DummyContent.DummyItem;
-import com.ruraara.ken.e_nyumbani.dummy.Property;
-import com.ruraara.ken.e_nyumbani.dummy.PropertyForSale;
+import com.ruraara.ken.e_nyumbani.classes.DummyContent.DummyItem;
+import com.ruraara.ken.e_nyumbani.classes.PropertyForSale;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -3,6 +3,7 @@
     <string name="featured">Featured</string>
     <string name="add_property">New property</string>
     <string name="title_property_detail">Property Detail</string>
+    <string name="join">Join e-Nyumbani</string>
 
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -37,5 +38,12 @@
 
     <string name="com.twitter.sdk.android.CONSUMER_KEY">iAry7ZbX3RJB6Yy6tJkac0Ny4</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">75nlFj3jrJURHhuw8L9lGIxtOq5T6352w55yj4ERRMQIp13QBN</string>
+
+    <string name="my_link">By proceeding, you agree to our<a href="https://www.google.com/"> Privacy Policy</a> and <a href="https://www.google.com/">Terms of Use.</a></string>
+    <string name="sign_up_directive">Enter the details below to sign up with e-Nyumbani.</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="username">Username</string>
+    <string name="signup">SIGNUP</string>
 
 </resources>

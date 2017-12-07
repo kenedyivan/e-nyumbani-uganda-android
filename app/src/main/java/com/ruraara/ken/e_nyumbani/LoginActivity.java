@@ -286,6 +286,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         mLoginFormView = findViewById(R.id.login_form);
+
+        TextView signUp = (TextView) findViewById(R.id.sign_up);
+        signUp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -391,7 +400,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             /*mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);*/
 
-            AuthenticateUser(email, password);
+            authenticateUser(email, password);
         }
     }
 
@@ -461,7 +470,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    public void AuthenticateUser(final String email, final String password) {
+    public void authenticateUser(final String email, final String password) {
 
         RequestParams params = new RequestParams();
         params.put("email", email);

@@ -1,6 +1,4 @@
-package com.ruraara.ken.e_nyumbani.dummy;
-
-import com.ruraara.ken.e_nyumbani.R;
+package com.ruraara.ken.e_nyumbani.classes;
 
 import org.json.JSONArray;
 import org.json.JSONException;

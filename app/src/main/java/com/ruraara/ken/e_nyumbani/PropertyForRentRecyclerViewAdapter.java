@@ -11,8 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.dummy.Property;
-import com.ruraara.ken.e_nyumbani.dummy.PropertyForRent;
+import com.ruraara.ken.e_nyumbani.classes.PropertyForRent;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;

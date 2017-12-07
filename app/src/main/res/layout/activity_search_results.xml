@@ -14,5 +14,6 @@
     tools:context="com.ruraara.ken.e_nyumbani.SearchResults"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp"
-    tools:listitem="@layout/property_list_content" />
+    tools:listitem="@layout/property_list_content"
+    android:background="@color/background"/>
 
