@@ -125,7 +125,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         /*
          *Facebook login
          */
-        LoginButton fbLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
+        Button fb = (Button) findViewById(R.id.fb_login);
+
+        final LoginButton fbLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
         fbLoginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
         fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -178,11 +180,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 error.printStackTrace();
             }
         });
+
+        fb.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fbLoginButton.performClick();
+            }
+        });
+
         //End of facebook login
 
         /*
          *Twitter login
          */
+        Button tw = (Button) findViewById(R.id.twitter_login);
         twLoginButton = (TwitterLoginButton) findViewById(R.id.login_button);
         twLoginButton.setCallback(new Callback<TwitterSession>() {
             @Override
@@ -255,6 +266,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // Do something on failure
                 Log.d("Twiiter err: ", "twitter failed");
                 exception.printStackTrace();
+            }
+        });
+
+        tw.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                twLoginButton.performClick();
             }
         });
 
