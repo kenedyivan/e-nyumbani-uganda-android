@@ -1,5 +1,6 @@
 package com.ruraara.ken.e_nyumbani;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -8,7 +9,9 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,7 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -34,13 +40,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FeaturedPropertyFragment.OnListFragmentInteractionListener,
         ForRentPropertyFragment.OnListFragmentInteractionListener,
         ForSalePropertyFragment.OnListFragmentInteractionListener,
-        MyPropertiesFragment.OnFragmentInteractionListener {
+        MyPropertiesFragment.OnFragmentInteractionListener, FeaturedPropertyFragment.OnDataPass {
 
     NavigationView navigationView;
     int position;
@@ -54,13 +61,14 @@ public class DrawerActivity extends AppCompatActivity
     TextView mEmail;
     ImageView mProfilePicture;
 
+    boolean press;
+    CircleImageView mAvatarView;
+    ImageButton mChangePickView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-
-
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Featured");
@@ -73,8 +81,6 @@ public class DrawerActivity extends AppCompatActivity
         mEmail = hView.findViewById(R.id.email);
         mProfilePicture = hView.findViewById(R.id.profile_picture);
         setDrawerProfile();
-
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -116,11 +122,11 @@ public class DrawerActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(getIntent().getStringExtra("fragment") != null){
+        if (getIntent().getStringExtra("fragment") != null) {
             Intent intent = getIntent();
             String name = intent.getStringExtra("fragment");
 
-            if(name != null){
+            if (name != null) {
 
                 Log.d("Name: ", name);
 
@@ -137,7 +143,7 @@ public class DrawerActivity extends AppCompatActivity
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
             }
-        }else if(getIntent().getStringExtra("fragment") == null){
+        } else if (getIntent().getStringExtra("fragment") == null) {
             Log.d("Name: ", "Intent is null");
 
             //Sets navigation drawer first item to checked
@@ -161,7 +167,7 @@ public class DrawerActivity extends AppCompatActivity
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
             }
-        }else{
+        } else {
             //Sets navigation drawer first item to checked
             navigationView.getMenu().getItem(0).setChecked(true);
             if (navigationView.getMenu().findItem(R.id.nav_camera).isChecked()) {
@@ -185,7 +191,14 @@ public class DrawerActivity extends AppCompatActivity
             }
         }
 
+        //Alert dialog gathers other user information
+
+
     }
+
+
+    //End of alert dialog
+
 
     @Override
     public void onBackPressed() {
@@ -213,7 +226,6 @@ public class DrawerActivity extends AppCompatActivity
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
-
 
 
             ;
@@ -389,5 +401,102 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+    @Override
+    public void onDataPass(boolean data) {
+        if(data){
+            otherInfo();
+        }
+    }
+
+    private void otherInfo() {
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_other_details, null);
+
+        mAvatarView = dialogView.findViewById(R.id.avatar);
+        mChangePickView = dialogView.findViewById(R.id.changePic);
+
+        mAvatarView.setImageResource(R.drawable.img2);
+
+        RadioGroup radioGroup = (RadioGroup) dialogView.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                // Is the button now checked?
+                //boolean checked = ((RadioButton) view).isChecked();
+
+                // Check which radio button was clicked
+                switch (checkedId) {
+                    case R.id.radio_agent:
+                        //if (checked)
+                        // Property agents
+                        Log.d("Radio: ", "Agent");
+                        break;
+                    case R.id.radio_user:
+                        //if (checked)
+                        // Property buyers
+                        Log.d("Radio: ", "User");
+                        break;
+                }
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(DrawerActivity.this);
+        // Add the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                press = true;
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                press = false;
+            }
+        });
+
+
+        builder.setView(dialogView);
+        // Set other dialog properties
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(final DialogInterface arg0) {
+                if (!press) {
+                    Log.d("Dialog: ", "dismissed");
+                    finish();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.radio_agent:
+                if (checked)
+                    Log.d("Radio: ", "agent");
+                    // Property agents
+                    break;
+            case R.id.radio_user:
+                if (checked)
+                    // Property buyers
+                    Log.d("Radio: ", "buyer");
+                    break;
+        }
     }
 }

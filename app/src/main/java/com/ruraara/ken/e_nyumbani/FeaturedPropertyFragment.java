@@ -2,10 +2,12 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -26,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A fragment representing a list of Items.
@@ -42,6 +48,8 @@ public class FeaturedPropertyFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    OnDataPass dataPasser;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -149,6 +157,8 @@ public class FeaturedPropertyFragment extends Fragment {
 
                 mProgressDialog.dismiss();
 
+                passData(true);
+
                 //End work from here
 
             }
@@ -182,6 +192,14 @@ public class FeaturedPropertyFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
+        if(context instanceof OnDataPass){
+            dataPasser = (OnDataPass) context;
+        }else{
+            throw new RuntimeException(context.toString()
+                    + " must implement OnDataPass");
+        }
+
     }
 
     @Override
@@ -204,4 +222,16 @@ public class FeaturedPropertyFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
+
+
+
+    public interface OnDataPass {
+        public void onDataPass(boolean data);
+    }
+
+    public void passData(boolean data) {
+        dataPasser.onDataPass(data);
+    }
+
+
 }
