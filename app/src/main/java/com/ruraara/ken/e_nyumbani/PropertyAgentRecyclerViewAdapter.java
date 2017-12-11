@@ -45,7 +45,8 @@ public class PropertyAgentRecyclerViewAdapter
     @Override
     public void onBindViewHolder(final PropertyAgentRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).firstName + " " + mValues.get(position).lastName);
+        final String name = mValues.get(position).firstName + " " + mValues.get(position).lastName;
+        holder.mNameView.setText(name);
         holder.mCompanyView.setText(mValues.get(position).company);
 
         if (Integer.parseInt(mValues.get(position).all) == 1) {
@@ -63,16 +64,17 @@ public class PropertyAgentRecyclerViewAdapter
                 .load(AppData.getAgentsImagesPath() + mValues.get(position).image)
                 .into(holder.mImageView);
 
-        /*holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Context context = v.getContext();
-                Intent intent = new Intent(context, PropertyDetails.class);
-                intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                Intent intent = new Intent(context, TabbedAgentPropertiesActivity.class);
+                intent.putExtra(TabbedAgentPropertiesActivity.ARG_ITEM_ID, holder.mItem.id);
+                intent.putExtra(TabbedAgentPropertiesActivity.ARG_ITEM_NAME, name);
                 context.startActivity(intent);
             }
-        });*/
+        });
     }
 
     @Override

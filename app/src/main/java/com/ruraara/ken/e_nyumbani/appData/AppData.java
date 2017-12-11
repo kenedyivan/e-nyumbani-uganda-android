@@ -33,7 +33,7 @@ public class AppData {
     }
 
     public static String getMyProperties() {
-        return HOST + "/api/agent/properties";
+        return HOST + "/api/agent/my-properties";
     }
 
     public static String getFeatured() {
@@ -81,5 +81,9 @@ public class AppData {
      * */
     public static String getAgents() {
         return HOST + "/api/agents";
+    }
+
+    public static String getAgentProperties() {
+        return HOST + "/api/agent/properties";
     }
 }
