@@ -47,7 +47,9 @@ public class DrawerActivity extends AppCompatActivity
         FeaturedPropertyFragment.OnListFragmentInteractionListener,
         ForRentPropertyFragment.OnListFragmentInteractionListener,
         ForSalePropertyFragment.OnListFragmentInteractionListener,
-        MyPropertiesFragment.OnFragmentInteractionListener, FeaturedPropertyFragment.OnDataPass {
+        MyPropertiesFragment.OnFragmentInteractionListener,
+        PropertyAgentFragment.OnListFragmentInteractionListener,
+        FeaturedPropertyFragment.OnDataPass {
 
     NavigationView navigationView;
     int position;
@@ -293,8 +295,9 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setTitle("For sale");
 
         } else if (id == R.id.nav_manage) {
+            fragmentClass = PropertyAgentFragment.class;
             position = 4;
-            Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+            toolbar.setTitle("Agents");
         } else if (id == R.id.nav_my_properties) {
             fragmentClass = MyPropertiesFragment.class;
             position = 5;
@@ -407,7 +410,7 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public void onDataPass(boolean data) {
         if(data){
-            otherInfo();
+            //otherInfo(); //// TODO: 12/11/17 Uncomment this line after adding logic for capturing other details
         }
     }
 

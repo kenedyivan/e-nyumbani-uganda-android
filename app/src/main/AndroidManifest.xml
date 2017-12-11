@@ -38,12 +38,11 @@
             android:name=".DrawerActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity android:name=".PropertyForRentActivity" />
         <activity android:name=".PropertyDetails">
@@ -66,11 +65,14 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Login">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -91,13 +93,25 @@
         <activity android:name=".SuccessActivity" />
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/join"></activity>
+            android:label="@string/join" />
         <activity android:name=".OtherDetailsActivity">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".AgentProperties"
+            android:label="@string/title_activity_agent_properties">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

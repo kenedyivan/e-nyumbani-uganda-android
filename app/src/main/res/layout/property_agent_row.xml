@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="16dp"
+    android:paddingTop="16dp"
     android:weightSum="1">
 
     <LinearLayout
@@ -27,8 +28,8 @@
 
 
         <LinearLayout
-            android:layout_width="157dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.51"
             android:orientation="vertical">
 
@@ -37,44 +38,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Akena kenedy"
-                android:textSize="16sp" />
-
-            <RatingBar
-                android:id="@+id/reviewRatingBar"
-                style="?android:attr/ratingBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="74dp"
-            android:layout_height="match_parent"
-            android:paddingTop="3dp">
+                android:paddingBottom="3dp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
             <TextView
-                android:id="@+id/price"
+                android:id="@+id/company"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="2 days ago" />
+                android:text="Horizon real estate"
+                android:paddingBottom="3dp"/>
 
-        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/all"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/sale"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy."
-            android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/rent"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
+
