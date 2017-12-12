@@ -7,8 +7,8 @@
     android:weightSum="1">
 
     <FrameLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -19,8 +19,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:src="@drawable/avatar"
             app:civ_border_color="#cecece"
@@ -38,11 +38,11 @@
 
 
     <TextView
+        android:id="@+id/prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="10dp"
-        android:text="Select you user role"
         android:textStyle="bold" />
 
     <RadioGroup
@@ -68,4 +68,14 @@
             android:onClick="onRadioButtonClicked"
             android:text="User" />
     </RadioGroup>
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"/>
+    <EditText
+        android:id="@+id/company"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Company"/>
 </LinearLayout>

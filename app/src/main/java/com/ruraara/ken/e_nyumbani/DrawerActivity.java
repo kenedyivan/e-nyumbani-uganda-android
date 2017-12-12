@@ -21,11 +21,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -38,6 +40,9 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -66,6 +71,8 @@ public class DrawerActivity extends AppCompatActivity
     boolean press;
     CircleImageView mAvatarView;
     ImageButton mChangePickView;
+
+    String profilePicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -333,9 +340,14 @@ public class DrawerActivity extends AppCompatActivity
 
         SessionManager sessionManager = new SessionManager(DrawerActivity.this);
         String userId = sessionManager.getUserID();
+        final int loginType = sessionManager.getLoginType();
+
+        Log.d("LoginType: ", String.valueOf(loginType));
+
         RequestParams params = new RequestParams();
 
         params.put("id", userId);
+        params.put("login_type", loginType);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(AppData.userProfile(), params, new AsyncHttpResponseHandler() {
@@ -352,7 +364,7 @@ public class DrawerActivity extends AppCompatActivity
 
                 Log.d(TAG, "Status: " + statusCode);
                 String resp = new String(response);
-                Log.d(TAG, "Response: " + resp);
+                Log.d(TAG, "Profile: " + resp);
 
                 try {
                     JSONObject jsonObject = new JSONObject(resp);
@@ -372,11 +384,62 @@ public class DrawerActivity extends AppCompatActivity
                         String firstCap = firstname.substring(0, 1).toUpperCase() + firstname.substring(1);
 
                         mName.setText(lastCap + " " + firstCap);
-                        mEmail.setText(jsonObject.getString("email"));
+
+                        String email = jsonObject.getString("email");
+                        String company = jsonObject.getString("company");
+                        String userType = jsonObject.getString("user_type");
+
+                        Log.w("EEEmail: ", "++" + email);
+                        Log.w("EECompany: ", "--" + company);
+                        Log.w("EEUserType: ", "**" + userType);
+
+                        SessionManager s = new SessionManager(DrawerActivity.this);
+
+                        if (email == null || Objects.equals(email, "") || Objects.equals(email, "NULL")) {
+                            Log.e("Email", "no email");
+                            int e = 0;
+
+                            s.emailPresenceFlag(e);
+                        } else {
+                            Log.e("Email", "has email");
+                            mEmail.setText(jsonObject.getString("email"));
+                            s.emailPresenceFlag(1);
+                        }
+
+
+                        if (company == null || Objects.equals(company, "") || Objects.equals(company, "NULL")) {
+                            Log.e("Company", "no company");
+                            int c = 0;
+                            s.companyPresenceFlag(c);
+                        } else {
+                            Log.e("Company", "has company");
+                            s.companyPresenceFlag(1);
+                        }
+
+                        if (userType == null || Objects.equals(userType, "") || Objects.equals(userType, "NULL")) {
+                            Log.e("User Type", "no user type");
+                            int u = 0;
+                            s.userTypePresenceFlag(u);
+                        } else {
+                            Log.e("User Type", "has user type");
+                            s.userTypePresenceFlag(1);
+                        }
+
+                        Log.w("profile other: ", s.getOtherDetailsFlags().toString());
+
+
+                        //String profilePicture;
+
+                        if (loginType == 2) {
+                            profilePicture = jsonObject.getString("profile_picture");
+                        } else {
+                            profilePicture = AppData.userProfilePic() + jsonObject.getString("profile_picture");
+                        }
 
                         Picasso.with(DrawerActivity.this)
-                                .load(AppData.userProfilePic() + jsonObject.getString("profile_picture"))
-                                .resize(200, 200)
+                                .load(profilePicture)
+                                .placeholder(R.drawable.avatar)
+                                .resize(70, 70)
                                 .centerCrop()
                                 .into(mProfilePicture);
                     } else {
@@ -409,12 +472,24 @@ public class DrawerActivity extends AppCompatActivity
 
     @Override
     public void onDataPass(boolean data) {
-        if(data){
-            //otherInfo(); //// TODO: 12/11/17 Uncomment this line after adding logic for capturing other details
+        if (data) {
+            SessionManager sm = new SessionManager(DrawerActivity.this);
+            HashMap<String, Integer> hMap = sm.getOtherDetailsFlags();
+            Log.d("Other det: ", hMap.toString());
+            int e = hMap.get(SessionManager.KEY_EMAIL_FLAG);
+            int c = hMap.get(SessionManager.KEY_COMPANY_FLAG);
+            int u = hMap.get(SessionManager.KEY_USER_TYPE_FLAG);
+
+            if (e == 0 || c == 0 || u == 0) {
+                otherInfo(hMap.get(SessionManager.KEY_EMAIL_FLAG), hMap.get(SessionManager.KEY_COMPANY_FLAG),
+                        hMap.get(SessionManager.KEY_USER_TYPE_FLAG));
+            }
+
         }
     }
 
-    private void otherInfo() {
+    private void otherInfo(int e, int c, int u) {
+
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_other_details, null);
@@ -422,9 +497,58 @@ public class DrawerActivity extends AppCompatActivity
         mAvatarView = dialogView.findViewById(R.id.avatar);
         mChangePickView = dialogView.findViewById(R.id.changePic);
 
-        mAvatarView.setImageResource(R.drawable.img2);
+        //mAvatarView.setImageResource(R.drawable.img2);
 
-        RadioGroup radioGroup = (RadioGroup) dialogView.findViewById(R.id.radioGroup);
+        Picasso.with(DrawerActivity.this)
+                .load(profilePicture)
+                .placeholder(R.drawable.avatar)
+                .resize(70, 70)
+                .centerCrop()
+                .into(mAvatarView);
+
+        final int[] profile = new int[1];
+
+        final EditText mEmailView = dialogView.findViewById(R.id.email);
+        final EditText mCompanyView = dialogView.findViewById(R.id.company);
+        RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
+
+        TextView mPromptView = dialogView.findViewById(R.id.prompt);
+
+        if(e == 0 && c == 1 && u == 1){
+            mPromptView.setText("Add your email address");
+        }else if(c == 0 && e == 1 && u == 1){
+            mPromptView.setText("Add company name");
+        }else if( u == 0 && e == 1 && c == 1){
+            mPromptView.setText("Select your user role");
+        }else if(u == 0 && e == 0 && c == 0){
+            mPromptView.setText("User role, email and company name");
+        }
+
+
+        String email = null;
+        String company = null;
+
+        if (e == 1) {
+            mEmailView.setVisibility(View.GONE);
+        }
+
+        Log.d("FinalCompany:", "io--" + mCompanyView.getText().toString());
+
+        if (c == 1) {
+            mCompanyView.setVisibility(View.GONE);
+        }
+
+        if (u == 1){
+            radioGroup.setVisibility(View.GONE);
+        }else{
+            RadioButton agent = dialogView.findViewById(R.id.radio_agent);
+            agent.setChecked(true);
+            profile[0] = 1;
+        }
+
+
+
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -432,17 +556,21 @@ public class DrawerActivity extends AppCompatActivity
                 // Is the button now checked?
                 //boolean checked = ((RadioButton) view).isChecked();
 
+                profile[0] = 45;
+
                 // Check which radio button was clicked
                 switch (checkedId) {
                     case R.id.radio_agent:
                         //if (checked)
                         // Property agents
                         Log.d("Radio: ", "Agent");
+                        profile[0] = 1;
                         break;
                     case R.id.radio_user:
                         //if (checked)
                         // Property buyers
                         Log.d("Radio: ", "User");
+                        profile[0] = 0;
                         break;
                 }
             }
@@ -450,10 +578,27 @@ public class DrawerActivity extends AppCompatActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(DrawerActivity.this);
         // Add the buttons
+        final String finalEmail = email;
+        final String finalCompany = company;
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 press = true;
+
+                String email = null;
+                String company = null;
+
+                email = mEmailView.getText().toString();
+
+                company = mCompanyView.getText().toString();
+
+                Log.d("FinalProfile:", "io--" + profile[0]);
+                Log.d("FinalEmail:", "io--" + email);
+                Log.d("FinalCompany:", "io--" + company);
+
+
+                updateOtherDetails(profile[0], email, company);
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -493,13 +638,84 @@ public class DrawerActivity extends AppCompatActivity
             case R.id.radio_agent:
                 if (checked)
                     Log.d("Radio: ", "agent");
-                    // Property agents
-                    break;
+                // Property agents
+                break;
             case R.id.radio_user:
                 if (checked)
                     // Property buyers
                     Log.d("Radio: ", "buyer");
-                    break;
+                break;
         }
+    }
+
+    private void updateOtherDetails(int profile, String email, String company) {
+        SessionManager sessionManager = new SessionManager(DrawerActivity.this);
+        String userId = sessionManager.getUserID();
+
+        RequestParams params = new RequestParams();
+
+        params.put("id", userId);
+        params.put("profile", profile);
+        params.put("email", email);
+        params.put("company", company);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(AppData.setOtherDetails(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Other details: " + resp);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+                    int success = jsonObject.getInt("success");
+                    int error = jsonObject.getInt("error");
+
+                    Log.d("Success: ", String.valueOf(success));
+                    Log.d("Error: ", String.valueOf(error));
+
+                    if (error == 0 && success == 1) {
+
+                        SessionManager s = new SessionManager(DrawerActivity.this);
+                        s.emailPresenceFlag(1);
+
+                        s.companyPresenceFlag(1);
+
+                        Log.d("After up: ", s.getOtherDetailsFlags().toString());
+
+                        setDrawerProfile();
+
+                        Toast.makeText(DrawerActivity.this, "Profile updated", Toast.LENGTH_LONG).show();
+
+                    } else {
+                        //Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
     }
 }

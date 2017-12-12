@@ -211,6 +211,7 @@ public class RegisterActivity extends AppCompatActivity {
                     int success = jsonObject.getInt("success");
                     int error = jsonObject.getInt("error");
                     int id = jsonObject.getInt("id");
+                    int loginType = jsonObject.getInt("login_type");
 
                     Log.d("Success: ", String.valueOf(success));
                     Log.d("Error: ", String.valueOf(error));
@@ -220,7 +221,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Sign up successful", Toast.LENGTH_LONG).show();
 
                         SessionManager sessionManager = new SessionManager(RegisterActivity.this);
-                        sessionManager.createLoginSession(email, password, String.valueOf(id));
+                        sessionManager.createLoginSession(email, password, String.valueOf(id),loginType);
 
                         Intent i = new Intent(RegisterActivity.this, DrawerActivity.class);
                         // Closing all the Activities

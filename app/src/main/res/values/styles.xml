@@ -54,4 +54,8 @@
         <item name="colorButtonNormal">#1DA1F2</item>
     </style>
 
+    <style name="agentButtonTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">#FFEB3B</item>
+    </style>
+
 </resources>

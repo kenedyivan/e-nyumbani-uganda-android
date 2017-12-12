@@ -152,10 +152,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     String gender = object.getString("gender");
                                     String firstName = object.getString("first_name");
                                     String lastName = object.getString("last_name");
+                                    String profilePicture = "https://graph.facebook.com/" + socialId + "/picture?type=large";
                                     Log.d("Name: ", name);
                                     Log.d("Gender: ", gender);
 
-                                    AuthenticateSocialUser(firstName, lastName, socialId);
+                                    AuthenticateSocialUser(firstName, lastName, socialId, profilePicture);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -240,7 +241,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Log.d("followers ", String.valueOf(user.followersCount));
                             Log.d("createdAt", user.createdAt);
 
-                            AuthenticateSocialUser(firstName, lastName, String.valueOf(userId));
+                            String profilePicture = user.profileImageUrl;
+
+                            AuthenticateSocialUser(firstName, lastName, String.valueOf(userId), profilePicture);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -525,6 +528,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     int success = jsonObject.getInt("success");
                     int error = jsonObject.getInt("error");
                     int id = jsonObject.getInt("id");
+                    int loginType = jsonObject.getInt("login_type");
 
                     Log.d("Success: ", String.valueOf(success));
                     Log.d("Error: ", String.valueOf(error));
@@ -534,7 +538,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
 
                         SessionManager sessionManager = new SessionManager(LoginActivity.this);
-                        sessionManager.createLoginSession(email, password, String.valueOf(id));
+                        sessionManager.createLoginSession(email, password, String.valueOf(id), loginType);
 
                         Intent i = new Intent(LoginActivity.this, DrawerActivity.class);
                         // Closing all the Activities
@@ -579,13 +583,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void AuthenticateSocialUser(String firstName, String lastName, String socialId) {
+    private void AuthenticateSocialUser(String firstName, String lastName, String socialId, String profilePicture) {
 
         RequestParams params = new RequestParams();
         params.put("first_name", firstName);
         params.put("last_name", lastName);
         params.put("username", firstName);
         params.put("social_id", socialId);
+        params.put("profile_picture", profilePicture);
 
         final ProgressDialog mProgressDialog;
         mProgressDialog = new ProgressDialog(LoginActivity.this);
@@ -619,6 +624,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     int error = jsonObject.getInt("error");
                     int id = jsonObject.getInt("id");
                     String socialId = jsonObject.getString("s_id");
+                    int loginType = jsonObject.getInt("login_type");
 
                     Log.d("Success: ", String.valueOf(success));
                     Log.d("Error: ", String.valueOf(error));
@@ -628,7 +634,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
 
                         SessionManager sessionManager = new SessionManager(LoginActivity.this);
-                        sessionManager.createLoginSession(String.valueOf(id), socialId);
+                        sessionManager.createLoginSession(String.valueOf(id), socialId, loginType);
 
                         Intent i = new Intent(LoginActivity.this, DrawerActivity.class);
                         // Closing all the Activities

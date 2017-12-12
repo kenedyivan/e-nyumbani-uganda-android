@@ -91,6 +91,8 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         loadAgentProperties();
 
@@ -267,8 +269,8 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
 
                 //mViewPager.setAdapter(mSectionsPagerAdapter);
 
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-                tabLayout.setupWithViewPager(mViewPager);
+               /* TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+                tabLayout.setupWithViewPager(mViewPager);*/
 
                 //Do the working from here
 

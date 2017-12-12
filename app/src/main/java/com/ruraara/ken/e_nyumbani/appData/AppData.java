@@ -13,19 +13,19 @@ public class AppData {
     }
 
     public static String loginUser() {
-        return HOST + "/api/login";
+        return HOST + "/api/agent/login";
     }
 
     public static String loginSocialUser() {
-        return HOST + "/api/login-social-user";
+        return HOST + "/api/agent/login-social-user";
     }
 
     public static String registerUser() {
-        return HOST + "/api/register";
+        return HOST + "/api/agent/register";
     }
 
     public static String userProfile() {
-        return HOST + "/api/profile";
+        return HOST + "/api/agent/profile";
     }
 
     public static String userProfilePic() {
@@ -85,5 +85,9 @@ public class AppData {
 
     public static String getAgentProperties() {
         return HOST + "/api/agent/properties";
+    }
+
+    public static String setOtherDetails(){
+        return HOST + "/api/agent/other-details";
     }
 }

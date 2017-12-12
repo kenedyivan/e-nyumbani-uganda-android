@@ -44,6 +44,18 @@ public class SessionManager {
     // User social id (make variable public to access from outside)
     public static final String KEY_SOCIAL_ID = "social_id";
 
+    // User login type (make variable public to access from outside)
+    public static final String KEY_LOGIN_TYPE = "login_type";
+
+    // User social id (make variable public to access from outside)
+    public static final String KEY_EMAIL_FLAG = "email_flag";
+
+    // User login type (make variable public to access from outside)
+    public static final String KEY_COMPANY_FLAG = "company_flag";
+
+    //User type
+    public static final String KEY_USER_TYPE_FLAG = "user_type";
+
     // Constructor
     public SessionManager(Context context) {
         this._context = context;
@@ -54,7 +66,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String email, String password, String id) {
+    public void createLoginSession(String email, String password, String id, int loginType) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -67,11 +79,14 @@ public class SessionManager {
         // Storing id in pref
         editor.putString(KEY_ID, id);
 
+        // Storing login type in pref
+        editor.putInt(KEY_LOGIN_TYPE, loginType);
+
         // commit changes
         editor.commit();
     }
 
-    public void createLoginSession(String id, String socialId) {
+    public void createLoginSession(String id, String socialId, int loginType) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -81,19 +96,62 @@ public class SessionManager {
         //Removes password from field
         editor.remove(KEY_PASSWORD);
 
-        editor.putString(KEY_SOCIAL_ID,socialId);
+        editor.putString(KEY_SOCIAL_ID, socialId);
 
         // Storing id in pref
         editor.putString(KEY_ID, id);
+
+        // Storing login type in pref
+        editor.putInt(KEY_LOGIN_TYPE, loginType);
 
         // commit changes
         editor.commit();
     }
 
+    public void emailPresenceFlag(int email) {
+        //Removes email flag
+        editor.remove(KEY_EMAIL_FLAG);
+        // Stores email glad in pref
+        editor.putInt(KEY_EMAIL_FLAG, email);
+        // commit changes
+        editor.commit();
+    }
+
+    public void companyPresenceFlag(int company) {
+        //Removes company flag
+        editor.remove(KEY_COMPANY_FLAG);
+        // Stores company flag in pref
+        editor.putInt(KEY_COMPANY_FLAG, company);
+        // commit changes
+        editor.commit();
+
+    }
+
+    public void userTypePresenceFlag(int userType) {
+        //Removes user type flag
+        editor.remove(KEY_USER_TYPE_FLAG);
+        // Stores user type flag in pref
+        editor.putInt(KEY_USER_TYPE_FLAG, userType);
+        // commit changes
+        editor.commit();
+
+    }
+
+    public HashMap<String, Integer> getOtherDetailsFlags() {
+        HashMap<String, Integer> flags = new HashMap<String, Integer>();
+
+        // user email
+        flags.put(KEY_EMAIL_FLAG, pref.getInt(KEY_EMAIL_FLAG, 0));
+        flags.put(KEY_COMPANY_FLAG, pref.getInt(KEY_COMPANY_FLAG, 0));
+        flags.put(KEY_USER_TYPE_FLAG, pref.getInt(KEY_USER_TYPE_FLAG, 0));
+
+        return flags;
+    }
+
     /**
      * Get stored session data
-     * */
-    public HashMap<String, String> getUserDetails(){
+     */
+    public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         // user email
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
@@ -108,18 +166,22 @@ public class SessionManager {
         return user;
     }
 
-    public String getUserID(){
+    public String getUserID() {
         return pref.getString(KEY_ID, null);
+    }
+
+    public int getLoginType() {
+        return pref.getInt(KEY_LOGIN_TYPE, 0);
     }
 
     /**
      * Check login method wil check user login status
      * If false it will redirect user to login page
      * Else won't do anything
-     * */
-    public void checkLogin(){
+     */
+    public void checkLogin() {
         // Check login status
-        if(!this.isLoggedIn()){
+        if (!this.isLoggedIn()) {
             // user is not logged in redirect him to Login Activity
             Intent i = new Intent(_context, LoginActivity.class);
             // Closing all the Activities
@@ -136,8 +198,8 @@ public class SessionManager {
 
     /**
      * Clear session details
-     * */
-    public void logoutUser(){
+     */
+    public void logoutUser() {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
@@ -156,9 +218,9 @@ public class SessionManager {
 
     /**
      * Quick check for login
-     * **/
+     **/
     // Get Login State
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGIN, false);
     }
 }

@@ -87,6 +87,8 @@
                 android:layout_below="@+id/price"
                 android:minHeight="40dip"
                 android:text="Agent"
+                android:textStyle="bold"
+                android:theme="@style/agentButtonTheme"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
         </RelativeLayout>
     </LinearLayout>

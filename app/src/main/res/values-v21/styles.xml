@@ -15,6 +15,7 @@
 
     <style name="Login" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 
