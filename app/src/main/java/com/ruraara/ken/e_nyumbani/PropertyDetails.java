@@ -142,8 +142,8 @@ public class PropertyDetails extends AppCompatActivity {
         mProgressDialog.setCancelable(true);
 
 
-        //String item_id = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
-        String item_id = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
+        String item_id = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
+        //String item_id = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
 
         RequestParams params = new RequestParams();
         params.put("id", item_id);
