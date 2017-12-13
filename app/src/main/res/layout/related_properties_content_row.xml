@@ -16,10 +16,13 @@
         android:background="@color/property_background"
         android:layout_marginBottom="5dp"/>
     <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+        android:id="@+id/title"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"/>
     <RatingBar
         android:id="@+id/rating"
         style="?android:attr/ratingBarStyleSmall"
