@@ -2,6 +2,7 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +21,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +86,11 @@ public class PropertyDetails extends AppCompatActivity {
     public List<PropertyDetail.RelatedProperty> mRelatedProperties;
     public RecyclerView recyclerView;
 
+    //Interactive top icons
+    public ImageView mLikeView;
+    public ImageView mRateView;
+    public ImageView mShareView;
+
     RecyclerView horizontal_recycler_view;
     HorizontalAdapter horizontalAdapter;
     private List<Data> data;
@@ -104,6 +114,19 @@ public class PropertyDetails extends AppCompatActivity {
         mReviewsTitle = (TextView) findViewById(R.id.reviews_title);
         mAddress = (TextView) findViewById(R.id.address);
         mMainImage = (ImageView) findViewById(R.id.main_image);
+
+        mLikeView = (ImageView) findViewById(R.id.like);
+        mRateView = (ImageView) findViewById(R.id.rate);
+        mShareView = (ImageView) findViewById(R.id.share);
+
+        mRateView.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                rateDialog();
+            }
+        });
+
 
         recyclerView = (RecyclerView) findViewById(R.id.reviews_list);
         recyclerView.setNestedScrollingEnabled(false);
@@ -133,6 +156,8 @@ public class PropertyDetails extends AppCompatActivity {
 
 
 
+
+
         //End of create layout dynamically
 
         final ProgressDialog mProgressDialog;
@@ -143,7 +168,7 @@ public class PropertyDetails extends AppCompatActivity {
 
 
         //String item_id = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
-        String item_id = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
+        String item_id = "25"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
 
         RequestParams params = new RequestParams();
         params.put("id", item_id);
@@ -519,7 +544,7 @@ public class PropertyDetails extends AppCompatActivity {
                 super(view);
                 mView = view;
                 imageView= view.findViewById(R.id.image);
-                txtview= view.findViewById(R.id.text);
+                txtview= view.findViewById(R.id.title);
                 statusView= view.findViewById(R.id.status);
                 ratingBarView = view.findViewById(R.id.rating);
             }
@@ -599,4 +624,66 @@ public class PropertyDetails extends AppCompatActivity {
             this.txt=text;
         }
     }
+
+    private void rateDialog() {
+
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_property_rating, null);
+
+        final RatingBar mRatingBarView = dialogView.findViewById(R.id.ratingBar);
+        final EditText mReviewView = dialogView.findViewById(R.id.review);
+        final float[] rate = new float[1];
+
+        mRatingBarView.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+
+                rate[0] = rating;
+                //Toast.makeText(PropertyDetails.this,String.valueOf(rating),Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        mRatingBarView.setNumStars(5);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(PropertyDetails.this);
+        // Add the buttons
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                String review = mReviewView.getText().toString();
+
+                Toast.makeText(PropertyDetails.this,String.valueOf(rate[0])+" : "+review,Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+
+        builder.setView(dialogView);
+        // Set other dialog properties
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        dialog.setCanceledOnTouchOutside(false);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(final DialogInterface arg0) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+
 }
