@@ -13,6 +13,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -75,7 +78,12 @@ public class PropertyDetails extends AppCompatActivity {
     private TextView mAddress;
     private ImageView mMainImage;
     public List<String> mOtherImages;
+    public List<PropertyDetail.RelatedProperty> mRelatedProperties;
     public RecyclerView recyclerView;
+
+    RecyclerView horizontal_recycler_view;
+    HorizontalAdapter horizontalAdapter;
+    private List<Data> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +132,7 @@ public class PropertyDetails extends AppCompatActivity {
         //Create layout dynamically
 
 
+
         //End of create layout dynamically
 
         final ProgressDialog mProgressDialog;
@@ -133,7 +142,8 @@ public class PropertyDetails extends AppCompatActivity {
         mProgressDialog.setCancelable(true);
 
 
-        String item_id = getIntent().getStringExtra(ARG_ITEM_ID);
+        //String item_id = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
+        String item_id = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
 
         RequestParams params = new RequestParams();
         params.put("id", item_id);
@@ -187,13 +197,17 @@ public class PropertyDetails extends AppCompatActivity {
                     //Property reviews
                     JSONArray reviews = new JSONArray(jsonObject.getString("reviews"));
 
+                    JSONArray relatedProperties = new JSONArray(jsonObject.getString("related_properties"));
+
                     Log.d("Reviews", reviews.toString());
                     //End processign more images
+
+                    Log.d("Related properties: ",relatedProperties.toString());
 
 
                     propertyDetail = new PropertyDetail(String.valueOf(id),
                             jTitle, jDescrition, jRating, jNoReviews, jAddress,
-                            jType, jStatus, jAgent, jPrice, jCurrency, jImage, otherImages,reviews);
+                            jType, jStatus, jAgent, jPrice, jCurrency, jImage, otherImages,reviews,relatedProperties);
 
                     Log.e("Rev", propertyDetail.getReviews().toString());
 
@@ -248,7 +262,23 @@ public class PropertyDetails extends AppCompatActivity {
                         .fit()
                         .into(mMainImage);
 
-                setupRecyclerView(recyclerView);
+                //Sets up related properties horizontal recycler view
+                //data = fill_with_data(); // TODO: 12/13/17 uncomment when testing horizontal recycler view with Data model
+
+                mRelatedProperties = propertyDetail.getRelatedProperties();
+
+                horizontal_recycler_view= (RecyclerView) findViewById(R.id.horizontal_recycler_view);
+
+                horizontalAdapter=new HorizontalAdapter(mRelatedProperties, getApplication());
+
+                //horizontalAdapter=new HorizontalAdapter(data, getApplication());
+
+                LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PropertyDetails.this, LinearLayoutManager.HORIZONTAL, false);
+                horizontal_recycler_view.setLayoutManager(horizontalLayoutManager);
+                horizontal_recycler_view.setAdapter(horizontalAdapter);
+
+                //Sets up reviews recycler view
+                reviewsRecyclerView(recyclerView);
 
 
                 mProgressDialog.dismiss();
@@ -275,7 +305,7 @@ public class PropertyDetails extends AppCompatActivity {
 
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    private void reviewsRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews,PropertyDetails.this));
     }
 
@@ -394,6 +424,179 @@ public class PropertyDetails extends AppCompatActivity {
             public String toString() {
                 return super.toString() + " '" + mContent.getText() + "'";
             }
+        }
+    }
+
+
+
+    /*class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
+
+
+        List<Data> horizontalList = Collections.emptyList();
+        Context context;
+
+
+        public HorizontalAdapter(List<Data> horizontalList, Context context) {
+            this.horizontalList = horizontalList;
+            this.context = context;
+        }
+
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+
+            ImageView imageView;
+            TextView txtview;
+            public MyViewHolder(View view) {
+                super(view);
+                imageView= view.findViewById(R.id.image);
+                txtview= view.findViewById(R.id.text);
+            }
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.related_properties_content_row, parent, false);
+
+            return new MyViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
+
+            //holder.imageView.setImageResource(horizontalList.get(position).image);
+
+            Log.d("Related det: ","posi-"+position);
+
+            Picasso.with(PropertyDetails.this)
+                    .load(AppData.getImagesPath()+horizontalList.get(position).imageId)
+                    .resize(100, 70)
+                    .centerCrop()
+                    .into(holder.imageView);
+
+            holder.txtview.setText(horizontalList.get(position).txt);
+
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+
+                public void onClick(View v) {
+                    String list = horizontalList.get(position).txt;
+                    Toast.makeText(PropertyDetails.this, list, Toast.LENGTH_SHORT).show();
+                }
+
+            });
+
+        }
+
+
+        @Override
+        public int getItemCount()
+        {
+            return horizontalList.size();
+        }
+    }*/
+
+    class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
+
+
+        List<PropertyDetail.RelatedProperty> horizontalList = Collections.emptyList();
+        Context context;
+
+
+        HorizontalAdapter(List<PropertyDetail.RelatedProperty> horizontalList, Context context) {
+            this.horizontalList = horizontalList;
+            this.context = context;
+        }
+
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+
+            View mView;
+            ImageView imageView;
+            TextView txtview;
+            TextView statusView;
+            RatingBar ratingBarView;
+            MyViewHolder(View view) {
+                super(view);
+                mView = view;
+                imageView= view.findViewById(R.id.image);
+                txtview= view.findViewById(R.id.text);
+                statusView= view.findViewById(R.id.status);
+                ratingBarView = view.findViewById(R.id.rating);
+            }
+        }
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.related_properties_content_row, parent, false);
+
+            return new MyViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(final MyViewHolder holder, final int position) {
+
+            //holder.imageView.setImageResource(horizontalList.get(position).image);
+
+            Log.d("Related det: ","posi-"+position);
+
+            Picasso.with(PropertyDetails.this)
+                    .load(AppData.getRelatedPropertiesImagesPath()+horizontalList.get(position).image)
+                    .into(holder.imageView);
+
+            holder.txtview.setText(horizontalList.get(position).title);
+
+            holder.statusView.setText(horizontalList.get(position).status);
+
+            holder.ratingBarView.setRating((float) horizontalList.get(position).rating);
+
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, PropertyDetails.class);
+                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, horizontalList.get(position).id);
+                    context.startActivity(intent);
+                }
+            });
+
+        }
+
+
+        @Override
+        public int getItemCount()
+        {
+            return horizontalList.size();
+        }
+    }
+
+    public List<Data> fill_with_data() {
+
+        List<Data> data = new ArrayList<>();
+
+        data.add(new Data( R.drawable.img1, "Image 1"));
+        data.add(new Data( R.drawable.img2, "Image 2"));
+        data.add(new Data( R.drawable.img3, "Image 3"));
+        data.add(new Data( R.drawable.img1, "Image 1"));
+        data.add(new Data( R.drawable.img2, "Image 2"));
+        data.add(new Data( R.drawable.img3, "Image 3"));
+        data.add(new Data( R.drawable.img1, "Image 1"));
+        data.add(new Data( R.drawable.img2, "Image 2"));
+        data.add(new Data( R.drawable.img3, "Image 3"));
+
+
+        return data;
+    }
+
+    public class Data {
+        public int imageId;
+        public String txt;
+
+        Data( int imageId, String text) {
+
+            this.imageId = imageId;
+            this.txt=text;
         }
     }
 }
