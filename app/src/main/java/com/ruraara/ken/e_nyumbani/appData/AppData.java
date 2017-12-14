@@ -82,7 +82,7 @@ public class AppData {
 
     /**
      * Property agents
-     * */
+     */
     public static String getAgents() {
         return HOST + "/api/agents";
     }
@@ -91,7 +91,16 @@ public class AppData {
         return HOST + "/api/agent/properties";
     }
 
-    public static String setOtherDetails(){
+    public static String setOtherDetails() {
         return HOST + "/api/agent/other-details";
     }
+
+    public static String reviewProperty() {
+        return HOST + "/api/review";
+    }
+
+    public static String addToFavorites() {
+        return HOST + "/api/add-to-favorites";
+    }
+
 }

@@ -33,7 +33,9 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
+import com.ruraara.ken.e_nyumbani.classes.Property;
 import com.ruraara.ken.e_nyumbani.classes.PropertyDetail;
+import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -82,6 +84,9 @@ public class PropertyDetails extends AppCompatActivity {
     private TextView mReviewsTitle;
     private TextView mAddress;
     private ImageView mMainImage;
+    private TextView mDate;
+    private TextView mBy;
+    private TextView mCompany;
     public List<String> mOtherImages;
     public List<PropertyDetail.RelatedProperty> mRelatedProperties;
     public RecyclerView recyclerView;
@@ -95,10 +100,16 @@ public class PropertyDetails extends AppCompatActivity {
     HorizontalAdapter horizontalAdapter;
     private List<Data> data;
 
+    String itemId;
+    String agentId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_details);
+
+        SessionManager sessionManager = new SessionManager(PropertyDetails.this);
+        agentId = sessionManager.getUserID();
 
         //Sets actionbar back arrow
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -114,12 +125,23 @@ public class PropertyDetails extends AppCompatActivity {
         mReviewsTitle = (TextView) findViewById(R.id.reviews_title);
         mAddress = (TextView) findViewById(R.id.address);
         mMainImage = (ImageView) findViewById(R.id.main_image);
+        mDate = (TextView) findViewById(R.id.date);
+        mBy = (TextView) findViewById(R.id.by);
+        mCompany = (TextView) findViewById(R.id.company);
 
         mLikeView = (ImageView) findViewById(R.id.like);
         mRateView = (ImageView) findViewById(R.id.rate);
         mShareView = (ImageView) findViewById(R.id.share);
 
-        mRateView.setOnClickListener(new View.OnClickListener(){
+        mLikeView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                addToFavorite();
+            }
+        });
+
+        mRateView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -155,9 +177,6 @@ public class PropertyDetails extends AppCompatActivity {
         //Create layout dynamically
 
 
-
-
-
         //End of create layout dynamically
 
         final ProgressDialog mProgressDialog;
@@ -167,11 +186,12 @@ public class PropertyDetails extends AppCompatActivity {
         mProgressDialog.setCancelable(true);
 
 
-        String item_id = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
-        //String item_id = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
+        //itemId = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
+        itemId = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
 
         RequestParams params = new RequestParams();
-        params.put("id", item_id);
+        params.put("property_id", itemId);
+        params.put("agent_id", agentId);
 
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -194,9 +214,7 @@ public class PropertyDetails extends AppCompatActivity {
                 Log.d(TAG, "S: " + resp);
 
 
-
                 PropertyDetail propertyDetail = null;
-
 
 
                 try {
@@ -215,6 +233,16 @@ public class PropertyDetails extends AppCompatActivity {
                     String jPrice = jsonObject.getString("price");
                     String jCurrency = jsonObject.getString("currency");
                     String jImage = jsonObject.getString("main_image");
+                    String jCreatedAt = jsonObject.getString("created_at");
+                    int jfavorite = jsonObject.getInt("favorite");
+
+                    //Property agent
+                    JSONObject agentJsonObject = jsonObject.getJSONObject("agent");
+                    String firstName = agentJsonObject.getString("first_name");
+                    String lastName = agentJsonObject.getString("last_name");
+                    String company = agentJsonObject.getString("company");
+
+                    new PropertyDetail.PropertyAgent(firstName, lastName, company);
 
                     //More images
                     JSONArray otherImages = new JSONArray(jsonObject.getString("other_images"));
@@ -227,12 +255,13 @@ public class PropertyDetails extends AppCompatActivity {
                     Log.d("Reviews", reviews.toString());
                     //End processign more images
 
-                    Log.d("Related properties: ",relatedProperties.toString());
+                    Log.d("Related properties: ", relatedProperties.toString());
 
 
                     propertyDetail = new PropertyDetail(String.valueOf(id),
                             jTitle, jDescrition, jRating, jNoReviews, jAddress,
-                            jType, jStatus, jAgent, jPrice, jCurrency, jImage, otherImages,reviews,relatedProperties);
+                            jType, jStatus, jAgent, jPrice, jCurrency, jImage, jfavorite, jCreatedAt,
+                            otherImages, reviews, relatedProperties);
 
                     Log.e("Rev", propertyDetail.getReviews().toString());
 
@@ -252,13 +281,13 @@ public class PropertyDetails extends AppCompatActivity {
 
                 mPager = (ViewPager) findViewById(R.id.pager);
                 CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
-                mPagerAdapter = new ScreenSlidePagerAdapter(PropertyDetails.this, getSupportFragmentManager(),mOtherImages);
+                mPagerAdapter = new ScreenSlidePagerAdapter(PropertyDetails.this, getSupportFragmentManager(), mOtherImages);
                 mPager.setAdapter(mPagerAdapter);
                 indicator.setViewPager(mPager);
                 mPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
 
 
-                if(propertyDetail.getNoOfOtherImages() == 1){
+                if (propertyDetail.getNoOfOtherImages() == 1) {
                     indicator.setVisibility(View.INVISIBLE);
                 }
 
@@ -270,20 +299,31 @@ public class PropertyDetails extends AppCompatActivity {
                 mTitle.setText(propertyDetail.title);
                 mDescription.setText(propertyDetail.description);
                 mPropertyRating.setRating((float) propertyDetail.rating);
-                mNoReviews.setText("( "+propertyDetail.noReviews+" ) Reviews");
-                mReviewsTitle.setText("Reviews ( "+propertyDetail.noReviews+" )");
+                mNoReviews.setText("( " + propertyDetail.noReviews + " ) Reviews");
+                mReviewsTitle.setText("Reviews ( " + propertyDetail.noReviews + " )");
                 mAddress.setText(propertyDetail.address);
                 mType.setText(propertyDetail.type);
                 mStatus.setText(propertyDetail.status);
+
+                mDate.setText(propertyDetail.createdAt);
+                mBy.setText("By " + PropertyDetail.PropertyAgent.firstName + " " + PropertyDetail.PropertyAgent.lastName);
+                mCompany.setText("From " + PropertyDetail.PropertyAgent.company);
+
+                Log.d("Fav flag: ", String.valueOf(propertyDetail.favorite));
+                if(propertyDetail.favorite == 1){
+                    mLikeView.setImageResource(R.drawable.icons8_heart_outline_24_active);
+                }else{
+                    mLikeView.setImageResource(R.drawable.icons8_heart_24_grey);
+                }
 
                 double amount = Double.parseDouble(propertyDetail.price);
                 //DecimalFormat formatter = new DecimalFormat("#,###.00");  //// TODO: 12/1/17 when counting dollars with cents
                 DecimalFormat formatter = new DecimalFormat("#,###");
 
-                mPrice.setText(propertyDetail.currency.toUpperCase()+" "+formatter.format(amount));
+                mPrice.setText(propertyDetail.currency.toUpperCase() + " " + formatter.format(amount));
 
                 Picasso.with(PropertyDetails.this)
-                        .load(AppData.getImagesPath()+propertyDetail.image)
+                        .load(AppData.getImagesPath() + propertyDetail.image)
                         .fit()
                         .into(mMainImage);
 
@@ -292,9 +332,9 @@ public class PropertyDetails extends AppCompatActivity {
 
                 mRelatedProperties = propertyDetail.getRelatedProperties();
 
-                horizontal_recycler_view= (RecyclerView) findViewById(R.id.horizontal_recycler_view);
+                horizontal_recycler_view = (RecyclerView) findViewById(R.id.horizontal_recycler_view);
 
-                horizontalAdapter=new HorizontalAdapter(mRelatedProperties, getApplication());
+                horizontalAdapter = new HorizontalAdapter(mRelatedProperties, getApplication());
 
                 //horizontalAdapter=new HorizontalAdapter(data, getApplication());
 
@@ -331,7 +371,7 @@ public class PropertyDetails extends AppCompatActivity {
     }
 
     private void reviewsRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews,PropertyDetails.this));
+        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetails.this));
     }
 
     /**
@@ -405,9 +445,10 @@ public class PropertyDetails extends AppCompatActivity {
             holder.mName.setText(mValues.get(position).username);
             holder.mRatingBar.setRating((float) mValues.get(position).rating);
             holder.mContent.setText(mValues.get(position).review);
+            holder.mDate.setText(mValues.get(position).createdAt);
 
             Picasso.with(mContext)
-                    .load(AppData.getAgentsImagesPath()+mValues.get(position).profile_picture)
+                    .load(AppData.getAgentsImagesPath() + mValues.get(position).profile_picture)
                     .into(holder.mImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -434,6 +475,7 @@ public class PropertyDetails extends AppCompatActivity {
             final TextView mContent;
             final ImageView mImageView;
             final RatingBar mRatingBar;
+            final TextView mDate;
             PropertyDetail.Review mItem;
 
             ViewHolder(View view) {
@@ -443,6 +485,7 @@ public class PropertyDetails extends AppCompatActivity {
                 mRatingBar = view.findViewById(R.id.reviewRatingBar);
                 mContent = view.findViewById(R.id.content);
                 mImageView = view.findViewById(R.id.profile_image);
+                mDate = view.findViewById(R.id.date);
             }
 
             @Override
@@ -452,73 +495,6 @@ public class PropertyDetails extends AppCompatActivity {
         }
     }
 
-
-
-    /*class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
-
-
-        List<Data> horizontalList = Collections.emptyList();
-        Context context;
-
-
-        public HorizontalAdapter(List<Data> horizontalList, Context context) {
-            this.horizontalList = horizontalList;
-            this.context = context;
-        }
-
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-
-            ImageView imageView;
-            TextView txtview;
-            public MyViewHolder(View view) {
-                super(view);
-                imageView= view.findViewById(R.id.image);
-                txtview= view.findViewById(R.id.text);
-            }
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.related_properties_content_row, parent, false);
-
-            return new MyViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, final int position) {
-
-            //holder.imageView.setImageResource(horizontalList.get(position).image);
-
-            Log.d("Related det: ","posi-"+position);
-
-            Picasso.with(PropertyDetails.this)
-                    .load(AppData.getImagesPath()+horizontalList.get(position).imageId)
-                    .resize(100, 70)
-                    .centerCrop()
-                    .into(holder.imageView);
-
-            holder.txtview.setText(horizontalList.get(position).txt);
-
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-
-                public void onClick(View v) {
-                    String list = horizontalList.get(position).txt;
-                    Toast.makeText(PropertyDetails.this, list, Toast.LENGTH_SHORT).show();
-                }
-
-            });
-
-        }
-
-
-        @Override
-        public int getItemCount()
-        {
-            return horizontalList.size();
-        }
-    }*/
 
     class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.MyViewHolder> {
 
@@ -540,12 +516,13 @@ public class PropertyDetails extends AppCompatActivity {
             TextView txtview;
             TextView statusView;
             RatingBar ratingBarView;
+
             MyViewHolder(View view) {
                 super(view);
                 mView = view;
-                imageView= view.findViewById(R.id.image);
-                txtview= view.findViewById(R.id.title);
-                statusView= view.findViewById(R.id.status);
+                imageView = view.findViewById(R.id.image);
+                txtview = view.findViewById(R.id.title);
+                statusView = view.findViewById(R.id.status);
                 ratingBarView = view.findViewById(R.id.rating);
             }
         }
@@ -562,10 +539,10 @@ public class PropertyDetails extends AppCompatActivity {
 
             //holder.imageView.setImageResource(horizontalList.get(position).image);
 
-            Log.d("Related det: ","posi-"+position);
+            Log.d("Related det: ", "posi-" + position);
 
             Picasso.with(PropertyDetails.this)
-                    .load(AppData.getRelatedPropertiesImagesPath()+horizontalList.get(position).image)
+                    .load(AppData.getRelatedPropertiesImagesPath() + horizontalList.get(position).image)
                     .into(holder.imageView);
 
             holder.txtview.setText(horizontalList.get(position).title);
@@ -590,8 +567,7 @@ public class PropertyDetails extends AppCompatActivity {
 
 
         @Override
-        public int getItemCount()
-        {
+        public int getItemCount() {
             return horizontalList.size();
         }
     }
@@ -600,15 +576,15 @@ public class PropertyDetails extends AppCompatActivity {
 
         List<Data> data = new ArrayList<>();
 
-        data.add(new Data( R.drawable.img1, "Image 1"));
-        data.add(new Data( R.drawable.img2, "Image 2"));
-        data.add(new Data( R.drawable.img3, "Image 3"));
-        data.add(new Data( R.drawable.img1, "Image 1"));
-        data.add(new Data( R.drawable.img2, "Image 2"));
-        data.add(new Data( R.drawable.img3, "Image 3"));
-        data.add(new Data( R.drawable.img1, "Image 1"));
-        data.add(new Data( R.drawable.img2, "Image 2"));
-        data.add(new Data( R.drawable.img3, "Image 3"));
+        data.add(new Data(R.drawable.img1, "Image 1"));
+        data.add(new Data(R.drawable.img2, "Image 2"));
+        data.add(new Data(R.drawable.img3, "Image 3"));
+        data.add(new Data(R.drawable.img1, "Image 1"));
+        data.add(new Data(R.drawable.img2, "Image 2"));
+        data.add(new Data(R.drawable.img3, "Image 3"));
+        data.add(new Data(R.drawable.img1, "Image 1"));
+        data.add(new Data(R.drawable.img2, "Image 2"));
+        data.add(new Data(R.drawable.img3, "Image 3"));
 
 
         return data;
@@ -618,10 +594,10 @@ public class PropertyDetails extends AppCompatActivity {
         public int imageId;
         public String txt;
 
-        Data( int imageId, String text) {
+        Data(int imageId, String text) {
 
             this.imageId = imageId;
-            this.txt=text;
+            this.txt = text;
         }
     }
 
@@ -656,7 +632,7 @@ public class PropertyDetails extends AppCompatActivity {
                 // User clicked OK button
                 String review = mReviewView.getText().toString();
 
-                Toast.makeText(PropertyDetails.this,String.valueOf(rate[0])+" : "+review,Toast.LENGTH_SHORT).show();
+                postReview(rate[0], review, itemId, agentId);
 
 
             }
@@ -683,6 +659,154 @@ public class PropertyDetails extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void postReview(float rating, String review, String itemId, String agentId) {
+        RequestParams params = new RequestParams();
+
+        params.put("property_id", itemId);
+        params.put("agent_id", agentId);
+        params.put("rating", rating);
+        params.put("review", review);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(AppData.reviewProperty(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Review: " + resp);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+                    int success = jsonObject.getInt("success");
+                    int error = jsonObject.getInt("error");
+
+                    Log.d("Success: ", String.valueOf(success));
+                    Log.d("Error: ", String.valueOf(error));
+
+                    if (error == 0 && success == 1) {
+
+
+                        int newPropertyRating = jsonObject.getInt("new_rating");
+                        int number_of_reviews = jsonObject.getInt("number_of_reviews");
+
+
+                        JSONObject reviewJsonObject = jsonObject.getJSONObject("rate");
+
+                        String id = reviewJsonObject.getString("id");
+                        int rating = reviewJsonObject.getInt("rating");
+                        String review = reviewJsonObject.getString("review");
+                        String username = reviewJsonObject.getString("username");
+                        String profile_picture = reviewJsonObject.getString("profile_picture");
+                        String createdAt = reviewJsonObject.getString("created_at");
+
+                        PropertyDetail propertyDetail = new PropertyDetail();
+
+                        propertyDetail.updatePropertyRating(newPropertyRating);
+                        mPropertyRating.setRating((float) propertyDetail.rating);
+                        mNoReviews.setText("( " + number_of_reviews + " ) Reviews");
+                        mReviewsTitle.setText("Reviews ( " + number_of_reviews + " )");
+
+                        propertyDetail.getReviews
+                                (new PropertyDetail.Review(id, rating, review, username, profile_picture, createdAt));
+
+                        //Refreshes review recycler view list adapter
+                        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetails.this));
+                        recyclerView.invalidate();
+
+                        Toast.makeText(PropertyDetails.this, "Property reviewed", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        //Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
+    }
+
+    /**
+     * Posts favorite property to remote server
+     */
+    private void addToFavorite() {
+        RequestParams params = new RequestParams();
+
+        params.put("property_id", itemId);
+        params.put("agent_id", agentId);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(AppData.addToFavorites(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Favorite: " + resp);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+                    int status = jsonObject.getInt("status");
+                    int error = jsonObject.getInt("error");
+
+                    Log.d("Success: ", String.valueOf(status));
+                    Log.d("Error: ", String.valueOf(error));
+
+                    if (error == 0 && status == 1) {
+                        mLikeView.setImageResource(R.drawable.icons8_heart_outline_24_active);
+                        Toast.makeText(PropertyDetails.this, "Added to favorites", Toast.LENGTH_LONG).show();
+
+                    } else if (error == 0 && status == 2) {
+                        mLikeView.setImageResource(R.drawable.icons8_heart_24_grey);
+                        Toast.makeText(PropertyDetails.this, "Removed from favorites", Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
     }
 
 

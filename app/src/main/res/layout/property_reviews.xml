@@ -54,11 +54,12 @@
             android:paddingTop="3dp">
 
             <TextView
-                android:id="@+id/price"
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2 days ago" />
+                android:text="2 days ago"
+                android:textSize="12sp"/>
 
         </RelativeLayout>
 
