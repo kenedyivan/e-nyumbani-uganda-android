@@ -26,11 +26,11 @@
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreen">
 
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".DrawerActivity"
@@ -46,11 +46,11 @@
         <activity android:name=".PropertyForRentActivity" />
         <activity android:name=".PropertyDetails">
 
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".SearchResults"
