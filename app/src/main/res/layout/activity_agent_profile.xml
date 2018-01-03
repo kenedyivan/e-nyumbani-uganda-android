@@ -1,202 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.ruraara.ken.e_nyumbani.AgentProfileActivity">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/overview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.ruraara.ken.e_nyumbani.AgentProfileActivity">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_picture"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/avatar_pic"
-                app:civ_border_color="#00bfff"
-                app:civ_border_width="0dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:text="Akena Kenedy"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/company"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Jumia housing" />
-
-            <RatingBar
-                android:id="@+id/rating"
-                style="@style/Widget.AppCompat.RatingBar.Indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:rating="4" />
-        </LinearLayout>
-
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/social"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/avatar"
+                    app:civ_border_color="#00bfff"
+                    app:civ_border_width="0dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/agent_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/company"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    style="@style/Widget.AppCompat.RatingBar.Indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:rating="4" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <!--
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/social"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginBottom="10dp">
 
-                <ImageView
-                    android:id="@+id/fb"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="10dp"
-                    android:background="#00bfff"
-                    android:src="@drawable/icons8_facebook_24" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <ImageView
-                    android:id="@+id/tw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#00bfff"
-                    android:src="@drawable/icons8_twitter_24" />
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp">
+                        <ImageView
+                            android:id="@+id/fb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:background="#00bfff"
+                            android:src="@drawable/icons8_facebook_24" />
 
-        <LinearLayout
+                        <ImageView
+                            android:id="@+id/tw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="#00bfff"
+                            android:src="@drawable/icons8_twitter_24" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        -->
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
 
-
-            <TableLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_weight="0.5"
-                        android:src="@drawable/icons8_phone_24" />
-
-                    <TextView
-                        android:id="@+id/type"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:padding="3dip"
-                        android:text="+080067 567 890" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_weight="0.5"
-                        android:src="@drawable/icons8_phone_24" />
-
-                    <TextView
-                        android:id="@+id/status"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:padding="3dip"
-                        android:text="+256704 567 890" />
-                </TableRow>
-
-                <TableRow
+                <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_weight="0.5"
-                        android:src="@drawable/icons8_secured_letter_24" />
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:id="@+id/price"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:padding="3dip"
-                        android:text="kenedyakenaivan@gmail.com" />
-                </TableRow>
-            </TableLayout>
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_weight="0"
+                            android:src="@drawable/icons8_phone_24" />
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/top_properties"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp">
+                        <TextView
+                            android:id="@+id/office_phone"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:paddingLeft="10dp" />
+                    </TableRow>
 
-        <LinearLayout
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_weight="0"
+                            android:src="@drawable/icons8_phone_24" />
+
+                        <TextView
+                            android:id="@+id/mobile_phone"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:paddingLeft="10dp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_weight="0"
+                            android:src="@drawable/icons8_secured_letter_24" />
+
+                        <TextView
+                            android:id="@+id/email"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:paddingLeft="10dp" />
+                    </TableRow>
+                </TableLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/top_properties"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"></LinearLayout>
-    </android.support.v7.widget.CardView>
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
 
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="left"
+                        android:padding="3dip"
+                        android:text="Agent properties"
+                        android:textSize="16sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/horizontal_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/all_agent_properties"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View all agent properties"
+                    android:theme="@style/viewAgentPropertiesButtonTheme"/>
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>

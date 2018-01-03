@@ -87,6 +87,10 @@ public class AppData {
         return HOST + "/api/agents";
     }
 
+    public static String agentProfile() {
+        return HOST + "/api/agent";
+    }
+
     public static String getAgentProperties() {
         return HOST + "/api/agent/properties";
     }
