@@ -6,10 +6,6 @@
     android:name="com.ruraara.ken.e_nyumbani.ItemFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.ruraara.ken.e_nyumbani.TopSettingsActivity"
     tools:listitem="@layout/settings_item_row" />
