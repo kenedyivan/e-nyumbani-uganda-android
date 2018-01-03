@@ -25,8 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +33,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.Property;
 import com.ruraara.ken.e_nyumbani.classes.PropertyDetail;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 import com.squareup.picasso.Picasso;
@@ -238,7 +235,7 @@ public class PropertyDetails extends AppCompatActivity {
                     String jCreatedAt = jsonObject.getString("created_at");
                     int jfavorite = jsonObject.getInt("favorite");
 
-                    //Property agent
+                    //FeaturedProperty agent
                     JSONObject agentJsonObject = jsonObject.getJSONObject("agent");
                     String firstName = agentJsonObject.getString("first_name");
                     String lastName = agentJsonObject.getString("last_name");
@@ -249,7 +246,7 @@ public class PropertyDetails extends AppCompatActivity {
                     //More images
                     JSONArray otherImages = new JSONArray(jsonObject.getString("other_images"));
 
-                    //Property reviews
+                    //FeaturedProperty reviews
                     JSONArray reviews = new JSONArray(jsonObject.getString("reviews"));
 
                     JSONArray relatedProperties = new JSONArray(jsonObject.getString("related_properties"));
@@ -748,7 +745,7 @@ public class PropertyDetails extends AppCompatActivity {
                         recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetails.this));
                         recyclerView.invalidate();
 
-                        Toast.makeText(PropertyDetails.this, "Property reviewed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PropertyDetails.this, "FeaturedProperty reviewed", Toast.LENGTH_SHORT).show();
 
                     } else {
                         //Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();

@@ -2,12 +2,10 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,23 +13,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.classes.DummyContent.DummyItem;
-import com.ruraara.ken.e_nyumbani.classes.Property;
+import com.ruraara.ken.e_nyumbani.classes.FeaturedProperty;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A fragment representing a list of Items.
@@ -110,10 +104,10 @@ public class FeaturedPropertyFragment extends Fragment {
                 String resp = new String(response);
                 Log.d(TAG, "S: " + resp);
 
-                Log.e(TAG, String.valueOf(Property.ITEMS.size()));
+                Log.e(TAG, String.valueOf(FeaturedProperty.ITEMS.size()));
 
-                if (Property.ITEMS.size() > 0) {
-                    Property.ITEMS.clear();
+                if (FeaturedProperty.ITEMS.size() > 0) {
+                    FeaturedProperty.ITEMS.clear();
                 }
 
                 try {
@@ -129,7 +123,7 @@ public class FeaturedPropertyFragment extends Fragment {
                         String price = jsonObject.getString("price");
                         String currency = jsonObject.getString("currency");
                         String image = jsonObject.getString("image");
-                        Property.addPropertyItem(Property.createPropertyItem(String.valueOf(id),
+                        FeaturedProperty.addPropertyItem(FeaturedProperty.createPropertyItem(String.valueOf(id),
                                 title, rating, address, agentId, agent, price, currency, image));
 
                     }
@@ -149,7 +143,7 @@ public class FeaturedPropertyFragment extends Fragment {
                             linearLayoutManager.getOrientation());
                     recyclerView.addItemDecoration(mDividerItemDecoration);
 
-                    recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(Property.ITEMS, getActivity()));
+                    recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(FeaturedProperty.ITEMS, getActivity()));
                 }
 
                 //setupRecyclerView((RecyclerView) recyclerView);

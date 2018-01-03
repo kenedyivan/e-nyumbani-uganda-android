@@ -76,11 +76,11 @@ public class OtherDetailsActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.radio_agent:
                 if (checked)
-                    // Property agents
+                    // FeaturedProperty agents
                     break;
             case R.id.radio_user:
                 if (checked)
-                    // Property buyers
+                    // FeaturedProperty buyers
                     break;
         }
     }

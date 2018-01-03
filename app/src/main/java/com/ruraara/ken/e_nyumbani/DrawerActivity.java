@@ -54,7 +54,9 @@ public class DrawerActivity extends AppCompatActivity
         ForSalePropertyFragment.OnListFragmentInteractionListener,
         MyPropertiesFragment.OnFragmentInteractionListener,
         PropertyAgentFragment.OnListFragmentInteractionListener,
-        FeaturedPropertyFragment.OnDataPass {
+        MyFavoritesFragment.OnListFragmentInteractionListener,
+        FeaturedPropertyFragment.OnDataPass,
+        MyFavoritesFragment.OnDataPass{
 
     NavigationView navigationView;
     int position;
@@ -305,13 +307,18 @@ public class DrawerActivity extends AppCompatActivity
             fragmentClass = PropertyAgentFragment.class;
             position = 4;
             toolbar.setTitle("Agents");
+        } else if (id == R.id.nav_my_favorites) {
+            fragmentClass = MyFavoritesFragment.class;
+            position = 5;
+            toolbar.setTitle("My favorites");
+            Log.d("MenuItem: ", String.valueOf(item.getTitle()));
         } else if (id == R.id.nav_my_properties) {
             fragmentClass = MyPropertiesFragment.class;
-            position = 5;
+            position = 6;
             toolbar.setTitle("My properties");
             Log.d("MenuItem: ", String.valueOf(item.getTitle()));
         } else if (id == R.id.nav_send) {
-            position = 6;
+            position = 7;
             Log.d("MenuItem: ", String.valueOf(item.getTitle()));
         }
 
@@ -514,13 +521,13 @@ public class DrawerActivity extends AppCompatActivity
 
         TextView mPromptView = dialogView.findViewById(R.id.prompt);
 
-        if(e == 0 && c == 1 && u == 1){
+        if (e == 0 && c == 1 && u == 1) {
             mPromptView.setText("Add your email address");
-        }else if(c == 0 && e == 1 && u == 1){
+        } else if (c == 0 && e == 1 && u == 1) {
             mPromptView.setText("Add company name");
-        }else if( u == 0 && e == 1 && c == 1){
+        } else if (u == 0 && e == 1 && c == 1) {
             mPromptView.setText("Select your user role");
-        }else if(u == 0 && e == 0 && c == 0){
+        } else if (u == 0 && e == 0 && c == 0) {
             mPromptView.setText("User role, email and company name");
         }
 
@@ -538,15 +545,13 @@ public class DrawerActivity extends AppCompatActivity
             mCompanyView.setVisibility(View.GONE);
         }
 
-        if (u == 1){
+        if (u == 1) {
             radioGroup.setVisibility(View.GONE);
-        }else{
+        } else {
             RadioButton agent = dialogView.findViewById(R.id.radio_agent);
             agent.setChecked(true);
             profile[0] = 1;
         }
-
-
 
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -562,13 +567,13 @@ public class DrawerActivity extends AppCompatActivity
                 switch (checkedId) {
                     case R.id.radio_agent:
                         //if (checked)
-                        // Property agents
+                        // FeaturedProperty agents
                         Log.d("Radio: ", "Agent");
                         profile[0] = 1;
                         break;
                     case R.id.radio_user:
                         //if (checked)
-                        // Property buyers
+                        // FeaturedProperty buyers
                         Log.d("Radio: ", "User");
                         profile[0] = 0;
                         break;
@@ -638,11 +643,11 @@ public class DrawerActivity extends AppCompatActivity
             case R.id.radio_agent:
                 if (checked)
                     Log.d("Radio: ", "agent");
-                // Property agents
+                // FeaturedProperty agents
                 break;
             case R.id.radio_user:
                 if (checked)
-                    // Property buyers
+                    // FeaturedProperty buyers
                     Log.d("Radio: ", "buyer");
                 break;
         }

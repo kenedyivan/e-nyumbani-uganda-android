@@ -11,21 +11,21 @@ import java.util.Map;
  * Created by ken on 10/25/17.
  */
 
-public class Property {
+public class MyFavorite {
 
-    static String TAG = "PropertyItem";
+    static String TAG = MyFavorite.class.getSimpleName();
 
     /**
      * An array of sample (dummy) items.
      */
-    public static List<Property.PropertyItem> ITEMS = new ArrayList<Property.PropertyItem>();
+    public static List<MyFavorite.PropertyItem> ITEMS = new ArrayList<MyFavorite.PropertyItem>();
 
     public static List<String> IT = new ArrayList<String>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static Map<String, Property.PropertyItem> ITEM_MAP = new HashMap<String, Property.PropertyItem>();
+    public static Map<String, MyFavorite.PropertyItem> ITEM_MAP = new HashMap<String, MyFavorite.PropertyItem>();
 
 
     public static void addPropertyItem(PropertyItem item) {
@@ -39,8 +39,9 @@ public class Property {
     }
 
     public static PropertyItem createPropertyItem(String id, String title,
-                                                  int rating, String address, String agentId, String agent,
-                                                  String price, String currency, String image) {
+                                                  int rating, String address, String agentId,
+                                                  String agent, String price, String currency,
+                                                  String image) {
         return new PropertyItem(id, title, rating, address, agentId, agent, price, currency, image);
     }
 
@@ -58,7 +59,8 @@ public class Property {
         public final String currency;
         public final String image;
 
-        public PropertyItem(String id, String title, int rating, String address, String agentId, String agent, String price, String currency, String image) {
+        public PropertyItem(String id, String title, int rating, String address, String agentId,
+                            String agent, String price, String currency, String image) {
             this.id = id;
             this.title = title;
             this.rating = rating;

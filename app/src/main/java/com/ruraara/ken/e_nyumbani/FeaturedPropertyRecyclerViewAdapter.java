@@ -12,7 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.Property;
+import com.ruraara.ken.e_nyumbani.classes.FeaturedProperty;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -25,10 +25,10 @@ import java.util.List;
 public class FeaturedPropertyRecyclerViewAdapter
         extends RecyclerView.Adapter<FeaturedPropertyRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Property.PropertyItem> mValues;
+    private final List<FeaturedProperty.PropertyItem> mValues;
     private final Context mContext;
 
-    public FeaturedPropertyRecyclerViewAdapter(List<Property.PropertyItem> items, Context c) {
+    public FeaturedPropertyRecyclerViewAdapter(List<FeaturedProperty.PropertyItem> items, Context c) {
         mValues = items;
         mContext = c;
     }
@@ -97,7 +97,7 @@ public class FeaturedPropertyRecyclerViewAdapter
         public final ImageView mImageView;
         public final RatingBar mRatingBar;
         public final Button mAgentButton;
-        public Property.PropertyItem mItem;
+        public FeaturedProperty.PropertyItem mItem;
 
         public ViewHolder(View view) {
             super(view);

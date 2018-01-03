@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class PropertyForSaleRecyclerViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(final PropertyForSaleRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final PropertyForSaleRecyclerViewAdapter.ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
         holder.mRatingBar.setRating((float) mValues.get(position).rating);
@@ -67,6 +68,17 @@ public class PropertyForSaleRecyclerViewAdapter
                 context.startActivity(intent);
             }
         });
+
+        holder.mAgentButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, AgentProfileActivity.class);
+                intent.putExtra(AgentProfileActivity.ARG_AGENT_ID, mValues.get(position).agentId);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -82,6 +94,7 @@ public class PropertyForSaleRecyclerViewAdapter
         public final TextView mPriceView;
         public final ImageView mImageView;
         public final RatingBar mRatingBar;
+        public final Button mAgentButton;
         public PropertyForSale.PropertyItem mItem;
 
         public ViewHolder(View view) {
@@ -93,6 +106,7 @@ public class PropertyForSaleRecyclerViewAdapter
             mAgentView = view.findViewById(R.id.agent);
             mPriceView = view.findViewById(R.id.price);
             mImageView = view.findViewById(R.id.imageView);
+            mAgentButton = view.findViewById(R.id.agent_button);
         }
 
         @Override

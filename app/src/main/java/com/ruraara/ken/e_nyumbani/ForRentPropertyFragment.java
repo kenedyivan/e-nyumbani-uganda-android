@@ -116,12 +116,13 @@ public class ForRentPropertyFragment extends Fragment {
                         String title = jsonObject.getString("title");
                         int rating = jsonObject.getInt("rating");
                         String address = jsonObject.getString("address");
+                        String agentId = jsonObject.getString("agent_id");
                         String agent = jsonObject.getString("agent");
                         String price = jsonObject.getString("price");
                         String currency = jsonObject.getString("currency");
                         String image = jsonObject.getString("image");
                         PropertyForRent.addPropertyItem(PropertyForRent.createPropertyItem(String.valueOf(id),
-                                title, rating, address, agent, price, currency, image));
+                                title, rating, address, agentId, agent, price, currency, image));
 
                     }
                 } catch (JSONException e) {

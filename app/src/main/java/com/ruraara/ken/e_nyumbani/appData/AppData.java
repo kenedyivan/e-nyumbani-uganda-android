@@ -40,6 +40,10 @@ public class AppData {
         return HOST + "/api/listings";
     }
 
+    public static String getFavorites() {
+        return HOST + "/api/my-favorites";
+    }
+
     public static String getRent() {
         return HOST + "/api/listings/for-rent";
     }
@@ -81,7 +85,7 @@ public class AppData {
     }
 
     /**
-     * Property agents
+     * FeaturedProperty agents
      */
     public static String getAgents() {
         return HOST + "/api/agents";

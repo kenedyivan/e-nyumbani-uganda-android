@@ -12,7 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.PropertyForRent;
+import com.ruraara.ken.e_nyumbani.classes.MyFavorite;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -22,26 +22,26 @@ import java.util.List;
  * Created by ken on 10/30/17.
  */
 
-public class PropertyForRentRecyclerViewAdapter
-        extends RecyclerView.Adapter<PropertyForRentRecyclerViewAdapter.ViewHolder> {
+public class MyFavoriteRecyclerViewAdapter
+        extends RecyclerView.Adapter<MyFavoriteRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PropertyForRent.PropertyItem> mValues;
+    private final List<MyFavorite.PropertyItem> mValues;
     private final Context mContext;
 
-    public PropertyForRentRecyclerViewAdapter(List<PropertyForRent.PropertyItem> items, Context c) {
+    public MyFavoriteRecyclerViewAdapter(List<MyFavorite.PropertyItem> items, Context c) {
         mValues = items;
         mContext = c;
     }
 
     @Override
-    public PropertyForRentRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyFavoriteRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.property_list_content, parent, false);
-        return new PropertyForRentRecyclerViewAdapter.ViewHolder(view);
+        return new MyFavoriteRecyclerViewAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final PropertyForRentRecyclerViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyFavoriteRecyclerViewAdapter.ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).title);
         holder.mRatingBar.setRating((float) mValues.get(position).rating);
@@ -53,19 +53,21 @@ public class PropertyForRentRecyclerViewAdapter
         DecimalFormat formatter = new DecimalFormat("#,###");
 
         holder.mPriceView.setText(mValues.get(position).currency.toUpperCase()+" "+formatter.format(amount));
+        //holder.mImageView.setImageResource(mValues.get(position).image);
 
         Picasso.with(mContext)
-                .load(AppData.getImagesPath() + mValues.get(position).image)
+                .load(AppData.getImagesPath()+mValues.get(position).image)
                 .into(holder.mImageView);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Context context = v.getContext();
-                Intent intent = new Intent(context, PropertyDetails.class);
-                intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
-                context.startActivity(intent);
+
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, PropertyDetails.class);
+                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                    context.startActivity(intent);
             }
         });
 
@@ -95,7 +97,7 @@ public class PropertyForRentRecyclerViewAdapter
         public final ImageView mImageView;
         public final RatingBar mRatingBar;
         public final Button mAgentButton;
-        public PropertyForRent.PropertyItem mItem;
+        public MyFavorite.PropertyItem mItem;
 
         public ViewHolder(View view) {
             super(view);

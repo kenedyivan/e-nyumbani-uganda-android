@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.classes.DummyContent.DummyItem;
-import com.ruraara.ken.e_nyumbani.classes.PropertyForSale;
+import com.ruraara.ken.e_nyumbani.classes.MyFavorite;
+import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +35,7 @@ import cz.msebera.android.httpclient.Header;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ForSalePropertyFragment extends Fragment {
+public class MyFavoritesFragment extends Fragment {
 
     String TAG = "Item fragment";
 
@@ -43,17 +45,19 @@ public class ForSalePropertyFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
+    OnDataPass dataPasser;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ForSalePropertyFragment() {
+    public MyFavoritesFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ForSalePropertyFragment newInstance(int columnCount) {
-        ForSalePropertyFragment fragment = new ForSalePropertyFragment();
+    public static MyFavoritesFragment newInstance(int columnCount) {
+        MyFavoritesFragment fragment = new MyFavoritesFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -82,9 +86,14 @@ public class ForSalePropertyFragment extends Fragment {
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
+        SessionManager sessionManager = new SessionManager(getActivity());
+        String agentId = sessionManager.getUserID();
+
+        RequestParams params = new RequestParams();
+        params.put("agent_id", agentId);
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(AppData.getSale(), new AsyncHttpResponseHandler() {
+        client.get(AppData.getFavorites(), params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -102,10 +111,10 @@ public class ForSalePropertyFragment extends Fragment {
                 String resp = new String(response);
                 Log.d(TAG, "S: " + resp);
 
-                Log.e(TAG, String.valueOf(PropertyForSale.ITEMS.size()));
+                Log.e(TAG, String.valueOf(MyFavorite.ITEMS.size()));
 
-                if (PropertyForSale.ITEMS.size() > 0) {
-                    PropertyForSale.ITEMS.clear();
+                if (MyFavorite.ITEMS.size() > 0) {
+                    MyFavorite.ITEMS.clear();
                 }
 
                 try {
@@ -121,7 +130,7 @@ public class ForSalePropertyFragment extends Fragment {
                         String price = jsonObject.getString("price");
                         String currency = jsonObject.getString("currency");
                         String image = jsonObject.getString("image");
-                        PropertyForSale.addPropertyItem(PropertyForSale.createPropertyItem(String.valueOf(id),
+                        MyFavorite.addPropertyItem(MyFavorite.createPropertyItem(String.valueOf(id),
                                 title, rating, address, agentId, agent, price, currency, image));
 
                     }
@@ -141,7 +150,7 @@ public class ForSalePropertyFragment extends Fragment {
                             linearLayoutManager.getOrientation());
                     recyclerView.addItemDecoration(mDividerItemDecoration);
 
-                    recyclerView.setAdapter(new PropertyForSaleRecyclerViewAdapter(PropertyForSale.ITEMS, getActivity()));
+                    recyclerView.setAdapter(new MyFavoriteRecyclerViewAdapter(MyFavorite.ITEMS, getActivity()));
                 }
 
                 //setupRecyclerView((RecyclerView) recyclerView);
@@ -149,6 +158,8 @@ public class ForSalePropertyFragment extends Fragment {
                 //progressBar.setVisibility(View.INVISIBLE);
 
                 mProgressDialog.dismiss();
+
+                passData(true);
 
                 //End work from here
 
@@ -183,6 +194,14 @@ public class ForSalePropertyFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
+        if (context instanceof OnDataPass) {
+            dataPasser = (OnDataPass) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnDataPass");
+        }
+
     }
 
     @Override
@@ -205,4 +224,15 @@ public class ForSalePropertyFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
+
+
+    public interface OnDataPass {
+        public void onDataPass(boolean data);
+    }
+
+    public void passData(boolean data) {
+        dataPasser.onDataPass(data);
+    }
+
+
 }

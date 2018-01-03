@@ -50,7 +50,7 @@ public class PropertyAgentRecyclerViewAdapter
         holder.mCompanyView.setText(mValues.get(position).company);
 
         if (Integer.parseInt(mValues.get(position).all) == 1) {
-            holder.mAllView.setText(mValues.get(position).all + " Property");
+            holder.mAllView.setText(mValues.get(position).all + " FeaturedProperty");
         } else {
             holder.mAllView.setText(mValues.get(position).all + " Properties");
         }

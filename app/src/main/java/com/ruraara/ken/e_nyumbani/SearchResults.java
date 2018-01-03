@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,12 +103,13 @@ public class SearchResults extends AppCompatActivity {
                         int id = jsonObject.getInt("id");
                         String title = jsonObject.getString("title");
                         String address = jsonObject.getString("address");
+                        String agentId = jsonObject.getString("agent_id");
                         String agent = jsonObject.getString("agent");
                         String price = jsonObject.getString("price");
                         String currency = jsonObject.getString("currency");
                         String image = jsonObject.getString("image");
                         SearchProperty.addPropertyItem(SearchProperty.createPropertyItem(String.valueOf(id),
-                                title, address, agent, price, currency, image));
+                                title, address, agentId, agent, price, currency, image));
 
                     }
                 } catch (JSONException e) {
@@ -170,7 +172,7 @@ public class SearchResults extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final SearchResults.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final SearchResults.SimpleItemRecyclerViewAdapter.ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
             holder.mTitleView.setText(mValues.get(position).title);
             holder.mAddressView.setText(mValues.get(position).address);
@@ -181,7 +183,7 @@ public class SearchResults extends AppCompatActivity {
             //DecimalFormat formatter = new DecimalFormat("#,###.00");  //// TODO: 12/1/17 when counting dollars with cents
             DecimalFormat formatter = new DecimalFormat("#,###");
 
-            holder.mPriceView.setText(mValues.get(position).currency.toUpperCase()+" "+formatter.format(amount));
+            holder.mPriceView.setText(mValues.get(position).currency.toUpperCase() + " " + formatter.format(amount));
 
             Picasso.with(context)
                     .load(AppData.getImagesPath() + mValues.get(position).image)
@@ -194,6 +196,17 @@ public class SearchResults extends AppCompatActivity {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, PropertyDetails.class);
                     intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.mAgentButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, AgentProfileActivity.class);
+                    intent.putExtra(AgentProfileActivity.ARG_AGENT_ID, mValues.get(position).agentId);
                     context.startActivity(intent);
                 }
             });
@@ -211,6 +224,7 @@ public class SearchResults extends AppCompatActivity {
             public final TextView mAgentView;
             public final TextView mPriceView;
             public final ImageView mImageView;
+            public final Button mAgentButton;
             public SearchProperty.PropertyItem mItem;
 
             public ViewHolder(View view) {
@@ -221,6 +235,7 @@ public class SearchResults extends AppCompatActivity {
                 mAgentView = view.findViewById(R.id.agent);
                 mPriceView = view.findViewById(R.id.price);
                 mImageView = view.findViewById(R.id.imageView);
+                mAgentButton = view.findViewById(R.id.agent_button);
             }
 
             @Override
