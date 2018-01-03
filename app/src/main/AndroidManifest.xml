@@ -25,11 +25,14 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreen">
+
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".DrawerActivity"
@@ -129,14 +132,33 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".AgentProfileActivity"
+        <activity
+            android:name=".AgentProfileActivity"
             android:label="Profile">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".TopSettingsActivity"
+            android:label="@string/title_activity_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".UserAccountActivity"
+            android:label="Account" />
     </application>
 
 </manifest>

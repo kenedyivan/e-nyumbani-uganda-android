@@ -317,9 +317,11 @@ public class DrawerActivity extends AppCompatActivity
             position = 6;
             toolbar.setTitle("My properties");
             Log.d("MenuItem: ", String.valueOf(item.getTitle()));
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_settings) {
             position = 7;
-            Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+            //Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+            Intent i = new Intent(DrawerActivity.this, TopSettingsActivity.class);
+            startActivity(i);
         }
 
         try {
