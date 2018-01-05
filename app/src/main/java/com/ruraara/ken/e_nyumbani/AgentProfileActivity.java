@@ -163,7 +163,8 @@ public class AgentProfileActivity extends AppCompatActivity {
 
                 //horizontalAdapter=new HorizontalAdapter(data, getApplication());
 
-                LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(AgentProfileActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(AgentProfileActivity.this,
+                        LinearLayoutManager.HORIZONTAL, false);
                 horizontal_recycler_view.setLayoutManager(horizontalLayoutManager);
                 horizontal_recycler_view.setAdapter(horizontalAdapter);
 

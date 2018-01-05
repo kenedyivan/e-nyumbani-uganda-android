@@ -141,7 +141,7 @@
                             android:src="@drawable/icons8_phone_24" />
 
                         <TextView
-                            android:id="@+id/office_phone"
+                            android:id="@+id/mobile_phone"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:paddingLeft="10dp" />
@@ -156,10 +156,10 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_weight="0"
-                            android:src="@drawable/icons8_phone_24" />
+                            android:src="@drawable/icons8_office_phone_24" />
 
                         <TextView
-                            android:id="@+id/mobile_phone"
+                            android:id="@+id/office_phone"
                             android:layout_weight="1"
                             android:gravity="left"
                             android:paddingLeft="10dp" />

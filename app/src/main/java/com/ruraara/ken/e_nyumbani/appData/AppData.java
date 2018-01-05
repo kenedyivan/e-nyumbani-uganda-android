@@ -95,6 +95,10 @@ public class AppData {
         return HOST + "/api/agent";
     }
 
+    public static String agentAccount() {
+        return HOST + "/api/agent/account-details";
+    }
+
     public static String getAgentProperties() {
         return HOST + "/api/agent/properties";
     }
@@ -110,5 +114,21 @@ public class AppData {
     public static String addToFavorites() {
         return HOST + "/api/add-to-favorites";
     }
+
+    /**
+     * Update account details
+     */
+    public static String updateProfile() {
+        return HOST + "/api/agent/update-profile";
+    }
+
+    public static String updateContact() {
+        return HOST + "/api/agent/update-contact";
+    }
+
+    public static String updateCompany() {
+        return HOST + "/api/agent/update-company";
+    }
+
 
 }
