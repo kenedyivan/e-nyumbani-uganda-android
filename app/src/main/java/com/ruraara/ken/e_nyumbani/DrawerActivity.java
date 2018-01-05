@@ -34,7 +34,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.DummyContent;
+import com.ruraara.ken.e_nyumbani.models.DummyContent;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 import com.squareup.picasso.Picasso;
 

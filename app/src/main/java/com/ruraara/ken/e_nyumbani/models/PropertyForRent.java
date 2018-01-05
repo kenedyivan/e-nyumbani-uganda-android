@@ -1,4 +1,4 @@
-package com.ruraara.ken.e_nyumbani.classes;
+package com.ruraara.ken.e_nyumbani.models;
 
 import android.util.Log;
 
@@ -8,41 +8,41 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by ken on 10/25/17.
+ * Created by ken on 10/30/17.
  */
 
-public class MyFavorite {
-
-    static String TAG = MyFavorite.class.getSimpleName();
+public class PropertyForRent {
+    static String TAG = PropertyForRent.class.getSimpleName();
 
     /**
      * An array of sample (dummy) items.
      */
-    public static List<MyFavorite.PropertyItem> ITEMS = new ArrayList<MyFavorite.PropertyItem>();
+    public static List<PropertyForRent.PropertyItem> ITEMS = new ArrayList<PropertyForRent.PropertyItem>();
 
     public static List<String> IT = new ArrayList<String>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static Map<String, MyFavorite.PropertyItem> ITEM_MAP = new HashMap<String, MyFavorite.PropertyItem>();
+    public static Map<String, PropertyForRent.PropertyItem> ITEM_MAP = new HashMap<String, PropertyForRent.PropertyItem>();
 
 
-    public static void addPropertyItem(PropertyItem item) {
-        Log.w(TAG, "Creating property item");
+    public static void addPropertyItem(PropertyForRent.PropertyItem item) {
+        Log.w(TAG, "Creating property for rent item");
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
-        Log.w(TAG, "Finished creating property item");
+        Log.w(TAG, "Finished creating property for rent item");
         Log.w(TAG, String.valueOf(ITEM_MAP.size()));
         Log.w(TAG, String.valueOf(ITEMS.size()));
 
     }
 
-    public static PropertyItem createPropertyItem(String id, String title,
-                                                  int rating, String address, String agentId,
-                                                  String agent, String price, String currency,
-                                                  String image) {
-        return new PropertyItem(id, title, rating, address, agentId, agent, price, currency, image);
+    public static PropertyForRent.PropertyItem createPropertyItem(String id, String title,
+                                                                  int rating, String address,
+                                                                  String agentId, String agent, String price,
+                                                                  String currency,
+                                                                  String image) {
+        return new PropertyForRent.PropertyItem(id, title, rating, address, agentId,agent, price, currency, image);
     }
 
     /**

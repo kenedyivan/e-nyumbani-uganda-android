@@ -111,7 +111,6 @@
                                     android:id="@+id/address"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Kikoni B"
                                     android:textColor="#000"
                                     android:textSize="14sp" />
 
@@ -124,24 +123,26 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:id="@+id/date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12/12/2017"
-                                android:textSize="12sp"
-                                android:layout_marginRight="5dp"/>
+                                android:layout_marginRight="5dp"
+                                android:textSize="12sp" />
+
                             <TextView
                                 android:id="@+id/by"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="By magujo"
-                                android:textStyle="italic"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp"
+                                android:textStyle="italic" />
+
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
                                 android:layout_weight="1" />
+
                             <Button
                                 android:id="@+id/agent_button"
                                 android:layout_width="wrap_content"
@@ -151,9 +152,9 @@
                                 android:layout_below="@+id/price"
                                 android:minHeight="40dip"
                                 android:text="Agent"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textStyle="bold"
-                                android:theme="@style/agentButtonTheme"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+                                android:theme="@style/agentButtonTheme" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -161,15 +162,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:id="@+id/company"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="company"
-                                android:textSize="12sp"
-                                android:layout_marginRight="5dp"/>
+                                android:layout_marginRight="5dp"
+                                android:textSize="12sp" />
                         </LinearLayout>
-
 
 
                         <LinearLayout
@@ -202,10 +202,12 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/separator"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@color/property_background" />
+                            android:background="@color/property_background"
+                            android:orientation="vertical" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -216,8 +218,7 @@
                                 android:id="@+id/description"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity=""
-                                android:text="@string/dummy_desc" />
+                                android:gravity="" />
 
                         </LinearLayout>
 
@@ -244,6 +245,7 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/details_crd_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -269,8 +271,7 @@
                         <TextView
                             android:id="@+id/no_reviews"
                             android:gravity="left"
-                            android:padding="3dip"
-                            android:text="(280) Reviews" />
+                            android:padding="3dip" />
                     </TableRow>
 
                     <TableRow
@@ -278,14 +279,14 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/type_lbl"
                             android:padding="3dip"
                             android:text="Type" />
 
                         <TextView
                             android:id="@+id/type"
                             android:gravity="left"
-                            android:padding="3dip"
-                            android:text="Apartment" />
+                            android:padding="3dip" />
                     </TableRow>
 
                     <TableRow
@@ -293,14 +294,14 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/status_lbl"
                             android:padding="3dip"
                             android:text="Status" />
 
                         <TextView
                             android:id="@+id/status"
                             android:gravity="left"
-                            android:padding="3dip"
-                            android:text="Sale" />
+                            android:padding="3dip" />
                     </TableRow>
 
                     <TableRow
@@ -308,6 +309,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/price_lbl"
                             android:padding="3dip"
                             android:text="Price" />
 
@@ -336,6 +338,7 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/related_crd_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -380,7 +383,6 @@
                     android:layout_marginBottom="16dp"
                     android:gravity="left"
                     android:padding="3dip"
-                    android:text="Reviews(280)"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.RecyclerView

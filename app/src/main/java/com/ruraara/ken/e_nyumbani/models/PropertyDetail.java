@@ -1,4 +1,4 @@
-package com.ruraara.ken.e_nyumbani.classes;
+package com.ruraara.ken.e_nyumbani.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +20,7 @@ public class PropertyDetail {
     public String address = null;
     public String type = null;
     public String status = null;
+    public String agentId = null;
     public String agent = null;
     public String price = null;
     public String currency = null;
@@ -41,7 +42,7 @@ public class PropertyDetail {
     public PropertyDetail(String id, String title, String descrition,
                           int rating, String noReviews,
                           String address,
-                          String type, String status, String agent,
+                          String type, String status, String agentId, String agent,
                           String price, String currency, String image, int favorite, String createdAt,
                           JSONArray otherImagesJson, JSONArray reviewsJson, JSONArray relatedPropertiesJson) {
 
@@ -58,6 +59,7 @@ public class PropertyDetail {
         this.type = type;
         this.status = status;
         this.agent = agent;
+        this.agentId = agentId;
         this.price = price;
         this.currency = currency;
         this.image = image;

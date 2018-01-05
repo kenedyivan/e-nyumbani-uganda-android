@@ -1,4 +1,4 @@
-package com.ruraara.ken.e_nyumbani.classes;
+package com.ruraara.ken.e_nyumbani.models;
 
 import android.util.Log;
 

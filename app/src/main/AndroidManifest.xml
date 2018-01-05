@@ -48,13 +48,11 @@
         <activity android:name=".PropertyForRentActivity" />
         <activity android:name=".PropertyDetails">
 
-            <!--
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".SearchResults"
@@ -134,13 +132,11 @@
             android:name=".AgentProfileActivity"
             android:label="Profile">
 
-            <!--
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".SettingsActivity"

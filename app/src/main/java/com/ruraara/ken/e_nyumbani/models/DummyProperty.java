@@ -1,4 +1,4 @@
-package com.ruraara.ken.e_nyumbani.classes;
+package com.ruraara.ken.e_nyumbani.models;
 
 import com.ruraara.ken.e_nyumbani.R;
 

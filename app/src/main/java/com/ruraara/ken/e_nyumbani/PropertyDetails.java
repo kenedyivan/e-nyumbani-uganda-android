@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -33,7 +34,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.PropertyDetail;
+import com.ruraara.ken.e_nyumbani.models.PropertyDetail;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 import com.squareup.picasso.Picasso;
 
@@ -86,14 +87,24 @@ public class PropertyDetails extends AppCompatActivity {
     private TextView mDate;
     private TextView mBy;
     private TextView mCompany;
+    private Button mAgentBtn;
+    private View mSeparator;
     public List<String> mOtherImages;
     public List<PropertyDetail.RelatedProperty> mRelatedProperties;
     public RecyclerView recyclerView;
 
     //Interactive top icons
-    public ImageView mLikeView;
-    public ImageView mRateView;
-    public ImageView mShareView;
+    private ImageView mLikeView;
+    private ImageView mRateView;
+    private ImageView mShareView;
+
+    //Labels
+    private TextView mDetailsCrdTitle;
+    private TextView mRelatedCrdTitle;
+    private TextView mTypeLbl;
+    private TextView mStatusLbl;
+    private TextView mPriceLbl;
+
 
     RecyclerView horizontal_recycler_view;
     HorizontalAdapter horizontalAdapter;
@@ -127,10 +138,33 @@ public class PropertyDetails extends AppCompatActivity {
         mDate = (TextView) findViewById(R.id.date);
         mBy = (TextView) findViewById(R.id.by);
         mCompany = (TextView) findViewById(R.id.company);
+        mAgentBtn = (Button) findViewById(R.id.agent_button);
+        mSeparator = findViewById(R.id.separator);
 
         mLikeView = (ImageView) findViewById(R.id.like);
         mRateView = (ImageView) findViewById(R.id.rate);
         mShareView = (ImageView) findViewById(R.id.share);
+
+        //Labels
+        mDetailsCrdTitle = (TextView) findViewById(R.id.details_crd_title);
+        mRelatedCrdTitle = (TextView) findViewById(R.id.related_crd_title);
+        mTypeLbl = (TextView) findViewById(R.id.type_lbl);
+        mStatusLbl = (TextView) findViewById(R.id.status_lbl);
+        mPriceLbl = (TextView) findViewById(R.id.price_lbl);
+
+        //Sets views invisible
+        mLikeView.setVisibility(View.INVISIBLE);
+        mRateView.setVisibility(View.INVISIBLE);
+        mShareView.setVisibility(View.INVISIBLE);
+        mDetailsCrdTitle.setVisibility(View.INVISIBLE);
+        mRelatedCrdTitle.setVisibility(View.INVISIBLE);
+        mReviewsTitle.setVisibility(View.INVISIBLE);
+        mAgentBtn.setVisibility(View.INVISIBLE);
+        mSeparator.setVisibility(View.INVISIBLE);
+        mTypeLbl.setVisibility(View.INVISIBLE);
+        mStatusLbl.setVisibility(View.INVISIBLE);
+        mPriceLbl.setVisibility(View.INVISIBLE);
+        mPropertyRating.setVisibility(View.INVISIBLE);
 
         mLikeView.setOnClickListener(new View.OnClickListener() {
 
@@ -228,6 +262,7 @@ public class PropertyDetails extends AppCompatActivity {
                     String jAddress = jsonObject.getString("address");
                     String jType = jsonObject.getString("type");
                     String jStatus = jsonObject.getString("status");
+                    String jAgentId = jsonObject.getString("agent_id");
                     String jAgent = jsonObject.getString("agent");
                     String jPrice = jsonObject.getString("price");
                     String jCurrency = jsonObject.getString("currency");
@@ -259,7 +294,7 @@ public class PropertyDetails extends AppCompatActivity {
 
                     propertyDetail = new PropertyDetail(String.valueOf(id),
                             jTitle, jDescrition, jRating, jNoReviews, jAddress,
-                            jType, jStatus, jAgent, jPrice, jCurrency, jImage, jfavorite, jCreatedAt,
+                            jType, jStatus, jAgentId, jAgent, jPrice, jCurrency, jImage, jfavorite, jCreatedAt,
                             otherImages, reviews, relatedProperties);
 
                     Log.e("Rev", propertyDetail.getReviews().toString());
@@ -290,9 +325,33 @@ public class PropertyDetails extends AppCompatActivity {
                     indicator.setVisibility(View.INVISIBLE);
                 }
 
+                //Sets view visible
+                mLikeView.setVisibility(View.VISIBLE);
+                mRateView.setVisibility(View.VISIBLE);
+                mShareView.setVisibility(View.VISIBLE);
+                mDetailsCrdTitle.setVisibility(View.VISIBLE);
+                mRelatedCrdTitle.setVisibility(View.VISIBLE);
+                mReviewsTitle.setVisibility(View.VISIBLE);
+                mAgentBtn.setVisibility(View.VISIBLE);
+                mSeparator.setVisibility(View.VISIBLE);
+                mTypeLbl.setVisibility(View.VISIBLE);
+                mStatusLbl.setVisibility(View.VISIBLE);
+                mPriceLbl.setVisibility(View.VISIBLE);
+                mPropertyRating.setVisibility(View.VISIBLE);
 
                 // Setting actionbar title
                 getSupportActionBar().setTitle(propertyDetail.title);
+
+                final PropertyDetail finalPropertyDetail = propertyDetail;
+                mAgentBtn.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(PropertyDetails.this, AgentProfileActivity.class);
+                        intent.putExtra(AgentProfileActivity.ARG_AGENT_ID, finalPropertyDetail.agentId);
+                        context.startActivity(intent);
+                    }
+                });
 
 
                 mTitle.setText(propertyDetail.title);

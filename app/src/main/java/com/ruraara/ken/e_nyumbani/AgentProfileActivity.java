@@ -23,7 +23,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.AgentProfile;
+import com.ruraara.ken.e_nyumbani.models.AgentProfile;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -51,6 +51,13 @@ public class AgentProfileActivity extends AppCompatActivity {
     private TextView mEmail;
     private Button mAllAgentPropertiesBtn;
 
+    TextView mContactCrdTitle;
+    TextView mAgentPropertiesCrdTitle;
+    ImageView mOfficePhoneViewLbl;
+    ImageView mMobilePhoneViewLbl;
+    ImageView mEmailViewLbl;
+    RatingBar mRatingBar;
+
     RecyclerView horizontal_recycler_view;
     HorizontalAdapter horizontalAdapter;
 
@@ -64,9 +71,28 @@ public class AgentProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        //get agent id from intent
+        //Initializes labels
+        mOfficePhoneViewLbl = (ImageView) findViewById(R.id.office_phone_lbl);
+        mMobilePhoneViewLbl = (ImageView) findViewById(R.id.mobile_phone_lbl);
+        mEmailViewLbl = (ImageView) findViewById(R.id.email_lbl);
+        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        mContactCrdTitle = (TextView) findViewById(R.id.contact_crd_title);
+        mAgentPropertiesCrdTitle = (TextView) findViewById(R.id.agent_properties_crd_title);
+
+        mAllAgentPropertiesBtn = (Button) findViewById(R.id.all_agent_properties);
+
+        //Sets labels invisible
+        mContactCrdTitle.setVisibility(View.INVISIBLE);
+        mAgentPropertiesCrdTitle.setVisibility(View.INVISIBLE);
+        mOfficePhoneViewLbl.setVisibility(View.INVISIBLE);
+        mMobilePhoneViewLbl.setVisibility(View.INVISIBLE);
+        mEmailViewLbl.setVisibility(View.INVISIBLE);
+        mRatingBar.setVisibility(View.INVISIBLE);
+        mAllAgentPropertiesBtn.setVisibility(View.INVISIBLE);
+
+        //gets agent id from intent
         agentId = getIntent().getStringExtra(ARG_AGENT_ID);
-        Log.d("Agent ID", agentId);
 
         //Initialize views
         mAgentImage = (ImageView) findViewById(R.id.profile_picture);
@@ -75,7 +101,7 @@ public class AgentProfileActivity extends AppCompatActivity {
         mOfficePhone = (TextView) findViewById(R.id.office_phone);
         mMobilePhone = (TextView) findViewById(R.id.mobile_phone);
         mEmail = (TextView) findViewById(R.id.email);
-        mAllAgentPropertiesBtn = (Button) findViewById(R.id.all_agent_properties);
+
 
         mAllAgentPropertiesBtn.setOnClickListener(new View.OnClickListener(){
 
@@ -144,9 +170,19 @@ public class AgentProfileActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                //Sets labels visible
+                mContactCrdTitle.setVisibility(View.VISIBLE);
+                mAgentPropertiesCrdTitle.setVisibility(View.VISIBLE);
+                mOfficePhoneViewLbl.setVisibility(View.VISIBLE);
+                mMobilePhoneViewLbl.setVisibility(View.VISIBLE);
+                mEmailViewLbl.setVisibility(View.VISIBLE);
+                mRatingBar.setVisibility(View.VISIBLE);
+                mAllAgentPropertiesBtn.setVisibility(View.VISIBLE);
+
                 Picasso.with(AgentProfileActivity.this)
                         .load(AppData.getAgentsImagesPath() + agentDetail.image)
                         .fit()
+                        .placeholder(R.drawable.avatar)
                         .into(mAgentImage);
 
                 mAgentName.setText(agentDetail.firstName + " " + agentDetail.lastName);

@@ -24,7 +24,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
-import com.ruraara.ken.e_nyumbani.classes.SearchProperty;
+import com.ruraara.ken.e_nyumbani.models.SearchProperty;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;

@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ruraara.ken.e_nyumbani.classes.AgentProperty;
+import com.ruraara.ken.e_nyumbani.models.AgentProperty;
 
 import java.util.ArrayList;
 import java.util.List;

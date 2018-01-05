@@ -46,6 +46,26 @@ public class UserAccountActivity extends AppCompatActivity {
     TextView mEmailView;
     TextView mCompanyView;
     TextView mPositionView;
+    ImageView mImage;
+
+    //Lables
+    TextView mFirstNameViewLbl;
+    TextView mLastNameViewLbl;
+    TextView mUsernameViewLbl;
+    TextView mUserTypeViewLbl;
+    ImageView mOfficePhoneViewLbl;
+    ImageView mMobilePhoneViewLbl;
+    ImageView mEmailViewLbl;
+    TextView mCompanyViewLbl;
+    TextView mPositionViewLbl;
+    ImageView mEditProfileIv;
+    ImageView mEditContactIv;
+    ImageView mEditCompanyIv;
+    ImageView mEditImageIv;
+    TextView mProfileCrdTitle;
+    TextView mContactCrdTitle;
+    TextView mCompanyCrdTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +73,46 @@ public class UserAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_account);
         setupActionBar();
 
-        ImageView mEditProfileIv = (ImageView) findViewById(R.id.pencil_edit_profile);
-        ImageView mEditContactIv = (ImageView) findViewById(R.id.pencil_edit_contact);
-        ImageView mEditCompanyIv = (ImageView) findViewById(R.id.pencil_edit_company);
+        mEditProfileIv = (ImageView) findViewById(R.id.pencil_edit_profile);
+        mEditContactIv = (ImageView) findViewById(R.id.pencil_edit_contact);
+        mEditCompanyIv = (ImageView) findViewById(R.id.pencil_edit_company);
+        mEditImageIv = (ImageView) findViewById(R.id.pencil_edit_image);
+
+        //Initialize label view
+        mFirstNameViewLbl = (TextView) findViewById(R.id.first_name_lbl);
+        mLastNameViewLbl = (TextView) findViewById(R.id.last_name_lbl);
+        mUsernameViewLbl = (TextView) findViewById(R.id.username_lbl);
+        mUserTypeViewLbl = (TextView) findViewById(R.id.user_type_lbl);
+        mOfficePhoneViewLbl = (ImageView) findViewById(R.id.office_phone_lbl);
+        mMobilePhoneViewLbl = (ImageView) findViewById(R.id.mobile_phone_lbl);
+        mEmailViewLbl = (ImageView) findViewById(R.id.email_lbl);
+        mCompanyViewLbl = (TextView) findViewById(R.id.company_lbl);
+        mPositionViewLbl = (TextView) findViewById(R.id.position_lbl);
+
+        mProfileCrdTitle = (TextView) findViewById(R.id.profile_crd_title);
+        mContactCrdTitle = (TextView) findViewById(R.id.contact_crd_title);
+        mCompanyCrdTitle = (TextView) findViewById(R.id.company_crd_title);
+
+
+        //Set visibility gone
+        mFirstNameViewLbl.setVisibility(View.INVISIBLE);
+        mLastNameViewLbl.setVisibility(View.INVISIBLE);
+        mUsernameViewLbl.setVisibility(View.INVISIBLE);
+        mUserTypeViewLbl.setVisibility(View.INVISIBLE);
+        mOfficePhoneViewLbl.setVisibility(View.INVISIBLE);
+        mMobilePhoneViewLbl.setVisibility(View.INVISIBLE);
+        mEmailViewLbl.setVisibility(View.INVISIBLE);
+        mCompanyViewLbl.setVisibility(View.INVISIBLE);
+        mPositionViewLbl.setVisibility(View.INVISIBLE);
+        mEditProfileIv.setVisibility(View.INVISIBLE);
+        mEditContactIv.setVisibility(View.INVISIBLE);
+        mEditCompanyIv.setVisibility(View.INVISIBLE);
+        mEditImageIv.setVisibility(View.INVISIBLE);
+        mProfileCrdTitle.setVisibility(View.INVISIBLE);
+        mContactCrdTitle.setVisibility(View.INVISIBLE);
+        mCompanyCrdTitle.setVisibility(View.INVISIBLE);
+
+        mImage = (ImageView) findViewById(R.id.profile_picture);
 
         //Profile views
         mFirstNameView = (TextView) findViewById(R.id.ac_first_name);
@@ -133,7 +190,7 @@ public class UserAccountActivity extends AppCompatActivity {
     private void showAgentDetails(){
         final ProgressDialog mProgressDialog;
         mProgressDialog = new ProgressDialog(UserAccountActivity.this);
-        mProgressDialog.setMessage("Saving........");
+        mProgressDialog.setMessage("Loading........");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
@@ -183,7 +240,35 @@ public class UserAccountActivity extends AppCompatActivity {
                         String email = jsonObject.getString("email");
                         String sCompany = jsonObject.getString("company");
                         String sPosition = jsonObject.getString("position");
+                        String sImage = jsonObject.getString("image");
 
+                        //Sets views visible
+                        mFirstNameViewLbl.setVisibility(View.VISIBLE);
+                        mLastNameViewLbl.setVisibility(View.VISIBLE);
+                        mUsernameViewLbl.setVisibility(View.VISIBLE);
+                        mUserTypeViewLbl.setVisibility(View.VISIBLE);
+                        mOfficePhoneViewLbl.setVisibility(View.VISIBLE);
+                        mMobilePhoneViewLbl.setVisibility(View.VISIBLE);
+                        mEmailViewLbl.setVisibility(View.VISIBLE);
+                        mCompanyViewLbl.setVisibility(View.VISIBLE);
+                        mPositionViewLbl.setVisibility(View.VISIBLE);
+
+                        //Sets edit views visible
+                        mEditProfileIv.setVisibility(View.VISIBLE);
+                        mEditContactIv.setVisibility(View.VISIBLE);
+                        mEditCompanyIv.setVisibility(View.VISIBLE);
+                        mEditImageIv.setVisibility(View.VISIBLE);
+
+                        //Sets title labels visible
+                        mProfileCrdTitle.setVisibility(View.VISIBLE);
+                        mContactCrdTitle.setVisibility(View.VISIBLE);
+                        mCompanyCrdTitle.setVisibility(View.VISIBLE);
+
+                        Picasso.with(UserAccountActivity.this)
+                                .load(AppData.getAgentsImagesPath() + sImage)
+                                .fit()
+                                .placeholder(R.drawable.avatar)
+                                .into(mImage);
 
                         mFirstNameView.setText(firstName);
                         mLastNameView.setText(lastName);

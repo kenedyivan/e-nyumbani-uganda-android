@@ -1,4 +1,4 @@
-package com.ruraara.ken.e_nyumbani.classes;
+package com.ruraara.ken.e_nyumbani.models;
 
 import android.util.Log;
 
@@ -11,23 +11,23 @@ import java.util.Map;
  * Created by ken on 10/30/17.
  */
 
-public class PropertyForRent {
-    static String TAG = PropertyForRent.class.getSimpleName();
+public class PropertyForSale {
+    static String TAG = PropertyForSale.class.getSimpleName();
 
     /**
      * An array of sample (dummy) items.
      */
-    public static List<PropertyForRent.PropertyItem> ITEMS = new ArrayList<PropertyForRent.PropertyItem>();
+    public static List<PropertyForSale.PropertyItem> ITEMS = new ArrayList<PropertyForSale.PropertyItem>();
 
     public static List<String> IT = new ArrayList<String>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static Map<String, PropertyForRent.PropertyItem> ITEM_MAP = new HashMap<String, PropertyForRent.PropertyItem>();
+    public static Map<String, PropertyForSale.PropertyItem> ITEM_MAP = new HashMap<String, PropertyForSale.PropertyItem>();
 
 
-    public static void addPropertyItem(PropertyForRent.PropertyItem item) {
+    public static void addPropertyItem(PropertyForSale.PropertyItem item) {
         Log.w(TAG, "Creating property for rent item");
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
@@ -37,12 +37,11 @@ public class PropertyForRent {
 
     }
 
-    public static PropertyForRent.PropertyItem createPropertyItem(String id, String title,
+    public static PropertyForSale.PropertyItem createPropertyItem(String id, String title,
                                                                   int rating, String address,
                                                                   String agentId, String agent, String price,
-                                                                  String currency,
-                                                                  String image) {
-        return new PropertyForRent.PropertyItem(id, title, rating, address, agentId,agent, price, currency, image);
+                                                                  String currency, String image) {
+        return new PropertyForSale.PropertyItem(id, title, rating, address, agentId, agent, price, currency, image);
     }
 
     /**
