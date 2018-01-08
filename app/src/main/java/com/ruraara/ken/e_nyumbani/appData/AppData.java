@@ -60,12 +60,30 @@ public class AppData {
         return HOST + "/api/listings/property";
     }
 
+    public static String getMyProperty() {
+        return HOST + "/api/agent/my-property";
+    }
+
     public static String createProperty() {
         return HOST + "/api/listings/property/create";
     }
 
+    public static String editProperty() {
+        return HOST + "/api/listings/property/edit";
+    }
+
+    public static String savePropertyChanges() {
+        return HOST + "/api/listings/property/save";
+    }
+
+
+
     public static String uploadPhoto() {
         return HOST + "/api/listings/property/upload-photo";
+    }
+
+    public static String updatePhoto() {
+        return HOST + "/api/listings/property/update-photo";
     }
 
     public static String getImagesPath() {
@@ -128,6 +146,10 @@ public class AppData {
 
     public static String updateCompany() {
         return HOST + "/api/agent/update-company";
+    }
+
+    public static String getPropertyTypes() {
+        return HOST + "/api/listings/types";
     }
 
 

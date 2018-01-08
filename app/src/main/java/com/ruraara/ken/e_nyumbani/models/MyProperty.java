@@ -23,10 +23,6 @@ public class MyProperty {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
 
-        Log.w(TAG, "Finished creating property for rent item");
-        Log.w(TAG, String.valueOf(ITEM_MAP.size()));
-        Log.w(TAG, String.valueOf(ITEMS.size()));
-
     }
 
     public static MyProperty.PropertyItem createPropertyItem(String id, String title,

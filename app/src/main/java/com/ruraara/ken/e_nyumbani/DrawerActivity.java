@@ -76,6 +76,8 @@ public class DrawerActivity extends AppCompatActivity
 
     String profilePicture;
 
+    public static final String REFRESH = "refresh";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +102,7 @@ public class DrawerActivity extends AppCompatActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent i = new Intent(DrawerActivity.this, AddProperty.class);
+                Intent i = new Intent(DrawerActivity.this, AddPropertyActivity.class);
                 startActivity(i);
             }
         });
@@ -724,5 +726,32 @@ public class DrawerActivity extends AppCompatActivity
                 // called when request is retried
             }
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 45) {
+            if(resultCode == RESULT_OK) {
+
+                //if(data.getIntExtra("refresh",45) == 1){
+                    /*itemId = data.getStringExtra(EditPropertyActivity.ARG_ITEM_ID);
+                    rpf = 1;
+                    loadDetails();*/
+
+                    fragmentClass = MyPropertiesFragment.class;
+                    toolbar.setTitle("MyProperties");
+
+                    try {
+                        fragment = (Fragment) fragmentClass.newInstance();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    // Insert the fragment by replacing any existing fragment
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+                //}
+            }
+        }
     }
 }

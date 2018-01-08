@@ -4,4 +4,9 @@
         <item>Sale</item>
         <item>Rent</item>
     </string-array>
+
+    <string-array name="property_status_1">
+        <item>Rent</item>
+        <item>Sale</item>
+    </string-array>
 </resources>

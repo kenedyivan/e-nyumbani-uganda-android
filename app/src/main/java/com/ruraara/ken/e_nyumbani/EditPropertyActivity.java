@@ -2,6 +2,7 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,25 +12,37 @@ import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,13 +53,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
 
-public class AddProperty extends AppCompatActivity {
+import static java.security.AccessController.getContext;
+
+public class EditPropertyActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
-    private String TAG = AddProperty.class.getSimpleName();
+    private String TAG = EditPropertyActivity.class.getSimpleName();
     private ImageView mImageView1;
     private ImageView mImageView2;
     private ImageView mImageView3;
@@ -71,6 +89,12 @@ public class AddProperty extends AppCompatActivity {
     private ImageView mCheckMark4;
     private ImageView mCheckMark5;
     private ImageView mCheckMark6;
+    private TextView mFileName1;
+    private TextView mFileName2;
+    private TextView mFileName3;
+    private TextView mFileName4;
+    private TextView mFileName5;
+    private TextView mFileName6;
     private String imageName;
     private int layout;
 
@@ -87,15 +111,31 @@ public class AddProperty extends AppCompatActivity {
     private Spinner mType;
     /*end of other form fields*/
 
-    private Button mAddProperty;
+    String viewFileName;
+
+    View view;
+
+
+    private Button mEditPropertyActivity;
 
     private long time;
+
+    final String[] type = new String[1];
+    final String[] status = new String[1];
+    final String[] currency = new String[1];
+
+    public static final String ARG_ITEM_ID = "item_id";
+
+    String itemId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_property);
+        setContentView(R.layout.activity_edit_property);
+
+
+        itemId = getIntent().getStringExtra(ARG_ITEM_ID);
 
         //Sets actionbar back arrow
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -106,10 +146,6 @@ public class AddProperty extends AppCompatActivity {
         Log.d("Time: ", String.valueOf(time));
 
 
-        final String[] type = new String[1];
-        final String[] status = new String[1];
-        final String[] currency = new String[1];
-
         mTitle = (EditText) findViewById(R.id.title);
         mDescription = (EditText) findViewById(R.id.description);
         mPrice = (EditText) findViewById(R.id.price);
@@ -118,70 +154,13 @@ public class AddProperty extends AppCompatActivity {
         mTown = (EditText) findViewById(R.id.town);
         mRegion = (EditText) findViewById(R.id.region);
 
-        mStatus = (Spinner) findViewById(R.id.status);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this,
-                R.array.property_status, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        mStatus.setAdapter(statusAdapter);
-        mStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("Status: ", String.valueOf(adapterView.getItemAtPosition(i)));
-                status[0] = adapterView.getItemAtPosition(i).toString();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        //Retrieves remote property details
+        retrievePropertyDetails();
 
-            }
-        });
+        mEditPropertyActivity = (Button) findViewById(R.id.add_property);
 
-        mCurrency = (Spinner) findViewById(R.id.currency);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> currencyAapter = ArrayAdapter.createFromResource(this,
-                R.array.currency, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        currencyAapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        mCurrency.setAdapter(currencyAapter);
-        mCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("Currency: ", String.valueOf(adapterView.getItemAtPosition(i)));
-                currency[0] = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        mType = (Spinner) findViewById(R.id.type);
-        String[] types = {"Apartment", "Condor", "Bungalow", "Mansion"};
-        ArrayAdapter<String> typeSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, types);
-        typeSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
-        mType.setAdapter(typeSpinner);
-
-        mType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("Type: ", String.valueOf(adapterView.getItemAtPosition(i)));
-                type[0] = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        mAddProperty = (Button) findViewById(R.id.add_property);
-
-        mAddProperty.setOnClickListener(new View.OnClickListener() {
+        mEditPropertyActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -200,28 +179,28 @@ public class AddProperty extends AppCompatActivity {
                 if (mTitle.getText().toString() != null && !mTitle.getText().toString().isEmpty()) {
                     title = mTitle.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "Title empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Title empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (mDescription.getText().toString() != null && !mDescription.getText().toString().isEmpty()) {
                     description = mDescription.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "Description empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Description empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (mPrice.getText().toString() != null && !mPrice.getText().toString().isEmpty()) {
                     price = mPrice.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "Price empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Price empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (mAddress.getText().toString() != null && !mAddress.getText().toString().isEmpty()) {
                     address = mAddress.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "Address empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Address empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -229,7 +208,7 @@ public class AddProperty extends AppCompatActivity {
                 if (mDistrict.getText().toString() != null && !mDistrict.getText().toString().isEmpty()) {
                     district = mDistrict.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "District empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "District empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -237,35 +216,35 @@ public class AddProperty extends AppCompatActivity {
                 if (mTown.getText().toString() != null && !mTown.getText().toString().isEmpty()) {
                     town = mTown.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "Town is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Town is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (mRegion.getText().toString() != null && !mRegion.getText().toString().isEmpty()) {
                     region = mRegion.getText().toString();
                 } else {
-                    Toast.makeText(AddProperty.this, "Region is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Region is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (type[0] != null && !type[0].isEmpty()) {
                     sType = type[0];
                 } else {
-                    Toast.makeText(AddProperty.this, "Type not selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Type not selected", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (status[0] != null && !status[0].isEmpty()) {
                     sStatus = status[0];
                 } else {
-                    Toast.makeText(AddProperty.this, "Region is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Region is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (currency[0] != null && !currency[0].isEmpty()) {
                     sCurrency = currency[0];
                 } else {
-                    Toast.makeText(AddProperty.this, "Region is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Region is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -286,12 +265,12 @@ public class AddProperty extends AppCompatActivity {
                         && !town.isEmpty() && !region.isEmpty()
                         && !sType.isEmpty() && !sStatus.isEmpty() && !sCurrency.isEmpty()) {
 
-                    uploadForm(title, description, price, address,
+                    saveChanges(title, description, price, address,
                             district, town, region,
                             sType, sStatus, sCurrency, time);
 
                 } else {
-                    Toast.makeText(AddProperty.this, "Cannot read fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPropertyActivity.this, "Cannot read fields", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -319,6 +298,13 @@ public class AddProperty extends AppCompatActivity {
         mProgressBar5 = (ProgressBar) findViewById(R.id.progressBar5);
         mProgressBar6 = (ProgressBar) findViewById(R.id.progressBar6);
 
+        mFileName1 = (TextView) findViewById(R.id.file_name_1);
+        mFileName2 = (TextView) findViewById(R.id.file_name_2);
+        mFileName3 = (TextView) findViewById(R.id.file_name_3);
+        mFileName4 = (TextView) findViewById(R.id.file_name_4);
+        mFileName5 = (TextView) findViewById(R.id.file_name_5);
+        mFileName6 = (TextView) findViewById(R.id.file_name_6);
+
         mProgressBar1.setVisibility(View.GONE);
         mProgressBar2.setVisibility(View.GONE);
         mProgressBar3.setVisibility(View.GONE);
@@ -334,6 +320,7 @@ public class AddProperty extends AppCompatActivity {
         mCheckMark6.setVisibility(View.GONE);
 
 
+
         mImageButton1 = (ImageButton) findViewById(R.id.pick1);
         mImageButton2 = (ImageButton) findViewById(R.id.pick2);
         mImageButton3 = (ImageButton) findViewById(R.id.pick3);
@@ -346,6 +333,11 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 layout = 1;
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.layout_file_name_1);
+                TextView item = (TextView) layout.getChildAt(0);
+                viewFileName = item.getText().toString();
+
                 performFileSearch();
             }
         });
@@ -354,6 +346,11 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 layout = 2;
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.layout_file_name_2);
+                TextView item = (TextView) layout.getChildAt(0);
+                viewFileName = item.getText().toString();
+
                 performFileSearch();
             }
         });
@@ -362,6 +359,11 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 layout = 3;
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.layout_file_name_3);
+                TextView item = (TextView) layout.getChildAt(0);
+                viewFileName = item.getText().toString();
+
                 performFileSearch();
             }
         });
@@ -370,6 +372,11 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 layout = 4;
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.layout_file_name_4);
+                TextView item = (TextView) layout.getChildAt(0);
+                viewFileName = item.getText().toString();
+
                 performFileSearch();
             }
         });
@@ -378,6 +385,11 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 layout = 5;
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.layout_file_name_5);
+                TextView item = (TextView) layout.getChildAt(0);
+                viewFileName = item.getText().toString();
+
                 performFileSearch();
             }
         });
@@ -386,6 +398,11 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 layout = 6;
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.layout_file_name_5);
+                TextView item = (TextView) layout.getChildAt(0);
+                viewFileName = item.getText().toString();
+
                 performFileSearch();
             }
         });
@@ -464,7 +481,7 @@ public class AddProperty extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 dumpImageMetaData(uri);
-                upload(uri);    //// TODO: 11/30/17 Make image upload direct to cloudinary server from android client, if application server fails 
+                upload(uri, viewFileName);    //// TODO: 11/30/17 Make image upload direct to cloudinary server from android client, if application server fails
                 try {
                     switch (layout) {
                         case 1:
@@ -558,20 +575,22 @@ public class AddProperty extends AppCompatActivity {
         return stringBuilder.toString();
     }
 
-    private void upload(Uri uri) {
+    private void upload(Uri uri, String currentImageName) {
         Log.i("Path: ", uri.getPath());
 
         String str = getImageBase64(uri);
 
-        RequestParams params = new RequestParams();
+        RequestParams params = new RequestParams(); ///// TODO: 1/8/18 Send flag for setting main property image 
         params.put("encoded_string", str);
+        params.put("id", itemId);
         params.put("image", imageName);
+        params.put("current_image_name", currentImageName);
         params.put("session_time", time);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.setTimeout((50 * 1000));
         client.setResponseTimeout((50 * 1000));
-        client.post(AppData.uploadPhoto(), params, new AsyncHttpResponseHandler() {
+        client.post(AppData.updatePhoto(), params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -644,14 +663,14 @@ public class AddProperty extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.d(TAG, "failed " + statusCode);
-                Toast.makeText(AddProperty.this, "Network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPropertyActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRetry(int retryNo) {
                 // called when request is retried
                 Log.d(TAG, "retryNO: " + retryNo);
-                Toast.makeText(AddProperty.this, "Taking too long", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPropertyActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -703,11 +722,218 @@ public class AddProperty extends AppCompatActivity {
 
     }
 
-    private void uploadForm(String title, String description, String price,
+    private void retrievePropertyDetails() {
+
+        final ProgressDialog mProgressDialog;
+        mProgressDialog = new ProgressDialog(EditPropertyActivity.this);
+        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+
+        RequestParams params = new RequestParams();
+        params.put("id", itemId);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(AppData.editProperty(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+                //progressBar.setVisibility(View.VISIBLE);
+                mProgressDialog.show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Edit property" + resp);
+
+                //Toast.makeText(EditPropertyActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
+
+                try {
+                    JSONObject jsonObject = new JSONObject(resp);
+
+                    String title = jsonObject.getString("title");
+                    String description = jsonObject.getString("description");
+                    String price = jsonObject.getString("price");
+                    String PropertyStatus = jsonObject.getString("status");
+                    String PriceCurrency = jsonObject.getString("currency");
+                    String address = jsonObject.getString("address");
+                    String district = jsonObject.getString("district");
+                    String town = jsonObject.getString("town");
+                    String region = jsonObject.getString("region");
+
+                    JSONArray typesJsonArray = jsonObject.getJSONArray("types");
+                    JSONArray imagesJsonArray = jsonObject.getJSONArray("images");
+
+                    final PropertyType propertyType = new PropertyType();
+
+                    for (int i = 0; i < typesJsonArray.length(); i++) {
+                        JSONObject typeJsonObject = typesJsonArray.getJSONObject(i);
+                        String id = typeJsonObject.getString("id");
+                        String name = typeJsonObject.getString("name");
+
+                        propertyType.propertyTypeList.add(new PropertyType(id, name));
+                    }
+
+                    List<ImageView> imgVz = new ArrayList<ImageView>();
+                    List<TextView> txtVz = new ArrayList<TextView>();
+
+                    mImageView1.setTag(1);
+                    mImageView2.setTag(2);
+                    mImageView3.setTag(3);
+                    mImageView4.setTag(4);
+                    mImageView5.setTag(5);
+                    mImageView6.setTag(6);
+
+                    txtVz.add(mFileName1);
+                    txtVz.add(mFileName2);
+                    txtVz.add(mFileName3);
+                    txtVz.add(mFileName4);
+                    txtVz.add(mFileName5);
+                    txtVz.add(mFileName6);
+
+                    imgVz.add(mImageView1);
+                    imgVz.add(mImageView2);
+                    imgVz.add(mImageView3);
+                    imgVz.add(mImageView4);
+                    imgVz.add(mImageView5);
+                    imgVz.add(mImageView6);
+
+                    for (int i = 0; i < imagesJsonArray.length(); i++) {
+                        JSONObject imageJsonObject = imagesJsonArray.getJSONObject(i);
+                        String image = imageJsonObject.getString("image");
+
+                        txtVz.get(i).setText(image);
+
+                        Picasso.with(EditPropertyActivity.this)
+                                .load(AppData.getImagesPath() + image)
+                                .into(imgVz.get(i));
+
+                    }
+
+                    mTitle.setText(title);
+                    mDescription.setText(description);
+                    mPrice.setText(price);
+                    mAddress.setText(address);
+                    mDistrict.setText(district);
+                    mTown.setText(town);
+                    mRegion.setText(region);
+
+                    mType = (Spinner) findViewById(R.id.type);
+
+
+                    String[] types = propertyType.typeNames();
+                    ArrayAdapter<String> typeSpinner = new ArrayAdapter<String>(EditPropertyActivity.this, android.R.layout.simple_spinner_item, types);
+                    typeSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+                    mType.setAdapter(typeSpinner);
+
+                    mType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            //Log.d("Type: ", String.valueOf(adapterView.getItemAtPosition(i)));
+                            Log.d("Type Id", propertyType.typeId(i));
+                            type[0] = propertyType.typeId(i);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
+                    mStatus = (Spinner) findViewById(R.id.status);
+                    // Create an ArrayAdapter using the string array and a default spinner layout
+                    int statusArr;
+                    if (Objects.equals(PropertyStatus, "1")) {
+                        statusArr = R.array.property_status;
+                    } else {
+                        statusArr = R.array.property_status_1;
+                    }
+                    ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(EditPropertyActivity.this,
+                            statusArr, android.R.layout.simple_spinner_item);
+                    // Specify the layout to use when the list of choices appears
+                    statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    // Apply the adapter to the spinner
+                    mStatus.setAdapter(statusAdapter);
+                    mStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            Log.d("Status: ", String.valueOf(adapterView.getItemAtPosition(i)));
+                            status[0] = adapterView.getItemAtPosition(i).toString();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
+                    mCurrency = (Spinner) findViewById(R.id.currency);
+                    // Create an ArrayAdapter using the string array and a default spinner layout
+                    int currencyArr;
+                    if (Objects.equals(PriceCurrency, "ugx")) {
+                        currencyArr = R.array.currency;
+                    } else {
+                        currencyArr = R.array.currency_1;
+                    }
+                    ArrayAdapter<CharSequence> currencyAapter = ArrayAdapter.createFromResource(EditPropertyActivity.this,
+                            currencyArr, android.R.layout.simple_spinner_item);
+                    // Specify the layout to use when the list of choices appears
+                    currencyAapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    // Apply the adapter to the spinner
+                    mCurrency.setAdapter(currencyAapter);
+                    mCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            Log.d("Currency: ", String.valueOf(adapterView.getItemAtPosition(i)));
+                            currency[0] = adapterView.getItemAtPosition(i).toString();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mProgressDialog.dismiss();
+
+                //End work from here
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+                Toast.makeText(EditPropertyActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Log.d(TAG, "retryNO: " + retryNo);
+                Toast.makeText(EditPropertyActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void saveChanges(String title, String description, String price,
                             String address, String district, String town,
                             String region, String type, String status, String currency, long sessionTime) {
 
         RequestParams params = new RequestParams();
+        params.put("id", itemId);
         params.put("title", title);
         params.put("description", description);
         params.put("price", price);
@@ -721,13 +947,13 @@ public class AddProperty extends AppCompatActivity {
         params.put("session_time", sessionTime);
 
         final ProgressDialog mProgressDialog;
-        mProgressDialog = new ProgressDialog(AddProperty.this);
-        mProgressDialog.setMessage("Loading........");
+        mProgressDialog = new ProgressDialog(EditPropertyActivity.this);
+        mProgressDialog.setMessage("Saving........");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post(AppData.createProperty(), params, new AsyncHttpResponseHandler() {
+        client.post(AppData.savePropertyChanges(), params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -745,7 +971,7 @@ public class AddProperty extends AppCompatActivity {
                 String resp = new String(response);
                 Log.d(TAG, "Response: " + resp);
 
-                //Toast.makeText(AddProperty.this, "Added successfully", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EditPropertyActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
 
                 try {
                     JSONObject jsonObject = new JSONObject(resp);
@@ -756,24 +982,49 @@ public class AddProperty extends AppCompatActivity {
                     Log.d("error: ", String.valueOf(error));
 
                     if (error == 0 && status == 1) {
-                        Toast.makeText(AddProperty.this, "Added successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(EditPropertyActivity.this, "Saved successfully", Toast.LENGTH_LONG).show();
 
-                        //// TODO: 11/30/17 Intent redirect to agents pending properties
-                        Intent i = new Intent(AddProperty.this, DrawerActivity.class);
-                        i.putExtra("fragment", "myProperties");
-                        // Closing all the Activities
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        // Add new Flag to start new Activity
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        JSONObject propertyChanges = jsonObject.getJSONObject("prop");
 
-                        startActivity(i);
 
-                        finish();
+                        /*String title = propertyChanges.optString("title");
+                        if(title != null || !Objects.equals(title, "")){
+                            mTitle.setText(title);
+                        }
 
-                    } else if (error == 1 && status == 0){
-                        Toast.makeText(AddProperty.this, "Failed", Toast.LENGTH_LONG).show();
+                        String description = propertyChanges.optString("description");
+                        if(description != null || !Objects.equals(description, "")){
+                            mDescription.setText(title);
+                        }
+
+                        String price = propertyChanges.optString("price");
+                        if(price != null || !Objects.equals(price, "")){
+                            mPrice.setText(price);
+                        }
+
+                        String address = propertyChanges.optString("address");
+                        if(address != null || !Objects.equals(address, "")){
+                            mAddress.setText(address);
+                        }
+                        String district = propertyChanges.optString("district");
+                        if(district != null || !Objects.equals(district, "")){
+                            mDistrict.setText(district);
+                        }
+                        String town = propertyChanges.optString("town");
+                        if(town != null || !Objects.equals(town, "")){
+                            mTown.setText(town);
+                        }
+                        String region = propertyChanges.optString("region");
+                        if(region != null || !Objects.equals(region, "")){
+                            mRegion.setText(region);
+                        }*/
+
+
+
+                    } else if (error == 1 && status == 0) {
+                        Toast.makeText(EditPropertyActivity.this, "Failed", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(AddProperty.this, "Unknown error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(EditPropertyActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
@@ -789,17 +1040,68 @@ public class AddProperty extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                mProgressDialog.dismiss();
                 Log.d(TAG, "failed " + statusCode);
-                Toast.makeText(AddProperty.this, "Network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPropertyActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRetry(int retryNo) {
                 // called when request is retried
                 Log.d(TAG, "retryNO: " + retryNo);
-                Toast.makeText(AddProperty.this, "Taking too long", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPropertyActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private class PropertyType {
+        private String id;
+        private String name;
+
+        List<PropertyType> propertyTypeList = new ArrayList<>();
+
+        PropertyType(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        PropertyType() {
+        }
+
+
+        private String[] typeNames() {
+            String[] names = new String[propertyTypeList.size()];
+            for (int i = 0; i < propertyTypeList.size(); i++) {
+                names[i] = propertyTypeList.get(i).name;
+            }
+
+            return names;
+        }
+
+        private String typeId(int nameIndex) {
+            String[] ids = new String[propertyTypeList.size()];
+            for (int i = 0; i < propertyTypeList.size(); i++) {
+                ids[i] = propertyTypeList.get(i).id;
+            }
+
+            return ids[nameIndex];
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(MyPropertyDetailsActivity.ARG_ITEM_ID, itemId);
+        intent.putExtra(MyPropertyDetailsActivity.REFRESH, 1);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+
 }
+

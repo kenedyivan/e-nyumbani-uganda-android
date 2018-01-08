@@ -43,6 +43,33 @@ public class PropertyDetail {
                           int rating, String noReviews,
                           String address,
                           String type, String status, String agentId, String agent,
+                          String price, String currency, String image, String createdAt,
+                          JSONArray otherImagesJson) {
+
+        clearOtherImages();
+
+        this.id = id;
+        this.title = title;
+        this.description = descrition;
+        this.rating = rating;
+        this.noReviews = noReviews;
+        this.address = address;
+        this.type = type;
+        this.status = status;
+        this.agent = agent;
+        this.agentId = agentId;
+        this.price = price;
+        this.currency = currency;
+        this.image = image;
+        this.createdAt = createdAt;
+        this.otherImagesJson = otherImagesJson;
+
+    }
+
+    public PropertyDetail(String id, String title, String descrition,
+                          int rating, String noReviews,
+                          String address,
+                          String type, String status, String agentId, String agent,
                           String price, String currency, String image, int favorite, String createdAt,
                           JSONArray otherImagesJson, JSONArray reviewsJson, JSONArray relatedPropertiesJson) {
 
@@ -108,7 +135,7 @@ public class PropertyDetail {
                 String profile_picture = jsonObject.getString("profile_picture");
                 String createdAt = jsonObject.getString("created_at");
 
-                reviews.add(new Review(id, (double) rating, review, username, profile_picture,createdAt));
+                reviews.add(new Review(id, (double) rating, review, username, profile_picture, createdAt));
 
             }
 
@@ -125,7 +152,7 @@ public class PropertyDetail {
         reviews.add(0, new Review(r.id, r.rating, r.review, r.username, r.profile_picture, r.createdAt));
     }
 
-    public void updatePropertyRating(int rating){
+    public void updatePropertyRating(int rating) {
         this.rating = rating;
         this.noReviews = String.valueOf(getNoOfReviews());
     }
@@ -240,13 +267,13 @@ public class PropertyDetail {
         }
     }
 
-    public static class PropertyAgent{
+    public static class PropertyAgent {
 
         public static String firstName = null;
         public static String lastName = null;
         public static String company = null;
 
-        public PropertyAgent(String firstName, String lastName, String company){
+        public PropertyAgent(String firstName, String lastName, String company) {
 
             this.firstName = firstName;
             this.lastName = lastName;

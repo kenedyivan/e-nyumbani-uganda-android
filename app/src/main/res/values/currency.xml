@@ -4,4 +4,8 @@
         <item>UGX</item>
         <item>USD</item>
     </string-array>
+    <string-array name="currency_1">
+        <item>USD</item>
+        <item>UGX</item>
+    </string-array>
 </resources>

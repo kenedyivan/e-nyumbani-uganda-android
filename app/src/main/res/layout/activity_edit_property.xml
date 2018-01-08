@@ -161,6 +161,7 @@
                         android:layout_height="match_parent">
 
                         <FrameLayout
+                            android:id="@+id/fram_1"
                             android:layout_width="95dp"
                             android:layout_height="71dp"
                             android:layout_marginEnd="8dp"
@@ -196,6 +197,19 @@
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
                                 app:srcCompat="@drawable/icons8_picture_48" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_file_name_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/file_name_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
                         </FrameLayout>
 
                         <FrameLayout
@@ -234,6 +248,18 @@
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
                                 app:srcCompat="@drawable/icons8_picture_48" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_file_name_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/file_name_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
 
 
                         </FrameLayout>
@@ -276,6 +302,17 @@
                                 app:srcCompat="@drawable/icons8_picture_48" />
 
 
+                            <LinearLayout
+                                android:id="@+id/layout_file_name_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/file_name_3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
                         </FrameLayout>
                     </TableRow>
 
@@ -320,6 +357,18 @@
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
                                 app:srcCompat="@drawable/icons8_picture_48" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_file_name_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/file_name_4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
                         </FrameLayout>
 
                         <FrameLayout
@@ -358,6 +407,18 @@
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
                                 app:srcCompat="@drawable/icons8_picture_48" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_file_name_5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/file_name_5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
 
 
                         </FrameLayout>
@@ -398,6 +459,18 @@
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
                                 app:srcCompat="@drawable/icons8_picture_48" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_file_name_6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/file_name_6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
 
 
                         </FrameLayout>
@@ -484,7 +557,7 @@
                 android:id="@+id/add_property"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit"
+                android:text="save changes"
                 android:theme="@style/myButtonTheme" />
         </android.support.v7.widget.CardView>
     </LinearLayout>

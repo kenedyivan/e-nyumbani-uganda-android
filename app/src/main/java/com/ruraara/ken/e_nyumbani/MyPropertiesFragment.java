@@ -100,6 +100,7 @@ public class MyPropertiesFragment extends Fragment {
 
         RequestParams params = new RequestParams();
         params.put("id", sessionManager.getUserID());
+        Log.d("User id",sessionManager.getUserID());
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(AppData.getMyProperties(), params, new AsyncHttpResponseHandler() {

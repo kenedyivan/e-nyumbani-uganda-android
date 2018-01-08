@@ -29,12 +29,8 @@ public class FeaturedProperty {
 
 
     public static void addPropertyItem(PropertyItem item) {
-        Log.w(TAG, "Creating property item");
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
-        Log.w(TAG, "Finished creating property item");
-        Log.w(TAG, String.valueOf(ITEM_MAP.size()));
-        Log.w(TAG, String.valueOf(ITEMS.size()));
 
     }
 

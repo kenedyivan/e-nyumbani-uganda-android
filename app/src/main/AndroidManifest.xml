@@ -46,19 +46,21 @@
             -->
         </activity>
         <activity android:name=".PropertyForRentActivity" />
-        <activity android:name=".PropertyDetails">
+        <activity android:name=".PropertyDetailsActivity">
 
-            <!--<intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".SearchResults"
             android:label="Search results" />
         <activity
-            android:name=".AddProperty"
+            android:name=".AddPropertyActivity"
             android:label="@string/add_property" />
         <activity
             android:name=".LoginActivity"
@@ -132,11 +134,13 @@
             android:name=".AgentProfileActivity"
             android:label="Profile">
 
-            <!--<intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".SettingsActivity"
@@ -144,21 +148,37 @@
         <activity
             android:name=".TopSettingsActivity"
             android:label="@string/title_activity_settings">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".UserAccountActivity"
             android:label="Account">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".EditPropertyActivity"
+            android:label="Edit property">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>-->
         </activity>
+        <activity android:name=".MyPropertyDetailsActivity"></activity>
     </application>
 
 </manifest>

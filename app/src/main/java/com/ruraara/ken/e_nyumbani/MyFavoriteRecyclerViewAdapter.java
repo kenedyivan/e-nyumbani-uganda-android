@@ -65,8 +65,8 @@ public class MyFavoriteRecyclerViewAdapter
 
 
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetails.class);
-                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                    Intent intent = new Intent(context, PropertyDetailsActivity.class);
+                    intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, holder.mItem.id);
                     context.startActivity(intent);
             }
         });

@@ -284,8 +284,8 @@ public class AgentProfileActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetails.class);
-                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, horizontalList.get(position).id);
+                    Intent intent = new Intent(context, PropertyDetailsActivity.class);
+                    intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, horizontalList.get(position).id);
                     context.startActivity(intent);
                 }
             });

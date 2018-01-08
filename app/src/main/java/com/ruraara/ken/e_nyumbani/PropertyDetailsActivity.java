@@ -50,9 +50,9 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import me.relex.circleindicator.CircleIndicator;
 
-public class PropertyDetails extends AppCompatActivity {
+public class PropertyDetailsActivity extends AppCompatActivity {
 
-    private String TAG = PropertyDetails.class.getSimpleName();
+    private String TAG = PropertyDetailsActivity.class.getSimpleName();
 
     public static final String ARG_ITEM_ID = "item_id";
 
@@ -67,7 +67,7 @@ public class PropertyDetails extends AppCompatActivity {
      */
     private ViewPager mPager;
 
-    private Context context = PropertyDetails.this;
+    private Context context = PropertyDetailsActivity.this;
 
     /**
      * The pager adapter, which provides the pages to the view pager widget.
@@ -118,7 +118,7 @@ public class PropertyDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_details);
 
-        SessionManager sessionManager = new SessionManager(PropertyDetails.this);
+        SessionManager sessionManager = new SessionManager(PropertyDetailsActivity.this);
         agentId = sessionManager.getUserID();
 
         //Sets actionbar back arrow
@@ -315,7 +315,7 @@ public class PropertyDetails extends AppCompatActivity {
 
                 mPager = (ViewPager) findViewById(R.id.pager);
                 CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
-                mPagerAdapter = new ScreenSlidePagerAdapter(PropertyDetails.this, getSupportFragmentManager(), mOtherImages);
+                mPagerAdapter = new ScreenSlidePagerAdapter(PropertyDetailsActivity.this, getSupportFragmentManager(), mOtherImages);
                 mPager.setAdapter(mPagerAdapter);
                 indicator.setViewPager(mPager);
                 mPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
@@ -347,7 +347,7 @@ public class PropertyDetails extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(PropertyDetails.this, AgentProfileActivity.class);
+                        Intent intent = new Intent(PropertyDetailsActivity.this, AgentProfileActivity.class);
                         intent.putExtra(AgentProfileActivity.ARG_AGENT_ID, finalPropertyDetail.agentId);
                         context.startActivity(intent);
                     }
@@ -380,7 +380,7 @@ public class PropertyDetails extends AppCompatActivity {
 
                 mPrice.setText(propertyDetail.currency.toUpperCase() + " " + formatter.format(amount));
 
-                Picasso.with(PropertyDetails.this)
+                Picasso.with(PropertyDetailsActivity.this)
                         .load(AppData.getImagesPath() + propertyDetail.image)
                         .fit()
                         .into(mMainImage);
@@ -396,7 +396,7 @@ public class PropertyDetails extends AppCompatActivity {
 
                 //horizontalAdapter=new HorizontalAdapter(data, getApplication());
 
-                LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PropertyDetails.this, LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(PropertyDetailsActivity.this, LinearLayoutManager.HORIZONTAL, false);
                 horizontal_recycler_view.setLayoutManager(horizontalLayoutManager);
                 horizontal_recycler_view.setAdapter(horizontalAdapter);
 
@@ -451,7 +451,7 @@ public class PropertyDetails extends AppCompatActivity {
     }
 
     private void reviewsRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetails.this));
+        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetailsActivity.this));
     }
 
     /**
@@ -537,8 +537,8 @@ public class PropertyDetails extends AppCompatActivity {
 
 
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetails.class);
-                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, holder.mItem.id);
+                    Intent intent = new Intent(context, PropertyDetailsActivity.class);
+                    intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, holder.mItem.id);
                     context.startActivity(intent);
                 }
             });
@@ -621,7 +621,7 @@ public class PropertyDetails extends AppCompatActivity {
 
             Log.d("Related det: ", "posi-" + position);
 
-            Picasso.with(PropertyDetails.this)
+            Picasso.with(PropertyDetailsActivity.this)
                     .load(AppData.getRelatedPropertiesImagesPath() + horizontalList.get(position).image)
                     .into(holder.imageView);
 
@@ -637,8 +637,8 @@ public class PropertyDetails extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, PropertyDetails.class);
-                    intent.putExtra(PropertyDetails.ARG_ITEM_ID, horizontalList.get(position).id);
+                    Intent intent = new Intent(context, PropertyDetailsActivity.class);
+                    intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, horizontalList.get(position).id);
                     context.startActivity(intent);
                 }
             });
@@ -696,7 +696,7 @@ public class PropertyDetails extends AppCompatActivity {
                                         boolean fromUser) {
 
                 rate[0] = rating;
-                //Toast.makeText(PropertyDetails.this,String.valueOf(rating),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PropertyDetailsActivity.this,String.valueOf(rating),Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -704,7 +704,7 @@ public class PropertyDetails extends AppCompatActivity {
         mRatingBarView.setNumStars(5);
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(PropertyDetails.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PropertyDetailsActivity.this);
         // Add the buttons
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -801,10 +801,10 @@ public class PropertyDetails extends AppCompatActivity {
                                 (new PropertyDetail.Review(id, rating, review, username, profile_picture, createdAt));
 
                         //Refreshes review recycler view list adapter
-                        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetails.this));
+                        recyclerView.setAdapter(new ReviewsRecyclerViewAdapter(PropertyDetail.reviews, PropertyDetailsActivity.this));
                         recyclerView.invalidate();
 
-                        Toast.makeText(PropertyDetails.this, "FeaturedProperty reviewed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PropertyDetailsActivity.this, "FeaturedProperty reviewed", Toast.LENGTH_SHORT).show();
 
                     } else {
                         //Toast.makeText(LoginActivity.this, "Unknown error", Toast.LENGTH_LONG).show();
@@ -864,11 +864,11 @@ public class PropertyDetails extends AppCompatActivity {
 
                     if (error == 0 && status == 1) {
                         mLikeView.setImageResource(R.drawable.icons8_heart_outline_24_active);
-                        Toast.makeText(PropertyDetails.this, "Added to favorites", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PropertyDetailsActivity.this, "Added to favorites", Toast.LENGTH_LONG).show();
 
                     } else if (error == 0 && status == 2) {
                         mLikeView.setImageResource(R.drawable.icons8_heart_24_grey);
-                        Toast.makeText(PropertyDetails.this, "Removed from favorites", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PropertyDetailsActivity.this, "Removed from favorites", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
