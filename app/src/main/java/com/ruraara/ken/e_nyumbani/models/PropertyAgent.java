@@ -26,12 +26,8 @@ public class PropertyAgent {
     public static Map<String, PropertyAgent.Agent> AGENT_MAP = new HashMap<String, PropertyAgent.Agent>();
 
     public static void addPropertyAgent(PropertyAgent.Agent agent) {
-        Log.w(TAG, "Creating property agent");
         AGENTS.add(agent);
         AGENT_MAP.put(agent.id, agent);
-        Log.w(TAG, "Finished creating property agent");
-        Log.w(TAG, String.valueOf(AGENT_MAP.size()));
-        Log.w(TAG, String.valueOf(AGENTS.size()));
 
     }
 

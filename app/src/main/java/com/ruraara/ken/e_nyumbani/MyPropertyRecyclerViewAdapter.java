@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.models.MyProperty;
+import com.ruraara.ken.e_nyumbani.utils.SharedDrawerNavigationUpHomeState;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -56,11 +57,13 @@ public class MyPropertyRecyclerViewAdapter
                 .load(AppData.getImagesPath() + mValues.get(position).image)
                 .into(holder.mImageView);
 
+        final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(mContext);
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Context context = v.getContext();
+                sd.goneToProperties(SharedDrawerNavigationUpHomeState.GONE);
                 Intent intent = new Intent(context, MyPropertyDetailsActivity.class);
                 intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, holder.mItem.id);
                 context.startActivity(intent);

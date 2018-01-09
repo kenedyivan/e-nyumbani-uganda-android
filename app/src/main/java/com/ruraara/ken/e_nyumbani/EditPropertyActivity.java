@@ -15,12 +15,15 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +43,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
+import com.ruraara.ken.e_nyumbani.utils.SharedPropertyEditState;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -64,6 +68,7 @@ import static java.security.AccessController.getContext;
 public class EditPropertyActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
+    private static int EDITED = 0;
     private String TAG = EditPropertyActivity.class.getSimpleName();
     private ImageView mImageView1;
     private ImageView mImageView2;
@@ -125,6 +130,7 @@ public class EditPropertyActivity extends AppCompatActivity {
     final String[] currency = new String[1];
 
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String BACK_PRESS = "item_id";
 
     String itemId;
 
@@ -654,6 +660,11 @@ public class EditPropertyActivity extends AppCompatActivity {
                         break;
                 }
 
+                SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(EditPropertyActivity.this);
+                sharedPropertyEditState.createEditState(SharedPropertyEditState.EDITED, itemId);
+
+                Log.d("Edit state",sharedPropertyEditState.getEditStatus()+" "+sharedPropertyEditState.getId());
+
 
                 //End work from here
 
@@ -984,41 +995,14 @@ public class EditPropertyActivity extends AppCompatActivity {
                     if (error == 0 && status == 1) {
                         Toast.makeText(EditPropertyActivity.this, "Saved successfully", Toast.LENGTH_LONG).show();
 
-                        JSONObject propertyChanges = jsonObject.getJSONObject("prop");
+                        //JSONObject propertyChanges = jsonObject.getJSONObject("prop");
 
+                        EDITED = 1;
 
-                        /*String title = propertyChanges.optString("title");
-                        if(title != null || !Objects.equals(title, "")){
-                            mTitle.setText(title);
-                        }
+                        SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(EditPropertyActivity.this);
+                        sharedPropertyEditState.createEditState(SharedPropertyEditState.EDITED, itemId);
 
-                        String description = propertyChanges.optString("description");
-                        if(description != null || !Objects.equals(description, "")){
-                            mDescription.setText(title);
-                        }
-
-                        String price = propertyChanges.optString("price");
-                        if(price != null || !Objects.equals(price, "")){
-                            mPrice.setText(price);
-                        }
-
-                        String address = propertyChanges.optString("address");
-                        if(address != null || !Objects.equals(address, "")){
-                            mAddress.setText(address);
-                        }
-                        String district = propertyChanges.optString("district");
-                        if(district != null || !Objects.equals(district, "")){
-                            mDistrict.setText(district);
-                        }
-                        String town = propertyChanges.optString("town");
-                        if(town != null || !Objects.equals(town, "")){
-                            mTown.setText(town);
-                        }
-                        String region = propertyChanges.optString("region");
-                        if(region != null || !Objects.equals(region, "")){
-                            mRegion.setText(region);
-                        }*/
-
+                        Log.d("Edit state",sharedPropertyEditState.getEditStatus()+" "+sharedPropertyEditState.getId());
 
 
                     } else if (error == 1 && status == 0) {
@@ -1095,11 +1079,49 @@ public class EditPropertyActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.putExtra(MyPropertyDetailsActivity.ARG_ITEM_ID, itemId);
-        intent.putExtra(MyPropertyDetailsActivity.REFRESH, 1);
-        setResult(RESULT_OK, intent);
+        intent.putExtra(MyPropertyDetailsActivity.REFRESH,1);
+        intent.putExtra(BACK_PRESS, "back_button_pressed");
+        if(EDITED == 1){
+            setResult(RESULT_OK, intent);
+        }else{
+            setResult(RESULT_CANCELED, intent);
+        }*/
+
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.property_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent i = new Intent(EditPropertyActivity.this, TopSettingsActivity.class);
+            startActivity(i);
+            return true;
+        }
+
+        if(id == android.R.id.home){
+            Intent intent = NavUtils.getParentActivityIntent(this);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            NavUtils.navigateUpTo(this, intent);
+            //NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 

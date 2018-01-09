@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.models.PropertyAgent;
+import com.ruraara.ken.e_nyumbani.utils.SharedDrawerNavigationUpHomeState;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -60,11 +61,13 @@ public class PropertyAgentRecyclerViewAdapter
                 .load(AppData.getAgentsImagesPath() + mValues.get(position).image)
                 .into(holder.mImageView);
 
+        final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(mContext);
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Context context = v.getContext();
+                sd.goneToAgents(SharedDrawerNavigationUpHomeState.GONE);
                 Intent intent = new Intent(context, TabbedAgentPropertiesActivity.class);
                 intent.putExtra(TabbedAgentPropertiesActivity.ARG_ITEM_ID, holder.mItem.id);
                 intent.putExtra(TabbedAgentPropertiesActivity.ARG_ITEM_NAME, name);

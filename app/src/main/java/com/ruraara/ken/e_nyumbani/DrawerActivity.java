@@ -36,6 +36,8 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.models.DummyContent;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
+import com.ruraara.ken.e_nyumbani.utils.SharedDrawerNavigationUpHomeState;
+import com.ruraara.ken.e_nyumbani.utils.SharedPropertyEditState;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -78,10 +80,142 @@ public class DrawerActivity extends AppCompatActivity
 
     public static final String REFRESH = "refresh";
 
+    boolean retrivedFeatured = false;
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("Drawer","onResume");
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //Track Drawer navigation
+        SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(DrawerActivity.this);
+        if(sd.getRentViewState() == SharedDrawerNavigationUpHomeState.GONE){
+            navigationView.getMenu().getItem(1).setChecked(true);
+
+            fragmentClass = ForRentPropertyFragment.class;
+            position = 2;
+            toolbar.setTitle("For rent");
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            sd.backFromRent(SharedDrawerNavigationUpHomeState.NOT_GONE);
+        }
+
+        if(sd.getSaleViewState() == SharedDrawerNavigationUpHomeState.GONE){
+            navigationView.getMenu().getItem(2).setChecked(true);
+            fragmentClass = ForSalePropertyFragment.class;
+            position = 3;
+            toolbar.setTitle("For sale");
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            sd.backFromSale(SharedDrawerNavigationUpHomeState.NOT_GONE);
+        }
+
+        if(sd.getAgentsViewState() == SharedDrawerNavigationUpHomeState.GONE){
+            navigationView.getMenu().getItem(3).setChecked(true);
+            fragmentClass = PropertyAgentFragment.class;
+            position = 4;
+            toolbar.setTitle("Agents");
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            sd.backFromAgents(SharedDrawerNavigationUpHomeState.NOT_GONE);
+        }
+
+        if(sd.getFavoritesViewState() == SharedDrawerNavigationUpHomeState.GONE){
+            navigationView.getMenu().getItem(4).setChecked(true);
+            fragmentClass = MyFavoritesFragment.class;
+            position = 5;
+            toolbar.setTitle("My favorites");
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            sd.backFromFavorites(SharedDrawerNavigationUpHomeState.NOT_GONE);
+        }
+
+        if(sd.getPropertiesViewState() == SharedDrawerNavigationUpHomeState.GONE){
+            navigationView.getMenu().getItem(5).setChecked(true);
+
+            SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(DrawerActivity.this);
+            int edited = sharedPropertyEditState.getMyPropertiesRefreshFlag();
+
+            if(edited == SharedPropertyEditState.EDITED){ ///// TODO: 1/9/18 Do a network operation here when property is edited
+
+                fragmentClass = MyPropertiesFragment.class;
+                position = 5;
+                toolbar.setTitle("MyProperties");
+
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+
+                Log.e("UpHome","up home button");
+                sharedPropertyEditState.clearMYPropertiesFlag();
+
+            }else{
+                fragmentClass = MyPropertiesFragment.class;
+                position = 6;
+                toolbar.setTitle("My properties");
+
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            }
+
+            sd.backFromProperties(SharedDrawerNavigationUpHomeState.NOT_GONE);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
+        Log.e("Drawer","onCreate");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Featured");
@@ -102,6 +236,8 @@ public class DrawerActivity extends AppCompatActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
+
+                trackCallToAction();
                 Intent i = new Intent(DrawerActivity.this, AddPropertyActivity.class);
                 startActivity(i);
             }
@@ -274,10 +410,39 @@ public class DrawerActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            trackCallToAction();
+            Intent i = new Intent(DrawerActivity.this, TopSettingsActivity.class);
+            startActivity(i);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void trackCallToAction(){
+        final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(DrawerActivity.this);
+        switch(position){
+            case 0:
+                break;
+            case 2:
+                sd.goneToRent(SharedDrawerNavigationUpHomeState.GONE);
+                break;
+            case 3:
+                sd.goneToSale(SharedDrawerNavigationUpHomeState.GONE);
+                break;
+            case 4:
+                sd.goneToAgents(SharedDrawerNavigationUpHomeState.GONE);
+                break;
+            case 5:
+                sd.goneToFavorites(SharedDrawerNavigationUpHomeState.GONE);
+                break;
+            case 6:
+                sd.goneToProperties(SharedDrawerNavigationUpHomeState.GONE);
+                break;
+            default:
+                Log.d("Debug","Not gone");
+                break;
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -313,12 +478,12 @@ public class DrawerActivity extends AppCompatActivity
             fragmentClass = MyFavoritesFragment.class;
             position = 5;
             toolbar.setTitle("My favorites");
-            Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+            //Log.d("MenuItem: ", String.valueOf(item.getTitle()));
         } else if (id == R.id.nav_my_properties) {
             fragmentClass = MyPropertiesFragment.class;
             position = 6;
             toolbar.setTitle("My properties");
-            Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+            //Log.d("MenuItem: ", String.valueOf(item.getTitle()));
         } else if (id == R.id.nav_settings) {
             position = 7;
             //Log.d("MenuItem: ", String.valueOf(item.getTitle()));

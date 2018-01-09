@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.models.MyFavorite;
+import com.ruraara.ken.e_nyumbani.utils.SharedDrawerNavigationUpHomeState;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -59,12 +60,13 @@ public class MyFavoriteRecyclerViewAdapter
                 .load(AppData.getImagesPath()+mValues.get(position).image)
                 .into(holder.mImageView);
 
+        final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(mContext);
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                     Context context = v.getContext();
+                    sd.goneToFavorites(SharedDrawerNavigationUpHomeState.GONE);
                     Intent intent = new Intent(context, PropertyDetailsActivity.class);
                     intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, holder.mItem.id);
                     context.startActivity(intent);
@@ -76,6 +78,7 @@ public class MyFavoriteRecyclerViewAdapter
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
+                sd.goneToFavorites(SharedDrawerNavigationUpHomeState.GONE);
                 Intent intent = new Intent(context, AgentProfileActivity.class);
                 intent.putExtra(AgentProfileActivity.ARG_AGENT_ID, mValues.get(position).agentId);
                 context.startActivity(intent);

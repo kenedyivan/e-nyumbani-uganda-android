@@ -28,12 +28,8 @@ public class SearchProperty {
 
 
     public static void addPropertyItem(SearchProperty.PropertyItem item) {
-        Log.w(TAG, "Creating SearchProperty item");
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
-        Log.w(TAG, "Finished creating SearchProperty item");
-        Log.w(TAG, String.valueOf(ITEM_MAP.size()));
-        Log.w(TAG, String.valueOf(ITEMS.size()));
 
     }
 

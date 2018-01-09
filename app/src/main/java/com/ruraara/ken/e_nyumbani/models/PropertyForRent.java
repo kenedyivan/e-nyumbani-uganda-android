@@ -28,12 +28,8 @@ public class PropertyForRent {
 
 
     public static void addPropertyItem(PropertyForRent.PropertyItem item) {
-        Log.w(TAG, "Creating property for rent item");
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
-        Log.w(TAG, "Finished creating property for rent item");
-        Log.w(TAG, String.valueOf(ITEM_MAP.size()));
-        Log.w(TAG, String.valueOf(ITEMS.size()));
 
     }
 

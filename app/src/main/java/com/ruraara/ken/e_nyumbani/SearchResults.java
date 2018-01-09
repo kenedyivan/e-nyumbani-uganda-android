@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,6 +58,33 @@ public class SearchResults extends AppCompatActivity {
         recyclerView = findViewById(R.id.search_list);
 
         search();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.property_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if(id == android.R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void search() {
@@ -155,12 +185,12 @@ public class SearchResults extends AppCompatActivity {
         recyclerView.setAdapter(new SearchResults.SimpleItemRecyclerViewAdapter(SearchProperty.ITEMS));
     }
 
-    public class SimpleItemRecyclerViewAdapter
+    class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SearchResults.SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final List<SearchProperty.PropertyItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<SearchProperty.PropertyItem> items) {
+        SimpleItemRecyclerViewAdapter(List<SearchProperty.PropertyItem> items) {
             mValues = items;
         }
 
@@ -219,12 +249,12 @@ public class SearchResults extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mTitleView;
-            public final TextView mAddressView;
-            public final TextView mAgentView;
-            public final TextView mPriceView;
-            public final ImageView mImageView;
-            public final Button mAgentButton;
+            final TextView mTitleView;
+            final TextView mAddressView;
+            final TextView mAgentView;
+            final TextView mPriceView;
+            final ImageView mImageView;
+            final Button mAgentButton;
             public SearchProperty.PropertyItem mItem;
 
             public ViewHolder(View view) {

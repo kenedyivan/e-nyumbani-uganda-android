@@ -2,29 +2,22 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -36,6 +29,7 @@ import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.models.PropertyDetail;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
+import com.ruraara.ken.e_nyumbani.utils.SharedPropertyEditState;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -43,9 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
 import me.relex.circleindicator.CircleIndicator;
@@ -105,15 +98,34 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
     String itemId;
     String agentId;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(MyPropertyDetailsActivity.this);
+        int edited = sharedPropertyEditState.getEditStatus();
+
+        if(edited == SharedPropertyEditState.EDITED){
+
+                itemId = sharedPropertyEditState.getId();
+                loadDetails();
+            Log.e("UpHome","up home button");
+            sharedPropertyEditState.clearMYPropertyDetailsFlag();
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_property_details);
+        SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(MyPropertyDetailsActivity.this);
+        sharedPropertyEditState.clearMYPropertyDetailsFlag();
 
         if(getIntent().getStringExtra(EditPropertyActivity.ARG_ITEM_ID) != null){
             itemId = getIntent().getStringExtra(EditPropertyActivity.ARG_ITEM_ID);
         }
-
 
         SessionManager sessionManager = new SessionManager(MyPropertyDetailsActivity.this);
         agentId = sessionManager.getUserID();
@@ -154,6 +166,8 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
 
         //End of create layout dynamically
 
+        PropertyDetail propertyDetail = new PropertyDetail();
+        Log.d("IsLoaded", String.valueOf(propertyDetail.isLoaded()));
         loadDetails();
 
 
@@ -180,6 +194,10 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
             intent.putExtra(PropertyDetailsActivity.ARG_ITEM_ID, itemId);
             startActivityForResult(intent, 1);
 
+            return true;
+        }
+        if(id == android.R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 
@@ -323,6 +341,7 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 Log.d(TAG, "failed " + statusCode);
+                mProgressDialog.dismiss();
                 Toast.makeText(context, "Network error", Toast.LENGTH_SHORT).show();
             }
 
@@ -330,25 +349,32 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
             public void onRetry(int retryNo) {
                 // called when request is retried
                 Log.d(TAG, "retryNO: " + retryNo);
+                mProgressDialog.dismiss();
                 Toast.makeText(context, "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
+    /*@RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
 
                 if(data.getIntExtra("refresh",45) == 1){
-                    itemId = data.getStringExtra(EditPropertyActivity.ARG_ITEM_ID);
-                    rpf = 1;
-                    loadDetails();
+                    if(Objects.equals(data.getStringExtra(EditPropertyActivity.BACK_PRESS), "back_button")){
+                        //itemId = data.getStringExtra(EditPropertyActivity.ARG_ITEM_ID);
+                        loadDetails();
+                        Log.e("Back button","back button");
+                        SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(MyPropertyDetailsActivity.this);
+                        sharedPropertyEditState.createEditState(SharedPropertyEditState.NOT_EDITED,null);
+                    }
+
                 }
             }
         }
-    }
+    }*/
 
 
     /**
@@ -393,18 +419,6 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
         public int getCount() {
             return NUM_IMAGES;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra(MyPropertyDetailsActivity.ARG_ITEM_ID, itemId);
-        //if(rpf == 1){
-            intent.putExtra(MyPropertyDetailsActivity.REFRESH, 1);
-        //}
-
-        setResult(RESULT_OK, intent);
-        finish();
     }
 
 }

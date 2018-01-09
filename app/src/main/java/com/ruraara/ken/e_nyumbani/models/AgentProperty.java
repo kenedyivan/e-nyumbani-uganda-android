@@ -32,7 +32,6 @@ public class AgentProperty {
     public static Map<String, AgentProperty.PropertyItem> ITEM_MAP = new HashMap<String, AgentProperty.PropertyItem>();
 
     public static void addPropertyItem(AgentProperty.PropertyItem item) {
-        Log.w(TAG, "Creating agent property item");
         ITEMS.add(item);
         if(Integer.parseInt(item.status) == 1){
             SALE_ITEMS.add(item);
@@ -41,11 +40,6 @@ public class AgentProperty {
         }
 
         ITEM_MAP.put(item.id, item);
-        Log.w(TAG, "Finished creating agent property item");
-        Log.w(TAG, String.valueOf(ITEM_MAP.size()));
-        Log.w("All:", String.valueOf(ITEMS.size()));
-        Log.w("Rent", String.valueOf(RENT_ITEMS.size()));
-        Log.w("Sale", String.valueOf(SALE_ITEMS.size()));
 
     }
 

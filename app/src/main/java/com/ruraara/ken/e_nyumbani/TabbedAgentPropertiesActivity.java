@@ -1,10 +1,12 @@
 package com.ruraara.ken.e_nyumbani;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -143,6 +145,13 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(TabbedAgentPropertiesActivity.this, TopSettingsActivity.class);
+            startActivity(i);
+            return true;
+        }
+
+        if(id == android.R.id.home){
+            onBackPressed();
             return true;
         }
 

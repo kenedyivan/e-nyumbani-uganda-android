@@ -12,6 +12,8 @@ import java.util.List;
  */
 
 public class PropertyDetail {
+    private boolean loaded = false;
+
     public String id = null;
     public String title = null;
     public String description = null;
@@ -64,6 +66,8 @@ public class PropertyDetail {
         this.createdAt = createdAt;
         this.otherImagesJson = otherImagesJson;
 
+        loaded = true;
+
     }
 
     public PropertyDetail(String id, String title, String descrition,
@@ -95,10 +99,16 @@ public class PropertyDetail {
         this.otherImagesJson = otherImagesJson;
         this.reviewsJson = reviewsJson;
         this.relatedPropertiesJson = relatedPropertiesJson;
+
+        loaded = true;
     }
 
     public PropertyDetail() {
 
+    }
+
+    public boolean isLoaded(){
+        return loaded;
     }
 
 

@@ -35,46 +35,32 @@
         <activity
             android:name=".DrawerActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PropertyForRentActivity" />
-        <activity android:name=".PropertyDetailsActivity">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+        <activity android:name=".PropertyDetailsActivity" />
         <activity
             android:name=".SearchResults"
-            android:label="Search results" />
+            android:label="Search results"
+            android:parentActivityName=".DrawerActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DrawerActivity" />
+        </activity>
         <activity
             android:name=".AddPropertyActivity"
-            android:label="@string/add_property" />
+            android:label="@string/add_property"
+            android:parentActivityName=".DrawerActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DrawerActivity" />
+        </activity>
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/Login">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+            android:theme="@style/Login" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -94,91 +80,61 @@
         <activity android:name=".SuccessActivity" />
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/join" />
-        <activity android:name=".OtherDetailsActivity">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            android:label="@string/join"
+            android:parentActivityName=".LoginActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
         </activity>
-        <activity
-            android:name=".AgentProperties"
-            android:label="@string/title_activity_agent_properties">
 
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
         <activity
             android:name=".TabbedAgentPropertiesActivity"
             android:label="@string/title_activity_property_agent"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AgentProfileActivity"
-            android:label="Profile">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+            android:label="Profile" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".TopSettingsActivity"
-            android:label="@string/title_activity_settings">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".TopSettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TopSettingsActivity" />
         </activity>
         <activity
+            android:name=".TopSettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
             android:name=".UserAccountActivity"
-            android:label="Account">
+            android:label="Account"
+            android:parentActivityName=".TopSettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TopSettingsActivity" />
 
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".EditPropertyActivity"
-            android:label="Edit property">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:label="Edit property"
+            android:parentActivityName=".MyPropertyDetailsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MyPropertyDetailsActivity" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
         </activity>
-        <activity android:name=".MyPropertyDetailsActivity"></activity>
+        <activity
+            android:name=".MyPropertyDetailsActivity"
+            android:parentActivityName=".DrawerActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DrawerActivity" />
+        </activity>
     </application>
 
 </manifest>
