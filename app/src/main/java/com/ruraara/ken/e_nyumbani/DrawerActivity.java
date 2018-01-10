@@ -58,7 +58,13 @@ public class DrawerActivity extends AppCompatActivity
         PropertyAgentFragment.OnListFragmentInteractionListener,
         MyFavoritesFragment.OnListFragmentInteractionListener,
         FeaturedPropertyFragment.OnDataPass,
-        MyFavoritesFragment.OnDataPass{
+        MyFavoritesFragment.OnDataPass,
+        MyPropertiesFragment.OnEmptyList,
+        FeaturedPropertyFragment.OnEmptyList,
+        ForRentPropertyFragment.OnEmptyList,
+        ForSalePropertyFragment.OnEmptyList,
+        PropertyAgentFragment.OnEmptyList,
+        MyFavoritesFragment.OnEmptyList {
 
     NavigationView navigationView;
     int position;
@@ -82,18 +88,22 @@ public class DrawerActivity extends AppCompatActivity
 
     boolean retrivedFeatured = false;
 
+    TextView mEmptyList;
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("Drawer","onResume");
+        Log.e("Drawer", "onResume");
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mEmptyList.setVisibility(View.GONE);
+
         //Track Drawer navigation
         SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(DrawerActivity.this);
-        if(sd.getRentViewState() == SharedDrawerNavigationUpHomeState.GONE){
+        if (sd.getRentViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(1).setChecked(true);
 
             fragmentClass = ForRentPropertyFragment.class;
@@ -112,7 +122,7 @@ public class DrawerActivity extends AppCompatActivity
             sd.backFromRent(SharedDrawerNavigationUpHomeState.NOT_GONE);
         }
 
-        if(sd.getSaleViewState() == SharedDrawerNavigationUpHomeState.GONE){
+        if (sd.getSaleViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(2).setChecked(true);
             fragmentClass = ForSalePropertyFragment.class;
             position = 3;
@@ -130,7 +140,7 @@ public class DrawerActivity extends AppCompatActivity
             sd.backFromSale(SharedDrawerNavigationUpHomeState.NOT_GONE);
         }
 
-        if(sd.getAgentsViewState() == SharedDrawerNavigationUpHomeState.GONE){
+        if (sd.getAgentsViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(3).setChecked(true);
             fragmentClass = PropertyAgentFragment.class;
             position = 4;
@@ -148,7 +158,7 @@ public class DrawerActivity extends AppCompatActivity
             sd.backFromAgents(SharedDrawerNavigationUpHomeState.NOT_GONE);
         }
 
-        if(sd.getFavoritesViewState() == SharedDrawerNavigationUpHomeState.GONE){
+        if (sd.getFavoritesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(4).setChecked(true);
             fragmentClass = MyFavoritesFragment.class;
             position = 5;
@@ -166,13 +176,13 @@ public class DrawerActivity extends AppCompatActivity
             sd.backFromFavorites(SharedDrawerNavigationUpHomeState.NOT_GONE);
         }
 
-        if(sd.getPropertiesViewState() == SharedDrawerNavigationUpHomeState.GONE){
+        if (sd.getPropertiesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(5).setChecked(true);
 
             SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(DrawerActivity.this);
             int edited = sharedPropertyEditState.getMyPropertiesRefreshFlag();
 
-            if(edited == SharedPropertyEditState.EDITED){ ///// TODO: 1/9/18 Do a network operation here when property is edited
+            if (edited == SharedPropertyEditState.EDITED) { ///// TODO: 1/9/18 Do a network operation here when property is edited
 
                 fragmentClass = MyPropertiesFragment.class;
                 position = 5;
@@ -188,10 +198,10 @@ public class DrawerActivity extends AppCompatActivity
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
 
-                Log.e("UpHome","up home button");
+                Log.e("UpHome", "up home button");
                 sharedPropertyEditState.clearMYPropertiesFlag();
 
-            }else{
+            } else {
                 fragmentClass = MyPropertiesFragment.class;
                 position = 6;
                 toolbar.setTitle("My properties");
@@ -215,7 +225,10 @@ public class DrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        Log.e("Drawer","onCreate");
+        Log.e("Drawer", "onCreate");
+
+        mEmptyList = (TextView) findViewById(R.id.empty_view);
+        mEmptyList.setVisibility(View.GONE);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Featured");
@@ -419,9 +432,9 @@ public class DrawerActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    void trackCallToAction(){
+    void trackCallToAction() {
         final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(DrawerActivity.this);
-        switch(position){
+        switch (position) {
             case 0:
                 break;
             case 2:
@@ -440,7 +453,7 @@ public class DrawerActivity extends AppCompatActivity
                 sd.goneToProperties(SharedDrawerNavigationUpHomeState.GONE);
                 break;
             default:
-                Log.d("Debug","Not gone");
+                Log.d("Debug", "Not gone");
                 break;
         }
     }
@@ -451,6 +464,7 @@ public class DrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        mEmptyList.setVisibility(View.GONE);
 
         if (id == R.id.nav_camera) {
 
@@ -471,24 +485,29 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setTitle("For sale");
 
         } else if (id == R.id.nav_manage) {
+
             fragmentClass = PropertyAgentFragment.class;
             position = 4;
             toolbar.setTitle("Agents");
+
         } else if (id == R.id.nav_my_favorites) {
+
             fragmentClass = MyFavoritesFragment.class;
             position = 5;
             toolbar.setTitle("My favorites");
-            //Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+
         } else if (id == R.id.nav_my_properties) {
+
             fragmentClass = MyPropertiesFragment.class;
             position = 6;
             toolbar.setTitle("My properties");
-            //Log.d("MenuItem: ", String.valueOf(item.getTitle()));
+
         } else if (id == R.id.nav_settings) {
+
             position = 7;
-            //Log.d("MenuItem: ", String.valueOf(item.getTitle()));
             Intent i = new Intent(DrawerActivity.this, TopSettingsActivity.class);
             startActivity(i);
+
         }
 
         try {
@@ -893,30 +912,12 @@ public class DrawerActivity extends AppCompatActivity
         });
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 45) {
-            if(resultCode == RESULT_OK) {
-
-                //if(data.getIntExtra("refresh",45) == 1){
-                    /*itemId = data.getStringExtra(EditPropertyActivity.ARG_ITEM_ID);
-                    rpf = 1;
-                    loadDetails();*/
-
-                    fragmentClass = MyPropertiesFragment.class;
-                    toolbar.setTitle("MyProperties");
-
-                    try {
-                        fragment = (Fragment) fragmentClass.newInstance();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    // Insert the fragment by replacing any existing fragment
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
-                //}
-            }
+    @Override
+    public void listEmpty(boolean data) {
+        if (data) {
+            mEmptyList.setVisibility(View.VISIBLE);
+            Log.e("Empty list", String.valueOf(data));
         }
+
     }
 }

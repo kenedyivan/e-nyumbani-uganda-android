@@ -53,6 +53,8 @@ public class MyPropertiesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+     OnEmptyList emptyDataPasser;
+
     public MyPropertiesFragment() {
         // Required empty public constructor
     }
@@ -148,18 +150,23 @@ public class MyPropertiesFragment extends Fragment {
                 }
 
 
-                // Set the adapter
-                if (view instanceof RecyclerView) {
-                    Context context = view.getContext();
-                    RecyclerView recyclerView = (RecyclerView) view;
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                            linearLayoutManager.getOrientation());
-                    recyclerView.addItemDecoration(mDividerItemDecoration);
+                if(MyProperty.ITEMS.size() < 1){
+                    listEmpty(true);
+                }else{
+                    // Set the adapter
+                    if (view instanceof RecyclerView) {
+                        Context context = view.getContext();
+                        RecyclerView recyclerView = (RecyclerView) view;
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                                linearLayoutManager.getOrientation());
+                        recyclerView.addItemDecoration(mDividerItemDecoration);
 
-                    recyclerView.setAdapter(new MyPropertyRecyclerViewAdapter(MyProperty.ITEMS, getActivity()));
+                        recyclerView.setAdapter(new MyPropertyRecyclerViewAdapter(MyProperty.ITEMS, getActivity()));
+                    }
                 }
+
 
 
                 mProgressDialog.dismiss();
@@ -202,6 +209,13 @@ public class MyPropertiesFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        if(context instanceof OnEmptyList){
+            emptyDataPasser = (OnEmptyList) context;
+        }else{
+            throw new RuntimeException(context.toString()
+                    + " must implement OnEmptyList");
+        }
     }
 
     @Override
@@ -223,5 +237,13 @@ public class MyPropertiesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public interface OnEmptyList {
+        public void listEmpty(boolean data);
+    }
+
+    public void listEmpty(boolean data) {
+        emptyDataPasser.listEmpty(data);
     }
 }

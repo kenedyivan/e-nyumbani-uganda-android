@@ -45,6 +45,8 @@ public class FeaturedPropertyFragment extends Fragment {
 
     OnDataPass dataPasser;
 
+    OnEmptyList emptyDataPasser;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -133,17 +135,21 @@ public class FeaturedPropertyFragment extends Fragment {
 
                 //Do the working from here
 
-                // Set the adapter
-                if (view instanceof RecyclerView) {
-                    Context context = view.getContext();
-                    RecyclerView recyclerView = (RecyclerView) view;
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                            linearLayoutManager.getOrientation());
-                    recyclerView.addItemDecoration(mDividerItemDecoration);
+                if(FeaturedProperty.ITEMS.size() < 1){
+                    listEmpty(true);
+                }else {
+                    // Set the adapter
+                    if (view instanceof RecyclerView) {
+                        Context context = view.getContext();
+                        RecyclerView recyclerView = (RecyclerView) view;
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                                linearLayoutManager.getOrientation());
+                        recyclerView.addItemDecoration(mDividerItemDecoration);
 
-                    recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(FeaturedProperty.ITEMS, getActivity()));
+                        recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(FeaturedProperty.ITEMS, getActivity()));
+                    }
                 }
 
                 //setupRecyclerView((RecyclerView) recyclerView);
@@ -195,6 +201,13 @@ public class FeaturedPropertyFragment extends Fragment {
                     + " must implement OnDataPass");
         }
 
+        if(context instanceof OnEmptyList){
+            emptyDataPasser = (OnEmptyList) context;
+        }else{
+            throw new RuntimeException(context.toString()
+                    + " must implement OnEmptyList");
+        }
+
     }
 
     @Override
@@ -226,6 +239,14 @@ public class FeaturedPropertyFragment extends Fragment {
 
     public void passData(boolean data) {
         dataPasser.onDataPass(data);
+    }
+
+    public interface OnEmptyList {
+        public void listEmpty(boolean data);
+    }
+
+    public void listEmpty(boolean data) {
+        emptyDataPasser.listEmpty(data);
     }
 
 

@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -37,14 +39,12 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
-        AgentAllFragment.OnFragmentInteractionListener,
-        AgentSaleFragment.OnFragmentInteractionListener,
-        AgentRentFragment.OnFragmentInteractionListener {
+public class TabbedAgentPropertiesActivity extends AppCompatActivity {
 
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_ITEM_NAME = "name";
 
+    TextView mEmptyList;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -54,7 +54,6 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -68,6 +67,11 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_tabbed_agent_properties);
 
 
+        //emptyViewPasser = (OnEmptyView);
+
+
+        mEmptyList = (TextView) findViewById(R.id.empty_view);
+        //mEmptyList.setVisibility(View.GONE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getIntent().getStringExtra(ARG_ITEM_NAME));
@@ -99,11 +103,8 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
         ArrayList<AgentProperty.PropertyItem> ssp = new ArrayList<>(AgentProperty.SALE_ITEMS);
         ArrayList<AgentProperty.PropertyItem> rrp = new ArrayList<>(AgentProperty.RENT_ITEMS);
 
-        ArrayList<Human> l = new ArrayList<>();
-        l.add(new Human("akena", "kenedy"));
-        l.add(new Human("otim", "kevin"));
-        l.add(new Human("ojara", "tom"));
-        l.add(new Human("okello", "duram"));
+
+
 
         Fragment all = new AgentAllFragment();
         Bundle bundle = new Bundle();
@@ -122,8 +123,8 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
 
 
         adapter.addFragment(all, "All");
-        adapter.addFragment(sale, "Sale");
-        adapter.addFragment(rent, "Rent");
+        adapter.addFragment(sale, "Rent");
+        adapter.addFragment(rent, "Sale");
 
         viewPager.setAdapter(adapter);
     }
@@ -150,17 +151,12 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
             return true;
         }
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
 
@@ -184,7 +180,6 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
             return mFragmentList.get(position);
         }
 
@@ -267,19 +262,6 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
 
                 setupViewPager(mViewPager, AgentProperty.ITEMS);
 
-                //mViewPager.setAdapter(mSectionsPagerAdapter);
-
-               /* TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-                tabLayout.setupWithViewPager(mViewPager);*/
-
-                //Do the working from here
-
-                //setupViewPager(mViewPager, AgentProperty.ITEMS);
-
-                //setupRecyclerView((RecyclerView) recyclerView);
-
-                //progressBar.setVisibility(View.INVISIBLE);
-
                 mProgressDialog.dismiss();
 
                 //End work from here
@@ -301,21 +283,5 @@ public class TabbedAgentPropertiesActivity extends AppCompatActivity implements
             }
         });
 
-    }
-
-    public static class Human implements Serializable {
-        String fn;
-        String ln;
-
-        public Human(String fn, String ln) {
-            this.fn = fn;
-            this.ln = ln;
-        }
-
-        @Override
-        public String toString() {
-            return fn + " " + ln;
-
-        }
     }
 }

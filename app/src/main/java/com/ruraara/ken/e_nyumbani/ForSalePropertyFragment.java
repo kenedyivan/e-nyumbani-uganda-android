@@ -43,6 +43,8 @@ public class ForSalePropertyFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
+    OnEmptyList emptyDataPasser;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -131,17 +133,22 @@ public class ForSalePropertyFragment extends Fragment {
 
                 //Do the working from here
 
-                // Set the adapter
-                if (view instanceof RecyclerView) {
-                    Context context = view.getContext();
-                    RecyclerView recyclerView = (RecyclerView) view;
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                            linearLayoutManager.getOrientation());
-                    recyclerView.addItemDecoration(mDividerItemDecoration);
+                if (PropertyForSale.ITEMS.size() < 1) {
+                    listEmpty(true);
+                } else {
 
-                    recyclerView.setAdapter(new PropertyForSaleRecyclerViewAdapter(PropertyForSale.ITEMS, getActivity()));
+                    // Set the adapter
+                    if (view instanceof RecyclerView) {
+                        Context context = view.getContext();
+                        RecyclerView recyclerView = (RecyclerView) view;
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                                linearLayoutManager.getOrientation());
+                        recyclerView.addItemDecoration(mDividerItemDecoration);
+
+                        recyclerView.setAdapter(new PropertyForSaleRecyclerViewAdapter(PropertyForSale.ITEMS, getActivity()));
+                    }
                 }
 
                 //setupRecyclerView((RecyclerView) recyclerView);
@@ -183,6 +190,13 @@ public class ForSalePropertyFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
+        if (context instanceof OnEmptyList) {
+            emptyDataPasser = (OnEmptyList) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnEmptyList");
+        }
     }
 
     @Override
@@ -204,5 +218,13 @@ public class ForSalePropertyFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+
+    public interface OnEmptyList {
+        public void listEmpty(boolean data);
+    }
+
+    public void listEmpty(boolean data) {
+        emptyDataPasser.listEmpty(data);
     }
 }

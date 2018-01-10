@@ -18,14 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AgentAllFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AgentAllFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AgentAllFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,8 +27,6 @@ public class AgentAllFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     private List<AgentProperty.PropertyItem> propertyItemList = null;
 
@@ -74,7 +64,6 @@ public class AgentAllFragment extends Fragment {
         //ArrayList<AgentProperty.PropertyItem> d = getArguments().getParcelable("items");
 
 
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
 
@@ -97,60 +86,38 @@ public class AgentAllFragment extends Fragment {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_agent_all_properties, container, false);
 
-        final View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = null;
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                    linearLayoutManager.getOrientation());
-            recyclerView.addItemDecoration(mDividerItemDecoration);
+        if (propertyItemList.size() < 1) {
+            view = inflater.inflate(R.layout.empty_list_layout, container, false);
+        } else {
+            view = inflater.inflate(R.layout.fragment_item_list, container, false);
+            // Set the adapter
+            if (view instanceof RecyclerView) {
+                Context context = view.getContext();
+                RecyclerView recyclerView = (RecyclerView) view;
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                        linearLayoutManager.getOrientation());
+                recyclerView.addItemDecoration(mDividerItemDecoration);
 
-            recyclerView.setAdapter(new AgentPropertiesRecyclerViewAdapter(propertyItemList, getActivity()));
+                recyclerView.setAdapter(new AgentPropertiesRecyclerViewAdapter(propertyItemList, getActivity()));
+            }
         }
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
