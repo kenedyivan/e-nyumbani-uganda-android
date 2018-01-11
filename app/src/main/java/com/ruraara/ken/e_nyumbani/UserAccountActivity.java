@@ -2,6 +2,8 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
@@ -65,6 +67,9 @@ public class UserAccountActivity extends AppCompatActivity {
     TextView mProfileCrdTitle;
     TextView mContactCrdTitle;
     TextView mCompanyCrdTitle;
+
+    private int PICK_IMAGE_REQUEST = 1;
+    private int CROP_IMAGE_REQUEST = 2;
 
 
     @Override
@@ -131,6 +136,18 @@ public class UserAccountActivity extends AppCompatActivity {
 
         showAgentDetails();
 
+        mEditImageIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                // Show only images, no videos or anything else
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                // Always show the chooser (if there are multiple options available)
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+        });
+
         //Profile edit pencil
         mEditProfileIv.setOnClickListener(new View.OnClickListener() {
 
@@ -184,6 +201,23 @@ public class UserAccountActivity extends AppCompatActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            Log.d("Avatar Uri", uri.toString());
+
+            Intent i = new Intent(UserAccountActivity.this,ImageCropperActivity.class);
+            i.putExtra("uri",uri);
+            startActivityForResult(i,CROP_IMAGE_REQUEST);
+
         }
     }
 

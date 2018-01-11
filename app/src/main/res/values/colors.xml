@@ -10,4 +10,6 @@
     <color name="fb_background">#3B5998</color>
     <color name="background">#ffffff</color>
     <color name="property_background">#ececec</color>
+    <color name="overlay">#AA1C1C1C</color>
+    <color name="windowBackground">#1C1C1C</color>
 </resources>

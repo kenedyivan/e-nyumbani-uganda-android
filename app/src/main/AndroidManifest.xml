@@ -8,6 +8,13 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
+
 
     <application
         android:allowBackup="true"
@@ -25,12 +32,11 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreen">
-
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".DrawerActivity"
@@ -42,6 +48,7 @@
             android:name=".SearchResults"
             android:label="Search results"
             android:parentActivityName=".DrawerActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -51,12 +58,12 @@
             android:name=".AddPropertyActivity"
             android:label="@string/add_property"
             android:parentActivityName=".DrawerActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DrawerActivity" />
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
@@ -82,12 +89,12 @@
             android:name=".RegisterActivity"
             android:label="@string/join"
             android:parentActivityName=".LoginActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoginActivity" />
         </activity>
-
         <activity
             android:name=".TabbedAgentPropertiesActivity"
             android:label="@string/title_activity_property_agent"
@@ -99,6 +106,7 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".TopSettingsActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -111,29 +119,42 @@
             android:name=".UserAccountActivity"
             android:label="Account"
             android:parentActivityName=".TopSettingsActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TopSettingsActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".EditPropertyActivity"
             android:label="Edit property"
             android:parentActivityName=".MyPropertyDetailsActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MyPropertyDetailsActivity" />
-
         </activity>
         <activity
             android:name=".MyPropertyDetailsActivity"
             android:parentActivityName=".DrawerActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DrawerActivity" />
+        </activity>
+        <activity android:name=".ImageCropperActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
     </application>
 
