@@ -7,8 +7,8 @@
     android:weightSum="1">
 
     <FrameLayout
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -27,13 +27,22 @@
             app:civ_border_width="2dp" />
 
 
-        <ImageButton
-            android:id="@+id/changePic"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/pencil_edit_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
             android:background="@android:color/transparent"
-            app:srcCompat="@drawable/icons8_picture_48" />
+            app:srcCompat="@drawable/icons8_pencil_24" />
+
     </FrameLayout>
 
 

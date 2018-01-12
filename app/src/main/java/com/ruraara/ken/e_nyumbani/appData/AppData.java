@@ -82,6 +82,12 @@ public class AppData {
         return HOST + "/api/listings/property/upload-photo";
     }
 
+    public static String uploadProfilePicture() {
+        return HOST + "/api/agent/upload-profile-picture";
+    }
+
+
+
     public static String updatePhoto() {
         return HOST + "/api/listings/property/update-photo";
     }

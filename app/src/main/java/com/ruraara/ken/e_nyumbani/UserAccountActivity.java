@@ -3,8 +3,13 @@ package com.ruraara.ken.e_nyumbani;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
+import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -26,11 +32,16 @@ import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
 import com.squareup.picasso.Picasso;
+import com.twitter.sdk.android.core.Session;
 import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
@@ -68,8 +79,14 @@ public class UserAccountActivity extends AppCompatActivity {
     TextView mContactCrdTitle;
     TextView mCompanyCrdTitle;
 
+    private ProgressBar mProgressBar;
+
     private int PICK_IMAGE_REQUEST = 1;
     private int CROP_IMAGE_REQUEST = 2;
+
+    private static String IMAGE_URI = "image_uri";
+
+    String imageName;
 
 
     @Override
@@ -98,8 +115,11 @@ public class UserAccountActivity extends AppCompatActivity {
         mContactCrdTitle = (TextView) findViewById(R.id.contact_crd_title);
         mCompanyCrdTitle = (TextView) findViewById(R.id.company_crd_title);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
 
         //Set visibility gone
+        mProgressBar.setVisibility(View.GONE);
         mFirstNameViewLbl.setVisibility(View.INVISIBLE);
         mLastNameViewLbl.setVisibility(View.INVISIBLE);
         mUsernameViewLbl.setVisibility(View.INVISIBLE);
@@ -204,6 +224,7 @@ public class UserAccountActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -215,11 +236,181 @@ public class UserAccountActivity extends AppCompatActivity {
             Log.d("Avatar Uri", uri.toString());
 
             Intent i = new Intent(UserAccountActivity.this,ImageCropperActivity.class);
-            i.putExtra("uri",uri);
+            i.putExtra(IMAGE_URI,uri.toString());
             startActivityForResult(i,CROP_IMAGE_REQUEST);
 
         }
+
+        if(requestCode == CROP_IMAGE_REQUEST && resultCode == RESULT_OK){
+            Uri croppedImageUri = Uri.parse(data.getExtras().getString(ImageCropperActivity.CROPPED_IMAGE_URI));
+            dumpImageMetaData(croppedImageUri);
+            uploadProfilePicture(croppedImageUri);
+            try {
+                mImage.setImageBitmap(getBitmapFromUri(croppedImageUri));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void dumpImageMetaData(Uri uri) {
+
+        // The query, since it only applies to a single document, will only return
+        // one row. There's no need to filter, sort, or select fields, since we want
+        // all fields for one document.
+        Cursor cursor = getContentResolver()
+                .query(uri, null, null, null, null, null);
+
+        try {
+            // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
+            // "if there's anything to look at, look at it" conditionals.
+            if (cursor != null && cursor.moveToFirst()) {
+
+                // Note it's called "Display Name".  This is
+                // provider-specific, and might not necessarily be the file name.
+                String displayName = cursor.getString(
+                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                Log.i(TAG, "Display Name: " + displayName);
+                imageName = displayName;
+
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                // If the size is unknown, the value stored is null.  But since an
+                // int can't be null in Java, the behavior is implementation-specific,
+                // which is just a fancy term for "unpredictable".  So as
+                // a rule, check if it's null before assigning to an int.  This will
+                // happen often:  The storage API allows for remote files, whose
+                // size might not be locally known.
+                String size = null;
+                if (!cursor.isNull(sizeIndex)) {
+                    // Technically the column stores an int, but cursor.getString()
+                    // will do the conversion automatically.
+                    size = cursor.getString(sizeIndex);
+                } else {
+                    size = "Unknown";
+                }
+                Log.i(TAG, "Size: " + size);
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
+    }
+
+    //Converting Selected Image to Base64Encode String
+    private String getImageBase64(Uri selectedImage) {
+        Bitmap myImg = null;
+        try {
+            myImg = decodeUri(selectedImage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Must compress the Image to reduce image size to make upload easy
+        myImg.compress(Bitmap.CompressFormat.PNG, 50, stream);
+        byte[] byte_arr = stream.toByteArray();
+        // Encode Image to String
+        return android.util.Base64.encodeToString(byte_arr, 0);
+    }
+
+    //Reducing Image Size of a selected Image
+    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
+
+        // Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o);
+
+        // The new size we want to scale to
+        final int REQUIRED_SIZE = 500;
+
+        // Find the correct scale value. It should be the power of 2.
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE
+                    || height_tmp / 2 < REQUIRED_SIZE) {
+                break;
+            }
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        // Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+
+    }
+
+    private void uploadProfilePicture(Uri uri) {
+        Log.i("Path: ", uri.getPath());
+
+        String str = getImageBase64(uri);
+
+        SessionManager sessionManager = new SessionManager(UserAccountActivity.this);
+
+        RequestParams params = new RequestParams();
+        params.put("encoded_string", str);
+        params.put("image", imageName);
+        params.put("id", sessionManager.getUserID());
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout((50 * 1000));
+        client.setResponseTimeout((50 * 1000));
+        client.post(AppData.uploadProfilePicture(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Response: " + resp);
+
+                mProgressBar.setVisibility(View.GONE);
+                Toast.makeText(UserAccountActivity.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+
+                //End work from here
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+                mProgressBar.setVisibility(View.GONE);
+                Toast.makeText(UserAccountActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Log.d(TAG, "retryNO: " + retryNo);
+                Toast.makeText(UserAccountActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void showAgentDetails(){
         final ProgressDialog mProgressDialog;

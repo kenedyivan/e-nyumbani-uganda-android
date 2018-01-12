@@ -31,23 +31,27 @@
 
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/SplashScreen">
-            <!--<intent-filter>
+            android:theme="@style/SplashScreen"
+            android:screenOrientation="portrait">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".DrawerActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity android:name=".PropertyForRentActivity" />
-        <activity android:name=".PropertyDetailsActivity" />
+        <activity android:name=".PropertyDetailsActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SearchResults"
             android:label="Search results"
-            android:parentActivityName=".DrawerActivity">
+            android:parentActivityName=".DrawerActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -57,7 +61,8 @@
         <activity
             android:name=".AddPropertyActivity"
             android:label="@string/add_property"
-            android:parentActivityName=".DrawerActivity">
+            android:parentActivityName=".DrawerActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -101,11 +106,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AgentProfileActivity"
-            android:label="Profile" />
+            android:label="Profile"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".TopSettingsActivity">
+            android:parentActivityName=".TopSettingsActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -114,26 +121,24 @@
         </activity>
         <activity
             android:name=".TopSettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UserAccountActivity"
             android:label="Account"
-            android:parentActivityName=".TopSettingsActivity">
+            android:parentActivityName=".TopSettingsActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TopSettingsActivity" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".EditPropertyActivity"
             android:label="Edit property"
-            android:parentActivityName=".MyPropertyDetailsActivity">
+            android:parentActivityName=".MyPropertyDetailsActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -142,14 +147,16 @@
         </activity>
         <activity
             android:name=".MyPropertyDetailsActivity"
-            android:parentActivityName=".DrawerActivity">
+            android:parentActivityName=".DrawerActivity"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DrawerActivity" />
         </activity>
-        <activity android:name=".ImageCropperActivity">
+        <activity android:name=".ImageCropperActivity"
+            android:screenOrientation="portrait">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

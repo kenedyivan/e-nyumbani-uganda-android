@@ -57,6 +57,9 @@ public class ImageCropperActivity extends AppCompatActivity {
 
     Uri imageToCrop;
 
+    public static String IMAGE_URI = "image_uri";
+    public static String CROPPED_IMAGE_URI = "cropped_image_uri";
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -87,7 +90,8 @@ public class ImageCropperActivity extends AppCompatActivity {
         //mSourceUri = savedInstanceState.getParcelable(KEY_SOURCE_URI);
         mCropView = (CropImageView) findViewById(R.id.cropImageView);
 
-        String sUri = getIntent().getStringExtra("uri");
+        String sUri = getIntent().getStringExtra(IMAGE_URI);
+        Log.d("sUri",sUri);
 
         imageToCrop = Uri.parse(sUri);
 
@@ -239,6 +243,11 @@ public class ImageCropperActivity extends AppCompatActivity {
             //dismissProgress();
             //((ImageCropperActivity) this).startResultActivity(outputUri);
             Log.d("Success Uri", outputUri.toString());
+            // Build a result intent and post it back.
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(CROPPED_IMAGE_URI, outputUri.toString());
+            setResult(RESULT_OK, resultIntent);
+            finish();
             ///todo Set intent result for request from parent activity then finish this activity
         }
 
