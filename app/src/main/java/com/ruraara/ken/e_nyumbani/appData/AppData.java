@@ -1,12 +1,8 @@
 package com.ruraara.ken.e_nyumbani.appData;
 
-/**
- * Created by ken on 10/30/17.
- */
-
 public class AppData {
-    public static final String HOST = "http://10.0.3.2:8000";
-    //static final String HOST = "http://192.168.43.28:5000";
+    private static final String HOST = "https://api.nyumbaniuganda.com";
+    //public static final String HOST = "http://10.0.3.2:8000";
 
     public static String getHost() {
         return HOST;
@@ -77,7 +73,6 @@ public class AppData {
     }
 
 
-
     public static String uploadPhoto() {
         return HOST + "/api/listings/property/upload-photo";
     }
@@ -87,25 +82,12 @@ public class AppData {
     }
 
 
-
     public static String updatePhoto() {
         return HOST + "/api/listings/property/update-photo";
     }
 
-    public static String getImagesPath() {
-        return HOST + "/images/properties/agent_properties_120x120/";
-    }
-
-    public static String getRelatedPropertiesImagesPath() {
-        return HOST + "/images/properties/latest_home_and_best_property_355x240/";
-    }
-
     public static String getAgentsImagesPath() {
         return HOST + "/images/agents/profile_330x330/";
-    }
-
-    public static String getDetailsImagesPath() {
-        return HOST + "/images/properties/property_listing_364x244/";
     }
 
     /**

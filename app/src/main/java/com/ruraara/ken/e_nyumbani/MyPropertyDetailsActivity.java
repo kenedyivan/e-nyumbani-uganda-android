@@ -326,7 +326,7 @@ public class MyPropertyDetailsActivity extends AppCompatActivity {
                 mPrice.setText(propertyDetail.currency.toUpperCase() + " " + formatter.format(amount));
 
                 Picasso.with(MyPropertyDetailsActivity.this)
-                        .load(AppData.getImagesPath() + propertyDetail.image)
+                        .load(propertyDetail.image)
                         .fit()
                         .into(mMainImage);
 

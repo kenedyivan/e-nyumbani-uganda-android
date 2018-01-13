@@ -822,7 +822,7 @@ public class EditPropertyActivity extends AppCompatActivity {
                         txtVz.get(i).setText(image);
 
                         Picasso.with(EditPropertyActivity.this)
-                                .load(AppData.getImagesPath() + image)
+                                .load(image)
                                 .into(imgVz.get(i));
 
                     }

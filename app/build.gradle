@@ -43,8 +43,6 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.twitter.sdk.android:twitter-core:3.1.1'
     compile 'com.android.support:support-vector-drawable:26.+'
-    compile 'org.hybridsquad.android.photocropper:library:2.1.0'
-    compile 'com.adamstyrc.cookiecutter:cookie-cutter:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.isseiaoki:simplecropview:1.1.7'
 }

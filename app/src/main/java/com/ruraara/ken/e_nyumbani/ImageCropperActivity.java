@@ -31,7 +31,7 @@ import com.isseiaoki.simplecropview.callback.SaveCallback;
 import com.isseiaoki.simplecropview.util.Logger;
 import com.isseiaoki.simplecropview.util.Utils;
 
-import org.hybridsquad.android.library.CropParams;
+//import org.hybridsquad.android.library.CropParams;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

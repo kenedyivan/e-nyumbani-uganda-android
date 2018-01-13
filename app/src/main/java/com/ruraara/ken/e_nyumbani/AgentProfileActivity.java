@@ -130,6 +130,8 @@ public class AgentProfileActivity extends AppCompatActivity {
 
         RequestParams params = new RequestParams();
 
+        Log.d("Agent id", agentId);
+
         params.put("agent_id", agentId);
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -271,7 +273,7 @@ public class AgentProfileActivity extends AppCompatActivity {
             Log.d("Related det: ", "posi-" + position);
 
             Picasso.with(AgentProfileActivity.this)
-                    .load(AppData.getRelatedPropertiesImagesPath() + horizontalList.get(position).image)
+                    .load(horizontalList.get(position).image)
                     .into(holder.imageView);
 
             holder.txtview.setText(horizontalList.get(position).title);

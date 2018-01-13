@@ -344,7 +344,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(propertyDetail.title);
 
                 final PropertyDetail finalPropertyDetail = propertyDetail;
-                mAgentBtn.setOnClickListener(new View.OnClickListener(){
+                mAgentBtn.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
@@ -369,9 +369,9 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                 mCompany.setText("From " + PropertyDetail.PropertyAgent.company);
 
                 Log.d("Fav flag: ", String.valueOf(propertyDetail.favorite));
-                if(propertyDetail.favorite == 1){
+                if (propertyDetail.favorite == 1) {
                     mLikeView.setImageResource(R.drawable.icons8_heart_outline_24_active);
-                }else{
+                } else {
                     mLikeView.setImageResource(R.drawable.icons8_heart_24_grey);
                 }
 
@@ -382,7 +382,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                 mPrice.setText(propertyDetail.currency.toUpperCase() + " " + formatter.format(amount));
 
                 Picasso.with(PropertyDetailsActivity.this)
-                        .load(AppData.getImagesPath() + propertyDetail.image)
+                        .load(propertyDetail.image)
                         .fit()
                         .into(mMainImage);
 
@@ -450,7 +450,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             return true;
         }
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             //NavUtils.navigateUpFromSameTask(this);
             /*Intent intent = NavUtils.getParentActivityIntent(this);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -541,6 +541,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
             Picasso.with(mContext)
                     .load(AppData.getAgentsImagesPath() + mValues.get(position).profile_picture)
+                    .placeholder(R.drawable.avatar)
                     .into(holder.mImageView);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -632,9 +633,10 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             //holder.imageView.setImageResource(horizontalList.get(position).image);
 
             Log.d("Related det: ", "posi-" + position);
+            Log.d("Related image: ", horizontalList.get(position).image);
 
             Picasso.with(PropertyDetailsActivity.this)
-                    .load(AppData.getRelatedPropertiesImagesPath() + horizontalList.get(position).image)
+                    .load(horizontalList.get(position).image)
                     .into(holder.imageView);
 
             holder.txtview.setText(horizontalList.get(position).title);

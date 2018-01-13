@@ -59,6 +59,7 @@ public class PropertyAgentRecyclerViewAdapter
 
         Picasso.with(mContext)
                 .load(AppData.getAgentsImagesPath() + mValues.get(position).image)
+                .placeholder(R.drawable.avatar)
                 .into(holder.mImageView);
 
         final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(mContext);

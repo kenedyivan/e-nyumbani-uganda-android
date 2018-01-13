@@ -57,7 +57,7 @@ public class MyFavoriteRecyclerViewAdapter
         //holder.mImageView.setImageResource(mValues.get(position).image);
 
         Picasso.with(mContext)
-                .load(AppData.getImagesPath()+mValues.get(position).image)
+                .load(mValues.get(position).image)
                 .into(holder.mImageView);
 
         final SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(mContext);
