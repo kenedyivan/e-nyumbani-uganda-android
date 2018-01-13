@@ -93,7 +93,6 @@ public class FeaturedPropertyFragment extends Fragment {
             @Override
             public void onStart() {
                 // called before request is started
-                Log.d(TAG, "Started request");
                 //progressBar.setVisibility(View.VISIBLE);
                 mProgressDialog.show();
             }
@@ -102,9 +101,7 @@ public class FeaturedPropertyFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
-                Log.d(TAG, "Status: " + statusCode);
                 String resp = new String(response);
-                Log.d(TAG, "S: " + resp);
 
                 Log.e(TAG, String.valueOf(FeaturedProperty.ITEMS.size()));
 
@@ -167,14 +164,12 @@ public class FeaturedPropertyFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(TAG, "failed " + statusCode);
                 Toast.makeText(getActivity(), "Network error", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRetry(int retryNo) {
                 // called when request is retried
-                Log.d(TAG, "retryNO: " + retryNo);
                 Toast.makeText(getActivity(), "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });
