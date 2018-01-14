@@ -1,10 +1,12 @@
 package com.ruraara.ken.e_nyumbani;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.DrawableWrapper;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,6 +49,7 @@ import com.ruraara.ken.e_nyumbani.utils.SharedDrawerNavigationUpHomeState;
 import com.ruraara.ken.e_nyumbani.utils.SharedPropertyEditState;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,6 +106,7 @@ public class DrawerActivity extends AppCompatActivity
 
     private int PICK_IMAGE_REQUEST = 1;
     private int CROP_IMAGE_REQUEST = 2;
+    private int FILTER_PROPERTY_REQUEST = 3;
 
     public static String IMAGE_URI = "image_uri";
 
@@ -115,6 +120,8 @@ public class DrawerActivity extends AppCompatActivity
     AlertDialog dialog;
     boolean reloadDialog;
 
+    Button mFilterBtn;
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
@@ -125,12 +132,14 @@ public class DrawerActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mEmptyList.setVisibility(View.GONE);
+        mFilterBtn.setVisibility(View.VISIBLE);
 
         //Track Drawer navigation
         SharedDrawerNavigationUpHomeState sd = new SharedDrawerNavigationUpHomeState(DrawerActivity.this);
         if (sd.getRentViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(1).setChecked(true);
 
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = ForRentPropertyFragment.class;
             position = 2;
             toolbar.setTitle("For rent");
@@ -149,6 +158,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (sd.getSaleViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(2).setChecked(true);
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = ForSalePropertyFragment.class;
             position = 3;
             toolbar.setTitle("For sale");
@@ -167,6 +177,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (sd.getAgentsViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(3).setChecked(true);
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = PropertyAgentFragment.class;
             position = 4;
             toolbar.setTitle("Agents");
@@ -185,6 +196,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (sd.getFavoritesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(4).setChecked(true);
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = MyFavoritesFragment.class;
             position = 5;
             toolbar.setTitle("My favorites");
@@ -204,6 +216,7 @@ public class DrawerActivity extends AppCompatActivity
         if (sd.getPropertiesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(5).setChecked(true);
 
+            mFilterBtn.setVisibility(View.GONE);
             SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(DrawerActivity.this);
             int edited = sharedPropertyEditState.getMyPropertiesRefreshFlag();
 
@@ -255,6 +268,7 @@ public class DrawerActivity extends AppCompatActivity
         mEmptyList = (TextView) findViewById(R.id.empty_view);
         mEmptyList.setVisibility(View.GONE);
 
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Featured");
         setSupportActionBar(toolbar);
@@ -278,6 +292,18 @@ public class DrawerActivity extends AppCompatActivity
                 trackCallToAction();
                 Intent i = new Intent(DrawerActivity.this, AddPropertyActivity.class);
                 startActivity(i);
+            }
+        });
+
+        mFilterBtn = (Button) findViewById(R.id.filter_button);
+
+        mFilterBtn.setVisibility(View.VISIBLE);
+
+        mFilterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DrawerActivity.this,FilterActivity.class);
+                startActivityForResult(intent,FILTER_PROPERTY_REQUEST);
             }
         });
 
@@ -317,6 +343,7 @@ public class DrawerActivity extends AppCompatActivity
 
                 Log.d("Name: ", name);
 
+                mFilterBtn.setVisibility(View.GONE);
                 fragmentClass = MyPropertiesFragment.class;
                 toolbar.setTitle("MyProperties");
 
@@ -341,6 +368,7 @@ public class DrawerActivity extends AppCompatActivity
 
 
             if (position == 0) {
+                mFilterBtn.setVisibility(View.VISIBLE);
                 fragmentClass = FeaturedPropertyFragment.class;
                 toolbar.setTitle("Featured");
 
@@ -363,6 +391,7 @@ public class DrawerActivity extends AppCompatActivity
 
 
             if (position == 0) {
+                mFilterBtn.setVisibility(View.VISIBLE);
                 fragmentClass = FeaturedPropertyFragment.class;
                 toolbar.setTitle("Featured");
 
@@ -394,6 +423,7 @@ public class DrawerActivity extends AppCompatActivity
 
         if (position > 0) {
 
+            mFilterBtn.setVisibility(View.VISIBLE);
             drawer.closeDrawer(GravityCompat.START);
             fragmentClass = FeaturedPropertyFragment.class;
             toolbar.setTitle("Featured");
@@ -493,42 +523,49 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
 
+            mFilterBtn.setVisibility(View.VISIBLE);
             fragmentClass = FeaturedPropertyFragment.class;
             position = 0;
             toolbar.setTitle("Featured");
 
         } else if (id == R.id.nav_gallery) {
 
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = ForRentPropertyFragment.class;
             position = 2;
             toolbar.setTitle("For rent");
 
         } else if (id == R.id.nav_slideshow) {
 
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = ForSalePropertyFragment.class;
             position = 3;
             toolbar.setTitle("For sale");
 
         } else if (id == R.id.nav_manage) {
 
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = PropertyAgentFragment.class;
             position = 4;
             toolbar.setTitle("Agents");
 
         } else if (id == R.id.nav_my_favorites) {
 
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = MyFavoritesFragment.class;
             position = 5;
             toolbar.setTitle("My favorites");
 
         } else if (id == R.id.nav_my_properties) {
 
+            mFilterBtn.setVisibility(View.GONE);
             fragmentClass = MyPropertiesFragment.class;
             position = 6;
             toolbar.setTitle("My properties");
 
         } else if (id == R.id.nav_settings) {
 
+            mFilterBtn.setVisibility(View.GONE);
             position = 7;
             Intent i = new Intent(DrawerActivity.this, TopSettingsActivity.class);
             startActivity(i);
@@ -899,6 +936,8 @@ public class DrawerActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("REQUEST CODE",String.valueOf(requestCode));
+
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -916,15 +955,38 @@ public class DrawerActivity extends AppCompatActivity
             dumpImageMetaData(croppedImageUri);
             uploadProfilePicture(croppedImageUri);
 
-            //reloadDialog = true;
-            //dialog.dismiss();
-
             croppedImage = croppedImageUri;
 
             SessionManager sm = new SessionManager(DrawerActivity.this);
             HashMap<String, Integer> hMap = sm.getOtherDetailsFlags();
             otherInfo(hMap.get(SessionManager.KEY_EMAIL_FLAG), hMap.get(SessionManager.KEY_COMPANY_FLAG),
                     hMap.get(SessionManager.KEY_USER_TYPE_FLAG), croppedImageUri);
+
+        }
+
+        if (requestCode == FILTER_PROPERTY_REQUEST && resultCode == RESULT_OK) {
+            String filter = data.getExtras().getString(FilterActivity.FILTER_TAG);
+
+            Log.d("Filter", filter);
+
+            String filterArray[]= filter.split(":");
+
+            String sFromPrice = filterArray[0];
+            String sToPrice = filterArray[1];
+            String sAddress= filterArray[2];
+            String sDistrict = filterArray[3];
+            String sTown = filterArray[4];
+            String sRegion = filterArray[5];
+            String sType = filterArray[6];
+            String sStatus = filterArray[7];
+            String sCurrency = filterArray[8];
+
+            String filter1 = sFromPrice+":"+sToPrice+":"+sAddress+":"+sDistrict+":"
+                    +sTown+":"+sRegion+":"+sType+":"+sStatus+":"+sCurrency;
+
+            getFilteredProperties(filterArray);
+            
+            ///Log.d("filter1",filter1);
 
         }
 
@@ -1167,4 +1229,111 @@ public class DrawerActivity extends AppCompatActivity
         }
 
     }
+
+    private void getFilteredProperties(String[] filterArray) {
+
+        final ProgressDialog mProgressDialog;
+        mProgressDialog = new ProgressDialog(DrawerActivity.this);
+        mProgressDialog.setMessage("Loading........");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+
+        String sFromPrice = filterArray[0];
+        String sToPrice = filterArray[1];
+        String sAddress= filterArray[2];
+        String sDistrict = filterArray[3];
+        String sTown = filterArray[4];
+        String sRegion = filterArray[5];
+        String sType = filterArray[6];
+        String sStatus = filterArray[7];
+        String sCurrency = filterArray[8];
+
+        RequestParams params = new RequestParams();
+        params.put("lower_price", sFromPrice);
+        params.put("higher_price", sToPrice);
+        params.put("address", sAddress);
+        params.put("district", sDistrict);
+        params.put("town", sTown);
+        params.put("region", sRegion);
+        params.put("type", sType);
+        params.put("status", sStatus);
+        params.put("currency", sCurrency);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(AppData.filterProperty(), params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                Log.d(TAG, "Started request");
+                //progressBar.setVisibility(View.VISIBLE);
+                mProgressDialog.show();
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
+                Log.d(TAG, "Status: " + statusCode);
+                String resp = new String(response);
+                Log.d(TAG, "Filtered property" + resp);
+
+                //Toast.makeText(EditPropertyActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
+
+                try {
+                    //JSONObject jsonObject = new JSONObject(resp);
+                    JSONArray jsonArray = new JSONArray(resp);
+
+                    //Sets navigation drawer first item to checked
+                    navigationView.getMenu().getItem(0).setChecked(true);
+                    if (navigationView.getMenu().findItem(R.id.nav_camera).isChecked()) {
+                        position = 10;
+                    }
+
+
+                    if (position == 10) {
+                        mFilterBtn.setVisibility(View.GONE);
+                        fragment = new FeaturedPropertyFragment();
+                        Bundle featuredBundle = new Bundle();
+                        featuredBundle.putString("filtered", jsonArray.toString());
+                        fragment.setArguments(featuredBundle);
+                        toolbar.setTitle("Filtered");
+
+                        /*try {
+                            fragment = (Fragment) fragmentClass.newInstance();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }*/
+
+                        // Insert the fragment by replacing any existing fragment
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mProgressDialog.dismiss();
+
+                //End work from here
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.d(TAG, "failed " + statusCode);
+                Toast.makeText(DrawerActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Log.d(TAG, "retryNO: " + retryNo);
+                Toast.makeText(DrawerActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

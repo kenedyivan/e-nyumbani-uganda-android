@@ -43,6 +43,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
+import com.ruraara.ken.e_nyumbani.models.PropertyType;
 import com.ruraara.ken.e_nyumbani.utils.SharedPropertyEditState;
 import com.squareup.picasso.Picasso;
 
@@ -1036,45 +1037,6 @@ public class EditPropertyActivity extends AppCompatActivity {
                 Toast.makeText(EditPropertyActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private class PropertyType {
-        private String id;
-        private String name;
-
-        List<PropertyType> propertyTypeList = new ArrayList<>();
-
-        PropertyType(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        PropertyType() {
-        }
-
-
-        private String[] typeNames() {
-            String[] names = new String[propertyTypeList.size()];
-            for (int i = 0; i < propertyTypeList.size(); i++) {
-                names[i] = propertyTypeList.get(i).name;
-            }
-
-            return names;
-        }
-
-        private String typeId(int nameIndex) {
-            String[] ids = new String[propertyTypeList.size()];
-            for (int i = 0; i < propertyTypeList.size(); i++) {
-                ids[i] = propertyTypeList.get(i).id;
-            }
-
-            return ids[nameIndex];
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
     }
 
     @Override

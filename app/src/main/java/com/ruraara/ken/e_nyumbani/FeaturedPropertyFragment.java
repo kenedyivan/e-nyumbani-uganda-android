@@ -18,12 +18,15 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.ruraara.ken.e_nyumbani.appData.AppData;
+import com.ruraara.ken.e_nyumbani.models.AgentProperty;
 import com.ruraara.ken.e_nyumbani.models.DummyContent.DummyItem;
 import com.ruraara.ken.e_nyumbani.models.FeaturedProperty;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -46,6 +49,8 @@ public class FeaturedPropertyFragment extends Fragment {
     OnDataPass dataPasser;
 
     OnEmptyList emptyDataPasser;
+
+    String filteredProperties;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -71,6 +76,15 @@ public class FeaturedPropertyFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+
+
+            filteredProperties = bundle.getString("filtered");
+
+            Log.e("APFilter: ", filteredProperties);
+        }
     }
 
     @Override
@@ -86,94 +100,150 @@ public class FeaturedPropertyFragment extends Fragment {
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
+        if (filteredProperties != null) {
+            Log.d("Bundle", "Found filter bundle");
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(AppData.getFeatured(), new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                // called before request is started
-                //progressBar.setVisibility(View.VISIBLE);
-                mProgressDialog.show();
+            if (FeaturedProperty.ITEMS.size() > 0) {
+                FeaturedProperty.ITEMS.clear();
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                // called when response HTTP status is "200 OK"
-                String resp = new String(response);
+            try {
+                JSONArray jsonArray = new JSONArray(filteredProperties);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    int id = jsonObject.getInt("id");
+                    String title = jsonObject.getString("title");
+                    int rating = jsonObject.getInt("rating");
+                    String address = jsonObject.getString("address");
+                    String agentId = jsonObject.getString("agent_id");
+                    String agent = jsonObject.getString("agent");
+                    String price = jsonObject.getString("price");
+                    String currency = jsonObject.getString("currency");
+                    String image = jsonObject.getString("image");
+                    FeaturedProperty.addPropertyItem(FeaturedProperty.createPropertyItem(String.valueOf(id),
+                            title, rating, address, agentId, agent, price, currency, image));
 
-                Log.e(TAG, String.valueOf(FeaturedProperty.ITEMS.size()));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                if (FeaturedProperty.ITEMS.size() > 0) {
-                    FeaturedProperty.ITEMS.clear();
+            //Do the working from here
+
+            if (FeaturedProperty.ITEMS.size() < 1) {
+                listEmpty(true);
+            } else {
+                // Set the adapter
+                if (view instanceof RecyclerView) {
+                    Context context = view.getContext();
+                    RecyclerView recyclerView = (RecyclerView) view;
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                            linearLayoutManager.getOrientation());
+                    recyclerView.addItemDecoration(mDividerItemDecoration);
+
+                    recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(FeaturedProperty.ITEMS, getActivity()));
+                }
+            }
+
+            //setupRecyclerView((RecyclerView) recyclerView);
+
+            //progressBar.setVisibility(View.INVISIBLE);
+
+            mProgressDialog.dismiss();
+
+            passData(true);
+
+
+        } else {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(AppData.getFeatured(), new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    // called before request is started
+                    //progressBar.setVisibility(View.VISIBLE);
+                    mProgressDialog.show();
                 }
 
-                try {
-                    JSONArray jsonArray = new JSONArray(resp);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        int id = jsonObject.getInt("id");
-                        String title = jsonObject.getString("title");
-                        int rating = jsonObject.getInt("rating");
-                        String address = jsonObject.getString("address");
-                        String agentId = jsonObject.getString("agent_id");
-                        String agent = jsonObject.getString("agent");
-                        String price = jsonObject.getString("price");
-                        String currency = jsonObject.getString("currency");
-                        String image = jsonObject.getString("image");
-                        FeaturedProperty.addPropertyItem(FeaturedProperty.createPropertyItem(String.valueOf(id),
-                                title, rating, address, agentId, agent, price, currency, image));
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                    // called when response HTTP status is "200 OK"
+                    String resp = new String(response);
 
+                    Log.e(TAG, String.valueOf(FeaturedProperty.ITEMS.size()));
+
+                    if (FeaturedProperty.ITEMS.size() > 0) {
+                        FeaturedProperty.ITEMS.clear();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-                //Do the working from here
+                    try {
+                        JSONArray jsonArray = new JSONArray(resp);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            int id = jsonObject.getInt("id");
+                            String title = jsonObject.getString("title");
+                            int rating = jsonObject.getInt("rating");
+                            String address = jsonObject.getString("address");
+                            String agentId = jsonObject.getString("agent_id");
+                            String agent = jsonObject.getString("agent");
+                            String price = jsonObject.getString("price");
+                            String currency = jsonObject.getString("currency");
+                            String image = jsonObject.getString("image");
+                            FeaturedProperty.addPropertyItem(FeaturedProperty.createPropertyItem(String.valueOf(id),
+                                    title, rating, address, agentId, agent, price, currency, image));
 
-                if(FeaturedProperty.ITEMS.size() < 1){
-                    listEmpty(true);
-                }else {
-                    // Set the adapter
-                    if (view instanceof RecyclerView) {
-                        Context context = view.getContext();
-                        RecyclerView recyclerView = (RecyclerView) view;
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                                linearLayoutManager.getOrientation());
-                        recyclerView.addItemDecoration(mDividerItemDecoration);
-
-                        recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(FeaturedProperty.ITEMS, getActivity()));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
+                    //Do the working from here
+
+                    if (FeaturedProperty.ITEMS.size() < 1) {
+                        listEmpty(true);
+                    } else {
+                        // Set the adapter
+                        if (view instanceof RecyclerView) {
+                            Context context = view.getContext();
+                            RecyclerView recyclerView = (RecyclerView) view;
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                            recyclerView.setLayoutManager(linearLayoutManager);
+                            DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                                    linearLayoutManager.getOrientation());
+                            recyclerView.addItemDecoration(mDividerItemDecoration);
+
+                            recyclerView.setAdapter(new FeaturedPropertyRecyclerViewAdapter(FeaturedProperty.ITEMS, getActivity()));
+                        }
+                    }
+
+                    //setupRecyclerView((RecyclerView) recyclerView);
+
+                    //progressBar.setVisibility(View.INVISIBLE);
+
+                    mProgressDialog.dismiss();
+
+                    passData(true);
+
+                    //End work from here
+
                 }
 
-                //setupRecyclerView((RecyclerView) recyclerView);
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                    // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                    Toast.makeText(getActivity(), "Network error", Toast.LENGTH_SHORT).show();
+                }
 
-                //progressBar.setVisibility(View.INVISIBLE);
-
-                mProgressDialog.dismiss();
-
-                passData(true);
-
-                //End work from here
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Toast.makeText(getActivity(), "Network error", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-                Toast.makeText(getActivity(), "Taking too long", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                @Override
+                public void onRetry(int retryNo) {
+                    // called when request is retried
+                    Toast.makeText(getActivity(), "Taking too long", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         return view;
     }
@@ -189,16 +259,16 @@ public class FeaturedPropertyFragment extends Fragment {
                     + " must implement OnListFragmentInteractionListener");
         }
 
-        if(context instanceof OnDataPass){
+        if (context instanceof OnDataPass) {
             dataPasser = (OnDataPass) context;
-        }else{
+        } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnDataPass");
         }
 
-        if(context instanceof OnEmptyList){
+        if (context instanceof OnEmptyList) {
             emptyDataPasser = (OnEmptyList) context;
-        }else{
+        } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnEmptyList");
         }
@@ -225,7 +295,6 @@ public class FeaturedPropertyFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
     }
-
 
 
     public interface OnDataPass {

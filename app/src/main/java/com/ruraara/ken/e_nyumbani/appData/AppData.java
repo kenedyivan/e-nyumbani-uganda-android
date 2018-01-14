@@ -140,5 +140,9 @@ public class AppData {
         return HOST + "/api/listings/types";
     }
 
+    public static String filterProperty() {
+        return HOST + "/api/listings/filter";
+    }
+
 
 }
