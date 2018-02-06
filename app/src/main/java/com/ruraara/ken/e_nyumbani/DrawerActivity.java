@@ -302,8 +302,8 @@ public class DrawerActivity extends AppCompatActivity
         mFilterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DrawerActivity.this,FilterActivity.class);
-                startActivityForResult(intent,FILTER_PROPERTY_REQUEST);
+                Intent intent = new Intent(DrawerActivity.this, FilterActivity.class);
+                startActivityForResult(intent, FILTER_PROPERTY_REQUEST);
             }
         });
 
@@ -548,6 +548,13 @@ public class DrawerActivity extends AppCompatActivity
             fragmentClass = PropertyAgentFragment.class;
             position = 4;
             toolbar.setTitle("Agents");
+
+        } else if (id == R.id.chat_list) {
+
+            mFilterBtn.setVisibility(View.GONE);
+            fragmentClass = ChatListFragment.class;
+            position = 8;
+            toolbar.setTitle("Chat");
 
         } else if (id == R.id.nav_my_favorites) {
 
@@ -902,7 +909,7 @@ public class DrawerActivity extends AppCompatActivity
                 if (!press && reloadDialog) {
                     //reload
                     reloadDialog = false;
-                } else if(!press){
+                } else if (!press) {
                     Log.d("Dialog: ", "dismissed");
                     finish();
                 }
@@ -936,7 +943,7 @@ public class DrawerActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d("REQUEST CODE",String.valueOf(requestCode));
+        Log.d("REQUEST CODE", String.valueOf(requestCode));
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
@@ -969,11 +976,11 @@ public class DrawerActivity extends AppCompatActivity
 
             Log.d("Filter", filter);
 
-            String filterArray[]= filter.split(":");
+            String filterArray[] = filter.split(":");
 
             String sFromPrice = filterArray[0];
             String sToPrice = filterArray[1];
-            String sAddress= filterArray[2];
+            String sAddress = filterArray[2];
             String sDistrict = filterArray[3];
             String sTown = filterArray[4];
             String sRegion = filterArray[5];
@@ -981,11 +988,11 @@ public class DrawerActivity extends AppCompatActivity
             String sStatus = filterArray[7];
             String sCurrency = filterArray[8];
 
-            String filter1 = sFromPrice+":"+sToPrice+":"+sAddress+":"+sDistrict+":"
-                    +sTown+":"+sRegion+":"+sType+":"+sStatus+":"+sCurrency;
+            String filter1 = sFromPrice + ":" + sToPrice + ":" + sAddress + ":" + sDistrict + ":"
+                    + sTown + ":" + sRegion + ":" + sType + ":" + sStatus + ":" + sCurrency;
 
             getFilteredProperties(filterArray);
-            
+
             ///Log.d("filter1",filter1);
 
         }
@@ -1240,7 +1247,7 @@ public class DrawerActivity extends AppCompatActivity
 
         String sFromPrice = filterArray[0];
         String sToPrice = filterArray[1];
-        String sAddress= filterArray[2];
+        String sAddress = filterArray[2];
         String sDistrict = filterArray[3];
         String sTown = filterArray[4];
         String sRegion = filterArray[5];
