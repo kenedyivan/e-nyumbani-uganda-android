@@ -14,20 +14,20 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ruraara.ken.e_nyumbani.content.DataProvider;
-import com.ruraara.ken.e_nyumbani.models.FeaturedProperty;
+import com.ruraara.ken.e_nyumbani.models.Chat;
+import com.ruraara.ken.e_nyumbani.models.ChatRooms;
+import com.ruraara.ken.e_nyumbani.models.Message;
 import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
-import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +38,6 @@ public class ChatActivity extends AppCompatActivity {
     EditText mMessageEtv;
     Context ctx = this;
     Message messageObj;
-    Chat chatObj;
     private List<Message> msgList = new ArrayList<>();
 
     String messageProjection[] = {
@@ -50,18 +49,13 @@ public class ChatActivity extends AppCompatActivity {
             DataProvider.COL_AT,
     };
 
-    String chatProjection[] = {
 
-            DataProvider.COL_ID,
-            DataProvider.COL_PROPERTY_ID,
-            DataProvider.COL_NAME,
-            DataProvider.COL_AT,
-    };
 
     RecyclerView recyclerView;
 
     String p_id;
     String p_title;
+    ChatRooms chatRooms;
 
 
     @Override
@@ -72,6 +66,8 @@ public class ChatActivity extends AppCompatActivity {
         p_id = getIntent().getStringExtra("propertyId");
         p_title = getIntent().getStringExtra("propertyTitle");
 
+        chatRooms = new ChatRooms(ctx);
+
 
         //Sets actionbar back arrow
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -81,9 +77,7 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        Log.d("Current chats", getChats().toString());
-
-        showMessages(getMessages(getChatId(p_id)));
+        showMessages(getMessages(chatRooms.getChatId(p_id)));
 
         mMessageEtv = (EditText) findViewById(R.id.message);
         sendBtn = (Button) findViewById(R.id.btn_send);
@@ -138,37 +132,58 @@ public class ChatActivity extends AppCompatActivity {
             message = sb.toString();
         }
 
-        if (!Objects.equals(getChatId(p_id), "0")) {
-            values.put(DataProvider.COL_CHAT_ID, getChatId(p_id));
+        if (!Objects.equals(chatRooms.getChatId(p_id), "0")) {
+            values.put(DataProvider.COL_CHAT_ID, chatRooms.getChatId(p_id));
         }
 
         values.put(DataProvider.COL_MESSAGE, message);
 
         //Creates new chat thread
-        if (!checkIfChatExists(p_id)) {
+        if (!chatRooms.checkIfChatExists(p_id)) {
+            Log.d("Di msg", message);
             ContentValues chatValues = new ContentValues();
-            int max = 100;
+            int max = 1000;
             int min = 1;
             Random randomId = new Random();
             int randId = min + randomId.nextInt(max);
             chatValues.put(DataProvider.COL_ID, randId);
             chatValues.put(DataProvider.COL_PROPERTY_ID, p_id);
             chatValues.put(DataProvider.COL_NAME, p_title);
+            chatValues.put(DataProvider.COL_LAST_MESSAGE, message);
 
             ctx.getContentResolver().insert(DataProvider.CONTENT_URI_CHATS, chatValues);
 
             values.put(DataProvider.COL_CHAT_ID, randId);
 
+        }else{
+            Log.d("There", "Already there");
         }
 
-        Uri uri = ctx.getContentResolver().insert(DataProvider.CONTENT_URI_MESSAGES, values);
+        Log.d("Di msg", message);
+        ctx.getContentResolver().insert(DataProvider.CONTENT_URI_MESSAGES, values);
+
+        refreshList(getMessages(chatRooms.getChatId(p_id)),message);
 
 
-        refreshList(getMessages(getChatId(p_id)));
+    }
+
+    private void updateLastMessage(String lastMessage, String chatId){
+        ContentValues chatValues = new ContentValues();
+        chatValues.put(DataProvider.COL_LAST_MESSAGE, lastMessage);
+
+        String where = DataProvider.COL_ID + "=?";
+
+        String[] whereArgs = new String[]{
+                chatId
+        };
+
+        ctx.getContentResolver().update(DataProvider.CONTENT_URI_CHATS, chatValues,
+                where, whereArgs);
 
     }
 
     private List<Message> getMessages(String chatId) {
+        Log.d("ChatId",chatId);
         msgList.clear();
         String orderBy = DataProvider.COL_AT + " ASC";
         String where = DataProvider.COL_CHAT_ID + "=?";
@@ -207,107 +222,38 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private List<Chat> getChats() {
-        List<Chat> chatList = new ArrayList<>();
-        Cursor cursor = ctx.getContentResolver().query(DataProvider.CONTENT_URI_CHATS, chatProjection, null, null, null);
-
-        cursor.moveToFirst();
-        if ((cursor.getCount() > 0)) {
-            String chatId;
-            do {
-
-                chatId = String.valueOf(cursor.getInt(cursor.getColumnIndex(DataProvider.COL_ID)));
-                String propertyid = cursor.getString(cursor.getColumnIndex(DataProvider.COL_PROPERTY_ID));
-                String name = cursor.getString(cursor.getColumnIndex(DataProvider.COL_NAME));
-                String at = cursor.getString(cursor.getColumnIndex(DataProvider.COL_AT));
-
-                chatObj = new Chat(chatId, propertyid, name, at);
-
-                Log.w("Chat", chatId + " ," + propertyid + ", " + name + " ," + at);
-
-                chatList.add(chatObj);
-
-            } while (cursor.moveToNext());
-
-        }
-
-        Log.w("Chats", chatList.toString());
-
-        return chatList;
-    }
-
-    private boolean checkIfChatExists(String pId) {
-        String where = DataProvider.COL_PROPERTY_ID + "=?";
-
-        String[] whereArgs = new String[]{
-                pId
-        };
-
-        Cursor cursor = ctx.getContentResolver().query(DataProvider.CONTENT_URI_CHATS, chatProjection, where, whereArgs, null);
-
-        cursor.moveToFirst();
-        if ((cursor.getCount() > 0)) {
-            return true;
-
-        }
-
-        return false;
-    }
-
-    private String getChatId(String pId) {
-        Log.d("Property ID", pId);
-        String where = DataProvider.COL_PROPERTY_ID + "=?";
-
-        String[] whereArgs = new String[]{
-                pId
-        };
-
-        Cursor cursor = ctx.getContentResolver().query(DataProvider.CONTENT_URI_CHATS, chatProjection, where, whereArgs, null);
-
-        cursor.moveToFirst();
-        if ((cursor.getCount() > 0)) {
-            String chatId;
-            do {
-            chatId =  String.valueOf(cursor.getInt(cursor.getColumnIndex(DataProvider.COL_ID)));
-            } while (cursor.moveToNext());
-
-            Log.d("Chat ID", chatId);
-            return chatId;
-        }
-
-        return "0";
-    }
-
     public void showMessages(List<Message> list) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new ChatsRecyclerViewAdapter(list, this));
+        recyclerView.setAdapter(new MessagesRecyclerViewAdapter(list, this));
         recyclerView.scrollToPosition(list.size() - 1);
     }
 
-    public void refreshList(List<Message> list) {
+    public void refreshList(List<Message> list,String lm) {
+        Log.d("Refresh","refresh running ["+list.toString());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new ChatsRecyclerViewAdapter(list, this));
+        recyclerView.setAdapter(new MessagesRecyclerViewAdapter(list, this));
         recyclerView.invalidate();
         recyclerView.scrollToPosition(list.size() - 1);
+        updateLastMessage(lm,chatRooms.getChatId(p_id));
     }
 
-    public class ChatsRecyclerViewAdapter
-            extends RecyclerView.Adapter<ChatsRecyclerViewAdapter.ViewHolder> {
+    public class MessagesRecyclerViewAdapter
+            extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
 
         private final List<Message> messageArrayList;
         private final Context mContext;
         private int SELF = 100;
 
-        public ChatsRecyclerViewAdapter(List<Message> items, Context c) {
+        public MessagesRecyclerViewAdapter(List<Message> items, Context c) {
             messageArrayList = items;
             mContext = c;
             Log.e("Adapter", "In adapter");
         }
 
         @Override
-        public ChatsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MessagesRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view;
 
             // view type is to identify where to render the chat message
@@ -322,11 +268,11 @@ public class ChatActivity extends AppCompatActivity {
                         .inflate(R.layout.chat_item_other, parent, false);
             }
 
-            return new ChatsRecyclerViewAdapter.ViewHolder(view);
+            return new MessagesRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ChatsRecyclerViewAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(final MessagesRecyclerViewAdapter.ViewHolder holder, final int position) {
             holder.mItem = messageArrayList.get(position);
             holder.mMessageView.setText(messageArrayList.get(position).message);
         }
@@ -368,47 +314,36 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public class Message {
-        private String messageId = "0";
-        private String chatId;
-        private String message;
-        private String userId;
-        private String at;
-
-        public Message(String messageId, String chatId, String message, String from, String at) {
-            this.messageId = messageId;
-            this.chatId = chatId;
-            this.message = message;
-            this.userId = from;
-            this.at = at;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        @Override
-        public String toString() {
-            return message;
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.property_details, menu);
+        return true;
     }
 
-    public class Chat {
-        private String chatId;
-        private String propertyId;
-        private String name;
-        private String at;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        public Chat(String chatId, String propertyId, String name, String at) {
-            this.chatId = chatId;
-            this.propertyId = propertyId;
-            this.name = name;
-            this.at = at;
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent i = new Intent(ChatActivity.this, TopSettingsActivity.class);
+            startActivity(i);
+            return true;
         }
 
-        @Override
-        public String toString() {
-            return name;
+        if (id == android.R.id.home) {
+            //NavUtils.navigateUpFromSameTask(this);
+            /*Intent intent = NavUtils.getParentActivityIntent(this);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            NavUtils.navigateUpTo(this, intent);*/
+            onBackPressed();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }

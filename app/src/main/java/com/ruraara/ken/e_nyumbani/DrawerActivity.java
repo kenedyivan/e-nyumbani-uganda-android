@@ -194,11 +194,30 @@ public class DrawerActivity extends AppCompatActivity
             sd.backFromAgents(SharedDrawerNavigationUpHomeState.NOT_GONE);
         }
 
-        if (sd.getFavoritesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
+        if (sd.getChatRoomListViewState() == SharedDrawerNavigationUpHomeState.GONE) {
             navigationView.getMenu().getItem(4).setChecked(true);
             mFilterBtn.setVisibility(View.GONE);
-            fragmentClass = MyFavoritesFragment.class;
+            fragmentClass = ChatListFragment.class;
             position = 5;
+            toolbar.setTitle("Chats");
+
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.f_content, fragment).commit();
+            sd.backFromChatRoomList(SharedDrawerNavigationUpHomeState.NOT_GONE);
+        }
+
+        if (sd.getFavoritesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
+            navigationView.getMenu().getItem(5).setChecked(true);
+            mFilterBtn.setVisibility(View.GONE);
+            fragmentClass = MyFavoritesFragment.class;
+            position = 6;
             toolbar.setTitle("My favorites");
 
             try {
@@ -214,7 +233,7 @@ public class DrawerActivity extends AppCompatActivity
         }
 
         if (sd.getPropertiesViewState() == SharedDrawerNavigationUpHomeState.GONE) {
-            navigationView.getMenu().getItem(5).setChecked(true);
+            navigationView.getMenu().getItem(6).setChecked(true);
 
             mFilterBtn.setVisibility(View.GONE);
             SharedPropertyEditState sharedPropertyEditState = new SharedPropertyEditState(DrawerActivity.this);
@@ -223,7 +242,7 @@ public class DrawerActivity extends AppCompatActivity
             if (edited == SharedPropertyEditState.EDITED) { ///// TODO: 1/9/18 Do a network operation here when property is edited
 
                 fragmentClass = MyPropertiesFragment.class;
-                position = 5;
+                position = 7;
                 toolbar.setTitle("MyProperties");
 
                 try {
@@ -241,7 +260,7 @@ public class DrawerActivity extends AppCompatActivity
 
             } else {
                 fragmentClass = MyPropertiesFragment.class;
-                position = 6;
+                position = 7;
                 toolbar.setTitle("My properties");
 
                 try {
@@ -502,9 +521,12 @@ public class DrawerActivity extends AppCompatActivity
                 sd.goneToAgents(SharedDrawerNavigationUpHomeState.GONE);
                 break;
             case 5:
-                sd.goneToFavorites(SharedDrawerNavigationUpHomeState.GONE);
+                sd.goneToAgents(SharedDrawerNavigationUpHomeState.GONE);
                 break;
             case 6:
+                sd.goneToFavorites(SharedDrawerNavigationUpHomeState.GONE);
+                break;
+            case 7:
                 sd.goneToProperties(SharedDrawerNavigationUpHomeState.GONE);
                 break;
             default:
@@ -553,27 +575,27 @@ public class DrawerActivity extends AppCompatActivity
 
             mFilterBtn.setVisibility(View.GONE);
             fragmentClass = ChatListFragment.class;
-            position = 8;
-            toolbar.setTitle("Chat");
+            position = 5;
+            toolbar.setTitle("Chats");
 
         } else if (id == R.id.nav_my_favorites) {
 
             mFilterBtn.setVisibility(View.GONE);
             fragmentClass = MyFavoritesFragment.class;
-            position = 5;
+            position = 6;
             toolbar.setTitle("My favorites");
 
         } else if (id == R.id.nav_my_properties) {
 
             mFilterBtn.setVisibility(View.GONE);
             fragmentClass = MyPropertiesFragment.class;
-            position = 6;
+            position = 7;
             toolbar.setTitle("My properties");
 
         } else if (id == R.id.nav_settings) {
 
             mFilterBtn.setVisibility(View.GONE);
-            position = 7;
+            position = 8;
             Intent i = new Intent(DrawerActivity.this, TopSettingsActivity.class);
             startActivity(i);
 

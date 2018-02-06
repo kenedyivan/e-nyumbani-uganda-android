@@ -32,6 +32,7 @@ public class SharedDrawerNavigationUpHomeState {
     public static final String RENT = "RENT_FLAG";
     public static final String SALE = "SALE_FLAG";
     public static final String AGENTS = "AGENTS_FLAG";
+    public static final String CHATS = "CHATS_FLAG";
     public static final String FAVORITES = "FAVORITES_FLAG";
     public static final String PROPERTIES = "PROPERTIES_FLAG";
     public static final String SETTINGS = "SETTINGS_FLAG";
@@ -89,6 +90,24 @@ public class SharedDrawerNavigationUpHomeState {
     public void backFromAgents(int status) {
 
         editor.remove(AGENTS);
+        // commit changes
+        editor.commit();
+    }
+
+    public int getChatRoomListViewState() {
+        return pref.getInt(CHATS, 0);
+    }
+
+    public void goneToChatRoomList(int status) {
+
+        editor.putInt(CHATS, status);
+        // commit changes
+        editor.commit();
+    }
+
+    public void backFromChatRoomList(int status) {
+
+        editor.remove(CHATS);
         // commit changes
         editor.commit();
     }

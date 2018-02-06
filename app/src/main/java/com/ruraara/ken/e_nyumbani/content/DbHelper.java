@@ -21,7 +21,7 @@ public class DbHelper extends SQLiteOpenHelper {
         /*db.execSQL("create table users (_id text, name text, phone text,image_name text, image blob, " +
                 "saved text default '0');");*/ ///todo Uncomment this line to save user data local to the device
 
-        db.execSQL("create table chats (_id integer, property_id integer, name text, created_at datetime default current_timestamp);");
+        db.execSQL("create table chats (_id integer, property_id integer, name text, last_message text, created_at datetime default current_timestamp);");
 
         db.execSQL("create table messages (_id integer , chat_id integer, user_id integer, message text," +
                 "created_at datetime default current_timestamp);");
