@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -119,12 +120,18 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_details);
 
+        itemId = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
+        //itemId = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
+
         SessionManager sessionManager = new SessionManager(PropertyDetailsActivity.this);
         agentId = sessionManager.getUserID();
 
         //Sets actionbar back arrow
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
 
         mTitle = (TextView) findViewById(R.id.title);
         mDescription = (TextView) findViewById(R.id.description);
@@ -219,9 +226,6 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
-
-        itemId = getIntent().getStringExtra(ARG_ITEM_ID); // TODO: 12/13/17 uncomment this line after for dynamic property id
-        //itemId = "34"; // TODO: 12/13/17 Remove or comment this line after running test on the property details activity
 
         RequestParams params = new RequestParams();
         params.put("property_id", itemId);
@@ -342,6 +346,17 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
                 // Setting actionbar title
                 getSupportActionBar().setTitle(propertyDetail.title);
+
+                final PropertyDetail finalPropertyDetail1 = propertyDetail;
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(PropertyDetailsActivity.this, ChatActivity.class);
+                        i.putExtra("propertyId",itemId);
+                        i.putExtra("propertyTitle", finalPropertyDetail1.title);
+                        startActivity(i);
+                    }
+                });
 
                 final PropertyDetail finalPropertyDetail = propertyDetail;
                 mAgentBtn.setOnClickListener(new View.OnClickListener() {

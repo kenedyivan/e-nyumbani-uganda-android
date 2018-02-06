@@ -12,4 +12,6 @@
     <color name="property_background">#ececec</color>
     <color name="overlay">#AA1C1C1C</color>
     <color name="windowBackground">#1C1C1C</color>
+    <color name="chat_back_ground">#E1E1E1</color>
+    <color name="bg_bubble_self">#80D8FF</color>
 </resources>

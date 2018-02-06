@@ -127,5 +127,6 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="edit">Edit</string>
     <string name="no_data_available">No data available</string>
+    <string name="title_activity_chattable_property_details">ChattablePropertyDetails</string>
 
 </resources>
