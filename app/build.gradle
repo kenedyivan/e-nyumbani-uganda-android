@@ -21,6 +21,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-messaging:11.0.4'
+    compile 'com.firebase:firebase-jobdispatcher:0.7.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -45,6 +47,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:26.+'
     testCompile 'junit:junit:4.12'
     compile 'com.isseiaoki:simplecropview:1.1.7'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
 }
 
 
@@ -66,3 +69,7 @@ dependencies {
 
 
 
+
+
+
+apply plugin: 'com.google.gms.google-services'
