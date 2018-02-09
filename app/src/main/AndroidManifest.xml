@@ -55,11 +55,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreen">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".DrawerActivity"
@@ -232,7 +232,13 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".SocketIOActivity"></activity>
+        <activity android:name=".SocketIOActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
