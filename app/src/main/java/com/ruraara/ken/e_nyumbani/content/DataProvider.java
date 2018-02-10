@@ -32,6 +32,8 @@ public class DataProvider extends ContentProvider {
 
     /*chat table details*/
     public static final String TABLE_CHATS = "chats";
+    public static final String COL_USER_1 = "user_1";
+    public static final String COL_USER_2 = "user_2";
     public static final String COL_PROPERTY_ID = "property_id";
     public static final String COL_NAME = "name";
     public static final String COL_LAST_MESSAGE = "last_message";

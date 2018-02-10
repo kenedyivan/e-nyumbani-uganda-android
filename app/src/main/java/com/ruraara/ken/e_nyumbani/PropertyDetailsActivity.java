@@ -352,6 +352,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent i = new Intent(PropertyDetailsActivity.this, ChatActivity.class);
+                        i.putExtra("agentId",finalPropertyDetail1.agentId);
                         i.putExtra("propertyId",itemId);
                         i.putExtra("propertyTitle", finalPropertyDetail1.title);
                         startActivity(i);
