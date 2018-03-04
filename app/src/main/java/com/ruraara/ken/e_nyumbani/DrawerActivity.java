@@ -320,7 +320,7 @@ public class DrawerActivity extends AppCompatActivity
         // Log and toast
         String msg = getString(R.string.msg_token_fmt, token);
         Log.d(TAG, msg);
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 
         mEmptyList = (TextView) findViewById(R.id.empty_view);
         mEmptyList.setVisibility(View.GONE);
