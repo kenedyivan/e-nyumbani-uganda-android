@@ -176,6 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(String firstName, String lastName, String username, final String email, final String password) {
+        Log.d("Notice!","Supposed to be here");
         RequestParams params = new RequestParams();
         params.put("first_name", firstName);
         params.put("last_name", lastName);
@@ -185,7 +186,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         final ProgressDialog mProgressDialog;
         mProgressDialog = new ProgressDialog(RegisterActivity.this);
-        mProgressDialog.setMessage("Logging in........");
+        mProgressDialog.setMessage("Signing up........");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
@@ -195,7 +196,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onStart() {
                 // called before request is started
-                Log.d(TAG, "Started request");
+                //Log.d(TAG, "Started request");
                 mProgressDialog.show();
             }
 
@@ -203,9 +204,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
 
-                Log.d(TAG, "Status: " + statusCode);
+                //Log.d(TAG, "Status: " + statusCode);
                 String resp = new String(response);
-                Log.d(TAG, "Response: " + resp);
+                //Log.d(TAG, "Response: " + resp);
 
                 mProgressDialog.dismiss();
 
@@ -216,24 +217,18 @@ public class RegisterActivity extends AppCompatActivity {
                     int id = jsonObject.getInt("id");
                     int loginType = jsonObject.getInt("login_type");
 
-                    Log.d("Success: ", String.valueOf(success));
-                    Log.d("Error: ", String.valueOf(error));
+                    //Log.d("Success: ", String.valueOf(success));
+                    //Log.d("Error: ", String.valueOf(error));
 
                     if (error == 0 && success == 1 && id != 0) {
 
                         Toast.makeText(RegisterActivity.this, "Sign up successful", Toast.LENGTH_LONG).show();
-
-                        SessionManager sessionManager = new SessionManager(RegisterActivity.this);
-                        sessionManager.createLoginSession(email, password, String.valueOf(id),loginType);
-
-                        Intent i = new Intent(RegisterActivity.this, DrawerActivity.class);
-                        // Closing all the Activities
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        // Add new Flag to start new Activity
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                        startActivity(i);
-
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("email", email);
+                        resultIntent.putExtra("password", password);
+                        resultIntent.putExtra("id", id);
+                        resultIntent.putExtra("login_type", loginType);
+                        setResult(RESULT_OK, resultIntent);
                         finish();
 
                     } else if (error == 1 && success == 0) {
@@ -253,7 +248,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.d(TAG, "failed " + statusCode);
+                //Log.d(TAG, "failed " + statusCode);
+                //Log.d("RegEx", "Am here");
                 mProgressDialog.dismiss();
                 Toast.makeText(RegisterActivity.this, "Network error", Toast.LENGTH_SHORT).show();
             }
@@ -261,7 +257,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onRetry(int retryNo) {
                 // called when request is retried
-                Log.d(TAG, "retryNO: " + retryNo);
+                //Log.d(TAG, "retryNO: " + retryNo);
                 Toast.makeText(RegisterActivity.this, "Taking too long", Toast.LENGTH_SHORT).show();
             }
         });

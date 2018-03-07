@@ -1,7 +1,8 @@
 package com.ruraara.ken.e_nyumbani.appData;
 
 public class AppData {
-    private static final String HOST = "https://api.nyumbaniuganda.com";
+    private static final String HOST = "http://api.nyumbaniuganda.com";
+    //private static final String HOST = "https://api.nyumbaniuganda.com"; ///todo Uncomment for using ssl connection
     //private static final String HOST = "http://10.0.3.2:8000";
 
     public static String getHost() {
