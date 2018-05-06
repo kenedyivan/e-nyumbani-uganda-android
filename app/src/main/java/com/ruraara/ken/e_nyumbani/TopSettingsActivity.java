@@ -15,6 +15,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.ruraara.ken.e_nyumbani.sessions.SessionManager;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterSession;
+
 
 public class TopSettingsActivity extends AppCompatActivity {
 
@@ -47,7 +54,7 @@ public class TopSettingsActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -63,8 +70,8 @@ public class TopSettingsActivity extends AppCompatActivity {
     class SettingsItemRecyclerViewAdapter
             extends RecyclerView.Adapter<TopSettingsActivity.SettingsItemRecyclerViewAdapter.ViewHolder> {
 
-        private final int[] icons = {R.drawable.ic_user, R.drawable.ic_info_black_24dp};
-        private final String[] settings = {"Account", "System"};
+        private final int[] icons = {R.drawable.ic_user, R.drawable.ic_info_black_24dp, R.drawable.ic_lock_black_24dp};
+        private final String[] settings = {"Account", "System", "Logout"};
 
         public SettingsItemRecyclerViewAdapter() {
         }
@@ -95,12 +102,30 @@ public class TopSettingsActivity extends AppCompatActivity {
                     if (pos == 0) {
                         intent = new Intent(TopSettingsActivity.this, UserAccountActivity.class);
                         intent.putExtra(TopSettingsActivity.SETTINGS_ID, position);
+                        context.startActivity(intent);
                     } else if (pos == 1) {
                         intent = new Intent(TopSettingsActivity.this, SettingsActivity.class);
                         intent.putExtra(TopSettingsActivity.SETTINGS_ID, position);
+                        context.startActivity(intent);
+                    } else if (pos == 2) {
+                        SessionManager sessionManager = new SessionManager(context);
+                        sessionManager.logoutUser();
+                        // After logout redirect user to Login Activity
+                        Intent i = new Intent(context, LoginActivity.class);
+                        // Closing all the Activities
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                        FacebookSdk.sdkInitialize(getApplicationContext());
+                        //Check if user is currently logged in
+                        if (AccessToken.getCurrentAccessToken() != null && com.facebook.Profile.getCurrentProfile() != null) {
+                            //Logged in so show the login button
+                            LoginManager.getInstance().logOut();
+                        }
+
+                        context.startActivity(i);
                     }
 
-                    context.startActivity(intent);
+
                 }
             });
 
