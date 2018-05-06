@@ -190,6 +190,20 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             }
         });
 
+        mShareView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                String shareLink = "https://www.nyumbaniuganda.com/property-details/"+itemId;
+                Log.d("Sharelink",shareLink);
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,shareLink ); // TODO: 5/6/18 Retrieve full path from backend server
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Check out this property!");
+                startActivity(Intent.createChooser(intent, "Share"));
+            }
+        });
+
 
         recyclerView = (RecyclerView) findViewById(R.id.reviews_list);
         recyclerView.setNestedScrollingEnabled(false);
@@ -352,8 +366,8 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent i = new Intent(PropertyDetailsActivity.this, ChatActivity.class);
-                        i.putExtra("agentId",finalPropertyDetail1.agentId);
-                        i.putExtra("propertyId",itemId);
+                        i.putExtra("agentId", finalPropertyDetail1.agentId);
+                        i.putExtra("propertyId", itemId);
                         i.putExtra("propertyTitle", finalPropertyDetail1.title);
                         startActivity(i);
                     }
