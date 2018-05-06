@@ -33,8 +33,9 @@
         completions."
     </string>
 
-    <string name="facebook_app_id">1583268985053637</string>
-    <string name="fb_login_protocol_scheme">fb1583268985053637</string>
+    <string name="facebook_app_id">1931785657089021</string>
+    <string name="fb_login_protocol_scheme">fb1931785657089021</string>
+
 
     <string name="com.twitter.sdk.android.CONSUMER_KEY">iAry7ZbX3RJB6Yy6tJkac0Ny4</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">75nlFj3jrJURHhuw8L9lGIxtOq5T6352w55yj4ERRMQIp13QBN</string>
