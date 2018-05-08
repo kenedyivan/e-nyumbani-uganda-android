@@ -2,21 +2,17 @@ package com.ruraara.ken.e_nyumbani;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.ruraara.ken.e_nyumbani.appData.AppData;
 import com.squareup.picasso.Picasso;
 
 
-public class ScreenSlidePageFragment extends Fragment {
+public class ScreenSlideGalleryPageFragment extends Fragment {
 
     private String title;
     private int page;
@@ -26,8 +22,8 @@ public class ScreenSlidePageFragment extends Fragment {
     private static Bundle args;
 
     // newInstance constructor for creating fragment with arguments
-    public static ScreenSlidePageFragment newInstance(Context c, int page, String image) {
-        ScreenSlidePageFragment fragmentFirst = new ScreenSlidePageFragment();
+    public static ScreenSlideGalleryPageFragment newInstance(Context c, int page, String image) {
+        ScreenSlideGalleryPageFragment fragmentFirst = new ScreenSlideGalleryPageFragment();
         context = c;
         args = new Bundle();
         args.putInt("someInt", page);
@@ -48,7 +44,7 @@ public class ScreenSlidePageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(
-                R.layout.fragment_screen_slide_page, container, false);
+                R.layout.fragment_screen_gallery_slide_page, container, false);
 
         //int r = R.drawable.img2;
 
@@ -58,14 +54,6 @@ public class ScreenSlidePageFragment extends Fragment {
                 .load(r)
                 .fit()
                 .into(img);
-
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(),GalleryActivity.class);
-                startActivity(i);
-            }
-        });
 
         return view;
     }

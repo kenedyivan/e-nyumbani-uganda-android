@@ -327,7 +327,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                 //Do the working from here
 
                 assert propertyDetail != null;
-                mOtherImages = propertyDetail.getOtherImages();
+                mOtherImages = PropertyDetail.getOtherImages();
 
                 Log.d("Other Images", mOtherImages.toString());
 
@@ -515,25 +515,10 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            //return new ScreenSlidePageFragment();
-
-            //return ScreenSlidePageFragment.newInstance(0, R.drawable.img2);
 
             return ScreenSlidePageFragment.newInstance(c, position, otherImages.get(position));
 
-
-            /*switch (position) {
-                case 0: // Fragment # 0 - This will show FirstFragment
-                    return ScreenSlidePageFragment.newInstance(0, R.drawable.img2);
-                case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return ScreenSlidePageFragment.newInstance(1, R.drawable.img3);
-                case 2: // Fragment # 1 - This will show SecondFragment
-                    return ScreenSlidePageFragment.newInstance(2, R.drawable.img4);
-                default:
-                    return null;
-            }*/
         }
-
         @Override
         public int getCount() {
             return NUM_IMAGES;

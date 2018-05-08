@@ -233,11 +233,18 @@
             android:exported="true" />
 
         <activity android:name=".SocketIOActivity">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".GalleryActivity"
+            android:label="Images">
         </activity>
     </application>
 

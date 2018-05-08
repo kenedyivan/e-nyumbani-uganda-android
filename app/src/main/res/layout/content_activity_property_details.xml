@@ -30,14 +30,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <!--<ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/img1" />-->
-
-
                     <!-- activity_screen_slide.xml -->
                     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/pager"
@@ -51,14 +43,6 @@
                         android:id="@+id/indicator"
                         android:layout_width="match_parent"
                         android:layout_height="48dp" />
-
-                    <!--<com.github.vivchar.viewpagerindicator.ViewPagerIndicator
-                        android:id="@+id/view_pager_indicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:delimiterSize="8dp"
-                        app:itemSize="8dp"
-                        android:gravity="center"/>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"

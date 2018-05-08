@@ -29,7 +29,7 @@ public class PropertyDetail {
     public String createdAt = null;
     public int favorite = 0;
     public String image = null;
-    public JSONArray otherImagesJson = null;
+    public static JSONArray otherImagesJson = null;
     public JSONArray reviewsJson = null;
     public JSONArray relatedPropertiesJson = null;
 
@@ -112,7 +112,7 @@ public class PropertyDetail {
     }
 
 
-    public List<String> getOtherImages() {
+    public static List<String> getOtherImages() {
 
         try {
 
@@ -127,6 +127,11 @@ public class PropertyDetail {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return otherImages;
+    }
+
+    public static List<String> getOtherImagesGallery() {
 
         return otherImages;
     }
