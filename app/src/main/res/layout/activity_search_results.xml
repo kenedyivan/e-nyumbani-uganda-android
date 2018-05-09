@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.ruraara.ken.e_nyumbani.SearchResults"
+    tools:context="com.ruraara.ken.enyumbani.SearchResults"
     tools:layout_editor_absoluteX="8dp"
     tools:layout_editor_absoluteY="8dp"
     tools:listitem="@layout/property_list_content"

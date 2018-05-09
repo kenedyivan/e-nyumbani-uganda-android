@@ -10,6 +10,6 @@
     android:layout_marginRight="16dp"
     android:layout_marginTop="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.ruraara.ken.e_nyumbani.PropertyListActivity"
+    tools:context="com.ruraara.ken.enyumbani.PropertyListActivity"
     tools:listitem="@layout/property_list_content"
     />

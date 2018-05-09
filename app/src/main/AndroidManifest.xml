@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ruraara.ken.e_nyumbani">
+    package="com.ruraara.ken.enyumbani">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -47,7 +47,7 @@
 
         <provider
             android:name=".content.DataProvider"
-            android:authorities="com.ruraara.ken.e_nyumbani.content.dataprovider"
+            android:authorities="com.ruraara.ken.enyumbani.content.dataprovider"
             android:exported="false" />
 
         <activity

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:563388262514:android:2333b71d91a39c4a",
         "android_client_info": {
-          "package_name": "com.ruraara.ken.e_nyumbani"
+          "package_name": "com.ruraara.ken.enyumbani"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "563388262514-mojqh9ie4788tub7830lsvkmvehmaoeu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ruraara.ken.e_nyumbani",
+            "package_name": "com.ruraara.ken.enyumbani",
             "certificate_hash": "81fb18a0f32c3f041ca2f49df2a116bb234a9806"
           }
         },

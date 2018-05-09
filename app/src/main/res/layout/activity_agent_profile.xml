@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.ruraara.ken.e_nyumbani.AgentProfileActivity">
+        tools:context="com.ruraara.ken.enyumbani.AgentProfileActivity">
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/overview"

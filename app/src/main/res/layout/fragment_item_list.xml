@@ -7,5 +7,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.ruraara.ken.e_nyumbani.FeaturedPropertyFragment"
+    tools:context="com.ruraara.ken.enyumbani.FeaturedPropertyFragment"
     tools:listitem="@layout/fragment_item" />

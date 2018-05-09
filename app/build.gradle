@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     //buildToolsVersion "26.0.1"
     defaultConfig {
-        applicationId "com.ruraara.ken.e_nyumbani"
+        applicationId "com.ruraara.ken.enyumbani"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -31,7 +31,7 @@ android {
 
 dependencies {
     //implementation 'com.google.firebase:firebase-messaging:12.0.1'
-    implementation 'com.firebase:firebase-jobdispatcher:0.7.0'
+    //implementation 'com.firebase:firebase-jobdispatcher:0.7.0'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
